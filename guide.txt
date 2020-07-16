@@ -1,0 +1,581 @@
+
+	<li>thing1</li>
+	<li>thing2</li>
+</ul>
+
+=====================================================
+CSS: Starts from here
+======================================================
+Inline CSS: use attribute style to modifcation to the header tag, for example. However, this will end up making our website very very messy. Therefore not recommended. 
+------------------------------------------------------
+Internal CSS: Add <style> </style> tag in the head tag of the index.html. This is also not recommended. 
+------------------------------------------------------
+External CSS: Add a new "style sheet". So we need to link it to the index.html. Here we target the element and then specify various attributes. We can define a division using <div> tag and assign certain properties to that the division of the page. These properties are:
+height
+width
+background-color
+margin
+text-align
+font-family
+line-height
+color ---> text color
+text-shadow
+box-shadow
+font-size
+Note: The division is referred to in the the css file using a 'period'(.) before the name of the class attribute of the div tag; followed by the square brackets. 
+
+id="some_unique_text"
+id attribute of a division is assigned to a div tag. Should be unique hence not be used too frequently. We will not use id's to style things but to INTERACT WITH JAVASCRIPT. This is referred-to in the style-sheet with- '#' before the name of the id.
+
+Classes are great when we want to apply the same setting to multiple elements(which are intended to be similar).
+
+The property 'color'-
+Modified by three methods(as of now):
+1. hexcode : #ffffff is for white and #000000 is for black
+2. using color name : 'white' and 'black', you have to remember names
+3. using RGB values: rgb(0,0,0) for black and rgb(255, 255, 255) for white. 
+______________
+CSS GRADIENTS:  
+-------------
+this properties of a class/ element / id /... allow us to set gradient to the specified area of the webpage. This done by setting the background of the class, in the following manner: 
+.class_name{
+	background:linear-gradient(to left/right/top/bottom,starting hex        value of the color, ending hex value)
+}
+
+_________________
+text-shadow:
+-----------------
+add shadow of particular length to the element.
+eg. 
+h1{
+	text-shadow:2px 2px 5px black; // this makes a soft/blurred shadow of 2*2px wide and the blurs out withing 5px.
+}
+adds a shadow of 2 px horizontal and 2px vertical shadow to the element.
+Similary, shadow can be added to a container class(rectangle/square).
+ 
+Background is interesting property and has lot more to it. We can use image as our background and tinker further to suit our need using background size, background-repeat: and so on. 
+one example could be: 
+body{
+	background-image: url();
+	background-repeat: no-repeat;
+	background-size: cover; //specific to image type background.
+}
+
+Border:
+Similar to background we have border, which also has a variety of options to choose from. from-left, from-right and so on. 
+.class_name{
+	border/border-right: width_in_px dotted/dashed/solid color;
+}
+
+A note about 'inspect-element':
+Every browser allows you view the source of the index.html. This can come in very handy sometimes. This allows you to look at the class names ids of a particular element. The properties defined in the css can also be views along with the default values of those properties which have not been defined.
+
+Combinators:
+------------
+ui li {
+	color:red;
+}
+above will apply the properties throughout all the nesting
+
+but 
+ui > li {
+	color: yellow;
+} will apply the setting only to the ui.
+
+Grouping
+--------
+In a large html file we may end up having various classes or ids having the same properties. In that case we can group those and avoid redundancy. 
+h1, h2, h3 {
+	color:red;
+	text-shadow: 2px 2px 5px black;
+}
+Note: id's, classes can also be added.
+
++++++++++++
+Specificity
++++++++++++
+In case of intentional or non-intentional conflicting properties, the specifity decides the value of property that the element should assume. Specificity precedence:
+
+Style attribute > ID > Class/psuedo-class/attribute > Elements
+Also if the  level of precedence is the same then the last property will be assumed.
+Adding multiple selector increases the precedence. 
+div h1{
+	color:red;
+} // here one h1 tag is under div tag, however others are outside div
+h1{
+	color: black;
+}
+h1 inside the div tag will receive the color red and the ones outside the div tag will receive black color. 
+#foo{
+	color:red;
+}
+[id="foo"]{
+	color:yellow}
+will assume red color. 100 points for id!
+
+<h1 style="color:yellow" id="foo"> this is h1 </h1>
+as present in the 'index.html'
+
+html body div.container h1#foo {
+	color: black;
+}
+
+the later might appear more specific but according to the precedence 1000 > (100+10+4). Therefore the color will still be yellow.
+Additionally, all of this can be over-ridden by 
+h1{
+ color:cyan !important;
+} // However not recommended, use while using bootstrap.    
+
+
+Some how few things got deleted, But I hope I have them in my head. 
+<button> can also be stylised similar to images. 
+border-radius:
+color:
+background:
+padding:
+border:2px 3px 4px 5px // works clockwise 
+
+
+margin creates space outside button
+padding creates space within the buttons. 
+
+Creating custom rows and columns:
+___________________________________
+
+Creating a custom grid helps us place objects on the webpage. Creating various column width [1-12] helps us choose the width of the column.
+with the help of class row, we stack content one upon other. 
+Now we can control the amount of space we want to dedicate to particular element by choosing the number of columns that we want to assign.
+We make a bigger class called 'row' and then place other classes within these rows. and stack these rows together. I have yet to understand the total application of these grids. 
+
+
+____________________________
+Learning JavaScript
+____________________________
+
+Sources:
+Devslopes
+String, MDN [developer.mozilla.org]----> details 
+w3school -----> always good and robusts
+quick test-----> jsbin.com ----> has node and runs the js.
+
+
+In javascript everything is a floating point 64-point precision, given that the variable is a number. 
+The if statement is the same as that in C or C++. The else is also the same. 
+
+if(){
+
+}
+else if {
+}
+else {
+}
+
+===   checks whether they have same value and type. 
+
+mostly use this instead of ==. !== is a thing here. 
+'true' and 'false' are keywords here. 
+'&&' is for and '||' is for 'or'. 
+ARRAYS:
+var arr_name=["content1", "content2"];
+var arr=[];
+arr.push(arr_name[0]);// adding data to the array 'arr'
+// We can also find the index of an element/entry in the arr. 
+var indexx=arr_name.indexOf("content1");
+
+
+.splice(index,number of elements to be removed. )
+This returns an array with reduced number of elements. 
+
+Alert-----> Never use an array with multiple data types. YOu should use Objects in those cases. 
+
+LOOPS:
+for(var x=0;x<someVal;x++){
+  //some statements
+}
+
+
+FUNCTIONS:
+function area(length,width) {
+  return length*width;
+}
+var area=area(10,15);//function call
+
+_______________
+JS Objects
+_______________
+var student = {
+  firstName: "John",lastName:"parker", age:7,
+  greeting: function() {// this is function
+    return "hi, I'm this.firstName + " and I'm " this.age + "years old.";
+  }
+};
+// note the definition of function inside the object
+firstName is a property/KEY for the variable(class, as I call it/object)
+and John is the value of that KEY. 
+Also notice the ; at the end of the declaration of students variable. 
+Now I realise that calling student a class is wrong. It is an ojbect from all point of views. 
+console.log(student.firstName);
+
+Above will the value of the key(firstName) of the Object student on to the console. 
+Another way of treatment is 
+console.log(student["firstName"]); //see the resemblance with python
+//create a new empty object
+var student1=new Object();
+student1.firstName ="John";
+student1.lastName = "Parker";
+student.age=7;
+
+//yet another way
+var student2={};
+var student2.firstName="Zack";//you get the idea.
+
+we can certainly have AN ARRAY of OBJECTS!!!!!!!!!!!
+Which is cooooooooooooool. 
+
+funtion student(first, last, age){
+  this.firstName=first;//"this" operator is from java application
+  this.lastName=last;
+  this.age=age; 
+} //the function 'student' is the certainly a constructorF!
+
+Above is a reusable object... That comes in very handy. 
+
+creation of actual object is as follows :
+var s1 = new student("Jenny", "laga",5);
+console.log(s1);
+// yeah we have created our first student entry.
+We could create an array of such object.
+var students=[];
+students.push(new student("Amiay","Narayan",23);
+students.push(new student("Abhay","narayan",23);
+.
+.
+.
+and so on. . .
+// for in 
+var stud=students[0];// where is students is an array of objects created using the 'blueprint'----> student using new operator/ constructor
+for (var key in stud){
+  console.log(stud[key]);
+}
+
+_____________
+.bind()
+-------------
+this.car="honda civic with ugly spoiler";
+var marksGarage={
+  car:"Aston Martin",
+  getCar: function(){
+  return this.car;
+}
+};
+
+console.log(marksGarage.getCar());
+
+var carName = marksGarage.getCar;
+console.log(carName());
+
+// console looks like
+  //"Aston Martin"
+  //"honda civic with ugly spoiler"
+  //----> this is a surprise as both should have been same.
+// carName() is the function that returns "this.car"
+// and since in the current scope this.car is associated with "honda civic"
+// we get the result above.
+
+// To avoid this we use .bind()
+
+var realCar=marksGarage.getCar.bind(marksGarage);
+//above sets 'this' to 'marksGarage' scope.
+console.log(realCar());
+//gives "Aston Martin"
+
+Working with <form> 
+Note: There is a difference between <button> and <input> with type="submit". We can directly use "onclick" property of <button> with some appropriate function for some action to take place. But with forms it is different. 
+
+we link a variable with the form tag:
+var form = document.getElementId('form_id');
+form.addEventListener('submit', function(){});
+  
+    The function(){} here dictates what should happen once the submit button is clicked, loosely speaking. The aspect of validation must also be kept in mind before evaluating the final result. One such action could be by confirming that every required field is filled by the user before "submitting". 
+Working with just the string objects so we need to "parseFloat" before doing any arithmetic operation. 
+The default behaviour of forms is to refresh the page once it has been submitted. 
+
+
+_______________
+Git
+---------------
+
+Git repositories, git conflict, 
+
+create local repo[origin]
+create global repo [master]
+on local : stage and commit
+on local : git remote add origin url.git of the repo on github/bitbucket
+git pull origin master : checks for conflicts merges them if none. 
+now git push origin master. 
+
+
+
+_______________
+BOOTSTRAP4
+---------------
+How I understand it for now is that it has got prebuilt classes for lot of styling that we do using CSS, for example making grids and buttons and so on.
+To use bootstrap we have to download the compiled version of CSS and JS from the official site of Bootstrap.
+
+Tips and requirements:
+1. use lang="en" with html tag
+2. use <meta charset="utf-8"> and other such as viewport.
+3. CDN -----> Content Delivery Network
+4. Now modify and delete the links to link your setting to the html doc. 
+
+Read the components documentation of the bootstratp4, they are really great and very good. carousal, button, form, modal, 4. Now modify and delete the links to link your setting to the html doc. 
+
+
+.container | .row | .col-sm-6
+_-----------------------------
+Along with many other classes, above classes are of major importance. 
+container must be followed by the row class. col-sm-6 ----> means if the media query hits "small viewport/screen" go to full screen else remain 50% display otherwise. 
+Viewports can be : 
+  1. sm
+  2. lg
+  3. md
+  4. xl
+
+with these prebuilt classes we can create columns that can serve flexiblity with screens. 
+
+  col-sm-6 
+  creates column with 50% and when the screen is small the corresponding div tag will occupy the full width. 
+  "col-sm-6 col-lg-4"
+  sets a rule that when the screen is large keep three columns in a row. When the screen is small("sm"), then occupy the full width of the screen and in every other case 50%. 
+
+ CARDS:
+ --------
+
+ card/(prev. panel) can hold images, tables , text and so on. This provides us with good stylised content holder. Whatever we feed it inside it will fit to that content. Also this card is flexible and page size responsive. So it shrinks and expands based on viewport size. So the content should also have flexibility else this will lead to overflow. For images this can be done using  the class "image-fluid".
+
+
+To host a webpage from your laptop... 
+1. we can use xampp
+2. python
+
+1----> install xampp, start services and then run it from /opt/lampp
+
+2----> python3 -m http.server
+       it is already done!! we can mention port as well(default 8000)
+
+
+Build a test website
+_____________________
+
+1. Add a <nav> using bootstrap. Several classes helps it look better. 
+    "navbar-light" allows us to have light gray background for the bar. This can be changed to "navbar-inverse bg-inverse"
+
+2. Then we added a jumbotron, changed the alignment and removed background.
+3. Add CAROUSEL----> Sliding show off on the front page. We changed the id so 'click' won't work. So we need to change the link being referred. We can also add caption to the slides. Present right there on the bootstrap site.  
+
+4. We add another row. Here we use media query provided by bootstrap to divide the row into columns. In the leftmost column we provide an "offset" of "2col width".   
+    b) We add the middle col with width 9 for "md" screen. Then we add two more rows to this column. The first row spans full of this column, while the second row has two column of its own: first one has some text second an NBA logo. 
+    c) Third col is a general col that occupies the left space. 
+
+5. Modals are built with HTML, CSS, JS. Remember if we change id at one place we have to change at all the other required places. 
+
+6. In the last section we used AwesomeFonts. We have to add the script inclusion statement at the top in the <head> element. This can be found on the site of w3shools. Then we have to add the class for each of the logo/symbol that we want to use. class="fa fa-google-plus-square". Adding custom made classes to stylise these logos is also a good practice.
+
+
+____________
+SASS
+------------
+SMACS is a very good architecture to organise the files that we have created. It helps us organise things. It urges us to create 5 folders
+      1. Base rules
+      2. Layout rules
+      3. Module Rules
+      4. State Rules
+      5. Theme Rule
+
+eg. 
+                                              --4-Structure_partials
+                                                  --CSS/
+                                                      -app.css
+                                                  
+                                                  --SASS/     
+                                                      -base
+                                                          -base-dir.sass
+                                                          -base.sass
+                                                      -layouts--------> only #tags to be used
+                                                          -footer.sass
+                                                          -header.sass
+                                                          -layout-dir.sass
+                                                      -modules--------> only classes should be styled
+                                                          -button.sass
+                                                          -module-dir.sass
+                                                          -navbar.sass 
+                                                      -app.sass
+                                                                @import "base"
+                                                                @import "base-dir"  // these will go in the file & no need of extensions for -dir.sass files.
+
+
+import the files in the dir files. and then import those '*-dir.sass' files into the app.sass. and then just compile this file only. Viola!! you will what you want. 
+
+Partials are used to bring modularity to the project we are working on and bring a sense of organisation.
+              sass --watch SASS:CSS 
+This will create a lot of files. So we use partials. we add '_' before all the file-names in the SASS/{base,layouts,modules}. Also sass is smart enought and we dont need to add '_' before the file names while doing '@import "sass_file_name_without_extension" to compile the whole structure of sass files. 
+
+
+_________________
+side note:
+-----------------
+getting a single directory from Github.
+          sudo apt install subversion
+          svn https://repo_name/..../trunk/directory_you_want/
+
+
+_______________
+Final project SASS
+-------------------
+
+
+
+
+
+
+___________________
+Web Hosting
+-------------------
+create and instance on GCP [priced] or EC2-instance on AWS["free"]
+While setting up the server, make sure that in "Add tags" you have selected allow HTTP on port 80. besides SSH on port 22.
+log in to the server
+    sudo apt install nginx -y
+    sudo ufw app list 
+    sudo ufw allow "Nginx HTTP"
+    systemctl status nginx
+        (should show ---> active(running))
+        if not make sure you service you have executed--> sudo service ufw enable
+
+now go to the su mode
+    mkdir -p ~/.ssh
+    cd .ssh
+    ssh-keygen
+    cat ~/.ssh/id_rsa.pub  # the name was given while generating key
+    cd /var
+    cd /www
+
+    it is here that default "Nginx-Welcome" site was placed
+    So any website that is present here can be hosted. 
+    use id_rsa.pub to add to github. Settings->SSH/GPG Keys->paste the key
+    add the repository to github from local it not available there on Github. Then clone that repo to the /var/www of the server. 
+    Or I think directly pasting within the remote should do the job. Main thing is /var/www is hosted. 
+
+
+for more details: visit---> https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
+
+
+
+
+______________________
+Web Requests
+----------------------
+
+curl <url> 
+            ---------------> gives the html code when we put https://www.google.com
+js codes could be run only on the web browsers but node allowed to be run on all the platforms. 
+it has to be install by the package manager. and we can get into the node shell just by typing the command "node" on the terminal
+
+JSON = Java Script Object Notation
+
+So HTTP: can send requests to the server of a site. This request could be: 
+      1. GET: To request for data on the server.
+      2. POST: To add new data. 
+      3. PUT: To update.
+
+All these requests are responded to by the server. 
+{
+  "name": "Luke Skywalker",
+  "height": "1.72",
+  "mass": "77 kg",
+  "films": [
+    "http://swapi.co/api/films/1/",
+    "http://swapi.co/api/films/2/,
+    ],
+  "species": [
+    "http://swapi.co/api/species/1/",]
+
+}
+You can see the similarity with java script. 
+A file format using which file can be tranferred across wire. xml is could also be used but here we are sticking with json. 
+  
+You can have object inside an array as well, it is indirect. so just saying. 
+
+COOL TOOLS: jsonfiles(google chrome extension), postmun
+npm: Node Package Manager.. we use prebuilt javascripts. They are used in backend. But then can used for front end as well. This is a very large community. 
+___________
+creating server or my first api.
+
+First create a file with .js extension in the project directory.
+Then do the execute the following command:
+    npm init
+After answering some "follow-up" questions you will have a file name package.jason. This will have a class with the info that you just gave. There is something missing here. "express" and "node" go hand in hand. 
+So, we go:
+    npm install --save express
+in the same directory as package.json
+'--save' helps you download only those modules that we have used in the package.json-----> dependencies class by simply carrying out : 
+    npm install
+    in the project directory.
+-----------------------
+Getting started
+
+
+var express=require('express');
+var app=express();
+// above is the same as below
+var app=require('express');
+
+sever must render a response, in all situation for consistency. 
+app.listen(3000, function(){
+  console.log("first api running on port 3000!")});
+
+If we open google-chrome and type
+    localhost:3000
+we find the message rendered on the screen of the browser as it can understand. 
+
+POST:
+client should be able to request to put something on the server/database. POST allows the client to do that. 'express' binds that data within the "request" argument of the funtion(request,response) of the "app.post". So the server can refer to the incoming piece of data as "request.body". This can be added to a variable on the server or can be put in the database(after validation, optionally). 
+
+To avoid killing the server running on the terminal and rerunning it... we should use
+    npm install -g nodemon
+    nodemon server.js
+This will automatically restart the server.
+URL parameters:
+app.put('/ingredients/:ingredientId',function(request,response){
+  var newText=request.body.text; // this grabs the request and get the value of property "text" as provided in the request body.("text":"butter_paneer_masala"; this will later be used to update the existing "property" associated with the "request.params.ingredientId"
+  if("some_string"===request.params.ingredientId)// So whatever we add in the '/ingredients/:url_parameter' ----> becomes a parameter. and can be grabbed using a statement like this. 
+This assists us to "put" some data on to the server... more clearly this helps a client to pass something as a paramter to the server... and this "something" can then be grabbed by the server to change that field in the data base(or can be used otherwise).
+so while doing carrying out the put request---->
+    https://localhost:3000/ingredients/66de83d
+the string in the end is the url parameter. which will be used to find a particular "id" and then text attached to request.body.text will be the new value. 
+
+
+So, it can be pointed out here that all these put,get or post are the same under the hood, it is just that we use them to properly structure our code.Also, we could have used just url_parameters to do all instead of using body or vice-versa. 
+
+--------------
+MonogoDB
+_____________
+    sudo apt install mongodb
+    sudo apt update
+    sudo service mongodb start
+    sudo killall mongodb
+    sudo mongod #sometimes sudo is must ... also using a bootsect/nt60 ALL windows
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
