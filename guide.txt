@@ -566,12 +566,34 @@ _____________
     sudo mongod #sometimes sudo is must ... also using a bootsect/nt60 ALL windows
 
 
+DOCUMENT
+--------
+A key term in this community. A recordin MongoDB is a document, which is a data structure composed of field and value pairs. MongoDB "Documents" are similar to JSON objects. 
+Go through the guide, for proper understanding[official documentation].
+    sudo mongodb #on terminal first
+    sudo mongo    #starts the mongo shell
+    show dbs      #shows databases on the computer
+                  #note: don't forget to start mongodb first on someother terminal    
+    use database_name   #creates a database
+    db.products.insert({"productName":"Red Car", "price":12.59,"salePrice":5.000})
+                  #Above line adds an entry into the database
+                  # "products" is a collection
+    db.products.find().pretty()  # shows the collections, notice "_id":ObjectId()
 
 
+Note: It is easy to access the database directly, which also makes it vulnerable to adding some INCONSISTENT field(s). So we will not be using the MongoDB shell. 
 
+"Find" in MongoDB shell
+    db.products.find({"productName":"Blue Car"})
+    db.products.find({"_id":ObjectId("0394509430eere200345jd")})
+        # Ofcourse you can use pretty() extenstion as well
+"Updating"
+    db.products.update({"productName":"Blue Car"},{$set:{"price":3.59})#don't forget the {}
+    db.products.find({}) # gives all the entries. 
 
-
-
+"Delete"
+    db.products.remove({"productName":"Yellow Car"})
+    db.products.remove({"productName":"Yellow Car"},{justOne:true})#only car onlty
 
 
 
