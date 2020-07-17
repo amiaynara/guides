@@ -596,7 +596,7 @@ Note: It is easy to access the database directly, which also makes it vulnerable
     db.products.remove({"productName":"Yellow Car"},{justOne:true})#only car onlty
 
 
-
+v
 
 
 
