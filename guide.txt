@@ -599,5 +599,18 @@ Note: It is easy to access the database directly, which also makes it vulnerable
 v
 
 
+____________________
+React
+--------------------
+A javaScript library for building user interfaces.
+Developed by Facebook in 2011 and currently the most popular JS library for building user interfaces. Other two players are: Angular and View. 
+At the heart is "Components", each one containing independent parts of the interface.
+Every React App is essentially a tree of components. Kind of like grids in CSS.
+Nomenclature: Once the state of an object changes, the code "reacts" to the changes and updates the DOM.
+Angular or React: Angular is a Framework while React is just a library used for rendering. So for other purposes React requires other services e.g. for routing, calling http server and so on (this provides independence). 
 
+A react interface can be set up manually but we do it by our own. 
+
+    npm install -g create-react-app #add sudo
+    create-react-app <proj_name>
 
