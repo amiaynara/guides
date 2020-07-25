@@ -528,6 +528,21 @@ var express=require('express');
 var app=express();
 // above is the same as below
 var app=require('express');
+__________________________________________________________________________
+Another way to see the changes live in the browser is using light-server to 
+    npm install lite-server --save-dev
+Now in the "package.json" search for "scripts":{  and add 
+    "start":"npm run lite",
+    "test":eslint *.js lib/*.js && istanbul cover _mocha -- -R spec",
+    "lite":"lite-server"
+
+Logic: this will allow us to execute 
+    npm start
+which in turn will allow us to start a lite-server.
+
+
+
+
 
 sever must render a response, in all situation for consistency. 
 app.listen(3000, function(){
