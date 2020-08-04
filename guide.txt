@@ -317,8 +317,50 @@ now git push origin master.
 
 
 _______________
-BOOTSTRAP4
+BOOTSTRAP4: most popular front-end UI Framework
 ---------------
+
+from coursera
+-------------
+    npm init
+    npm install bootstrap@4.0.0 --save
+    npm install jquery@3.3.1 popper@1.12.9 --save # these two are requirements for bootstrap
+    npm start # short hand to start the server @port : 3000
+
+Now add the <meta> tags, link the node_modules/..../bootstrap.min.css and add the scripts jquery...js and popper
+
+  --Responsive Design
+The web page can be rendered in various forms and screens depending on the size and platform. 
+Grids:
+<div col-sm-11 offset-1 order-sm-first col-md-8> 
+  offset-gives empty column
+  order- flips the order given the screen size "sm" and above
+  no screen size=> for all media size 
+  sm=> for small and more than small that. 
+Alignment with "row" class
+align-items-center, justify-content-center
+
+Using font-awesome and bootstrap-social
+---------------------------------------
+    npm install font-awesome@4.7.0 --save
+    npm install bootstrap-social@5.1.1 --save
+use the <span> or <i> for this purpose
+    <a class="btn btn-social-icon btn-youtube" href="#"><i class="fa fa-youtube fa-lg"></i></a>
+to add the glyphicons into the page. 
+
+
+
+
+
+Using font-awesome and glyphicons
+----------------------------------
+In the project directory
+    npm install font-awesome@4.7.0 --save #this will appear in package.json
+    npm install bootstrap-social@5.1.1 --save
+Now include this file in the index.html in the head section[like style.css]
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+Now add a <span class="fa fa-home fa-lg"> across the element. 
+
 How I understand it for now is that it has got prebuilt classes for lot of styling that we do using CSS, for example making grids and buttons and so on.
 To use bootstrap we have to download the compiled version of CSS and JS from the official site of Bootstrap.
 
@@ -330,7 +372,16 @@ Tips and requirements:
 
 Read the components documentation of the bootstratp4, they are really great and very good. carousal, button, form, modal, 4. Now modify and delete the links to link your setting to the html doc. 
 
+using SASS(.scss)
+_________________
+create a file name .scss
+put in variables, mixins and so on.
 
+    sudo npm install --save-dev node-sass@4.7.2
+add following to the script
+    "scss":"node-sass -o css/ css/"
+now do 
+    npm run scss
 .container | .row | .col-sm-6
 _-----------------------------
 Along with many other classes, above classes are of major importance. 

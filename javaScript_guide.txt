@@ -1,0 +1,90 @@
+What is ECMA?
+JavaScript has existed since 90's. It is an implementation of ECMA. In 2015 ECMAScript 5 was introduced. Other implementations are: Jscript and ActionScript. 
+Since then newer changes have also be added to the ECMA as 6 7 8 9 and you can expect to see more in the near future. So ES6 should not sound peculiar or unfamiliar. 
+What is a standard and what is its implementation?
+
+
+
+
+ES6 = ES5+ New awesome features. [classes, objects....]
+Note: Typescript is a langugage(Maintained by Microsoft). superset of JavaScript.   
+
+Transpilers:
+____________
+Tracer/Babel/Typescript
+you can also use chrome or firefox. Since, we are learning so we will go with the chrome. Also we are in 2020+. It is for production application. You might use Babel. 
+
+
+Getting started
+_______________
+
+    npm init # creates the file package.json
+    vim main.js
+#create index.html if you need it. 
+    chrome index.html # or node main.js [this will run on the terminal] or[nodemon main.js [keeps a watch on the changes]
+
+Now we are good to go....
+Viewing the output
+_________________
+Opening the main.js as Ctrl+O in chrome will just show the JavaScript on the display area. Console will not show anything whatso ever.
+
+    node main.js
+#directly show the output after compiling and running the script. [Method 1]
+    google-chrome index.html    # [Method 2]
+    nodemon main.js             # [Method 3]
+Note: Basically chrome compiles the script found in html. So does node. Hence you must include you main.js into your index.html if using a browser. 
+    
+Variables
+---------
+Containers that can store anything. objects are also declared similarly.
+      var name;
+      const name="amiay";
+
+'var' creates a global variable. Therefore ES6 brings in let, which introduces scopes. 
+    const colors=[];
+    colors.push("red");
+    colors.push("green"); // colors can be pushed to but not changed
+    colors="blue" // would yield an error
+
+    console.log(colors);// shows on the console[not the html page]
+    
+Variable Hoisting
+-----------------
+Every legal variable "re-declaration" of a variable (say "x") is but to the top("hoist") of the code. 
+
+ 1 var amiay="my name";
+  2 function scope_test(){
+  3   amiay="name";
+  4   if(amiay=="name"){
+  5     var amiay="new name";
+  6     console.log(name);
+  7   }
+  8   console.log('this is second scope shell'+amiay);
+  9 } 
+ 10 console.log('before function call '+ amiay);
+ 11 scope_test();
+ 12 console.log('after function call '+ amiay);
+
+
+Output:
+            before function call my name
+            amiay
+            this is second scope shellnew name
+            after function call my name
+
+Note: 'let' does not hoist unlike 'var' which does. 
+
+
+
+Loops:
+------
+ // -------------->
+  1 for(var i=0;i<10;i++)
+  2 {
+  3   setTimeout(function(){console.log(i);},1000);
+  4 }
+  5
+
+You think this should print 0 through 9. but it does not instead prints 9(9times). By the time the function runs the loop is executed. To ge the desired results we need to immediately invoked function expression(iife). But a simple way is 'let'. 
+While dealing with closures and loops.  
+

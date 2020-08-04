@@ -1,0 +1,57 @@
+This is a guide for REACT & REDUX
+__________________________________
+
+Why do we need a Library/Frameworks?
+WE can build fairly complex websites using HTML, CSS, JS,bootstrap and jQuery. 
+Complexity of managing DOM manipulation and data updates manually.
+Well defined application architectures(these libraries and Frameworks have). 
+
+A Library offers 
+    - Collection of implementations of behaviour with a well defined interface to invoke it. 
+    - Reuse of behaviour
+    - Modularity (jquery)
+Software Framework
+    -Abstractionin which software provides generic functionality that can be selectively changed by additional 
+     user-written code. 
+
+ eg. Angular, Ember, Backbone....
+
+What is React?
+A JavaScript library for building user interfaces. It is Declarative and Component-based. Facebook developed in 2011. 
+Speed. Simplicity. 
+
+Vocabulary: One-way data flow, JSX, Components, State, Props, Virtual DOM, Element, Flux/Redux, Test.
+
+-----------------
+create-react-app
+-----------------
+We will be using yarn here. 
+    sudo npm install --save-dev create-react-app
+#install yarn exactly as given in the official documentation
+    npx create-react-app <name_of_proj_directory> # after going into the intended directory
+now install the lite-server(or any server)--> add that to the script of the package.json. 
+    directory will be successfully created. And you will see the messages:
+      yarn start
+      yarn build
+      yarn test
+      yarn eject
+    These options will be shown.
+    You will also see 6 files(folders are file in disguise).
+now
+    yarn start #npm start ## depending on your choice
+This will open your default browser and with that you will see the animation React(yes the famous one).
+
+
+
+
+
+
+
+
+
+
+
+
+___________
+npm way
+-----------
