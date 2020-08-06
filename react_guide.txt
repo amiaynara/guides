@@ -41,17 +41,54 @@ now
     yarn start #npm start ## depending on your choice
 This will open your default browser and with that you will see the animation React(yes the famous one).
 
+The next step is to get familiar with enviroment. Looking at src/App.js. 
+We find some vague relationship with the html syntax but we have some distance to cover before we arrive at any conclusions. 
+
+Configure React: Reactstrap
+----------------------------
+We will make use of Bootstrap4 classes that we learnt in the previous course. So to attain that goal we will install "Reactstrap" [Recall that bootstrap requires popper and jquery as well.]. 
+        yarn add bootstrap@4.0.0
+        yarn add reactstrap@5.0.0
+        yarn add react-popper@0.9.2
+Then import bootstrap to the 'index.js'
+    import 'bootstrap/dist/css/bootstrap.min.css'
+Also modify the 'App.js' in the src. This will be done to add our own component. And get it displayed on to the browser when the page is requested by the browser. 
+
+Note:
+    - We fill the page using Components, that are created in files like App.js or Tweet.js or page.js
+    - The actual rendering is done by the 'index.js'
+    - By defining components in JS(using React), we actually the export 'html' to the main page and also add the javaScript behaviour at the SAME Place. 
+
+Getting hands dirty
+-------------------
+Adding our own components
+
+    import React, { Component } from 'react';
+
+    class Menu extends Component {
+      
+      // JSX here
+
+      constructor(props){
+        super(props);
+      }
+      render() {
+        return (
+        );
+      }
+    }
+
+
+using un-named function to get things done when you have a paramter at hand. The .map function can be very powerful. 
+const menu=this.state.map((dish){
+  //use dish to construct the body of some object in the web-page. 
+  //we use it when we see that we have to do some repetitive work
+  //dish is an array
+}
 
 
 
 
-
-
-
-
-
-
-
-___________
+__________
 npm way
 -----------

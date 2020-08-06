@@ -38,7 +38,7 @@ Variables
 ---------
 Containers that can store anything. objects are also declared similarly.
       var name;
-      const name="amiay";
+      const name="amiay"; // must be initialised. 
 
 'var' creates a global variable. Therefore ES6 brings in let, which introduces scopes. 
     const colors=[];
@@ -86,5 +86,116 @@ Loops:
   5
 
 You think this should print 0 through 9. but it does not instead prints 9(9times). By the time the function runs the loop is executed. To ge the desired results we need to immediately invoked function expression(iife). But a simple way is 'let'. 
-While dealing with closures and loops.  
+While dealing with closures and loops use 'let'. 
 
+
+Functions
+---------
+A JavaScript function is a block of code designed to perform a particular task.
+A JavaScript function is executed when "something" invokes it (calls it).
+          var x = myFunction(4, 3);   // Function is called, return value will end up in x
+
+          function myFunction(a, b) {
+            return a * b;             // Function returns the product of a and b
+          }
+
+    var function_name=function(){
+      return 10;
+    }
+    //creates a function that can be invoked by : function_name();
+    console.log(function_name());// logs 10.
+
+    const function_name=(m) => 10; // a single-line function that returns 10. parantheses can also be ommited when single parameter is passed. 
+
+    const function_name=() => {
+      //code block;
+      return 10;
+    }
+    //for multiline function declaration. 
+
+CONTEXT
+-------
+var employee= {
+  id: 1, 
+  greet: function(){
+    //var self=this; // in order to carry the context forward to the next function [here: setTimeout] 
+    // without the above line 'undefined' is printed on the console
+    setTimeout(function(){console.log(self.id)},1000);
+  }
+}
+
+var employee ={
+  id : 2;
+  greet: function(){
+    setTimeout(() => {console.log(this.id)}, 1000);
+  }// get the job done. a
+
+Note you can use functions(arrow functions as well) or variales to assign default values to the arguments of a functions. 
+
+Rest Operator
+-------------
+    let displayColors= function(message,...colors){
+  2   console.log(message);
+  3   for(let i in colors){
+  4     console.log(colors[i]);
+  5   }
+  6 }
+  7 let message="List of colros";
+  8
+  9 displayColors(message,'red', 'blue');
+
+Here 'red', 'blue' are stored in the array colors in the function. 
+
+Object Literals
+-----------------
+    let firstname="amiay"
+    let lastname="narayan"
+
+    let personObject={
+      firstname,      //instead of firstname: firstname,
+      lastname
+      "middle name":"karn"
+    };
+    console.log(personOject.firstname);
+    console.log(personObject["middle name"]);
+
+Destructuring of Arrays
+-----------------------
+Similar to that of python, the left had side of an assignment operator('=') can have more than one variables to receive the values reture by the right hand side of the expression. 
+    let empl=["ross","geller"];
+    let [firstname,lastname,lastmost]=empl;
+    let arr=["my","brother","is", "awesome"];
+  1 let [firstone,...sub_array]=arr;
+  2 console.log(sub_array);// prints an array of all but first element
+Rest operator can also used here. 
+Similarly, objects can also be destructured. Note the variable name and object property name should be the same. So we might decide to go for "aliases", but then we will HAVE TO use them only here on.
+Creating alias: 
+
+
+
+Class are just special functions
+--------------------------------
+The difference here is that they are not 'hoisted'. That means you cannot use a class before its declaration whereas function can be.  
+
+Note: when you want to know the type of a variable. you go
+      typedef var_name
+The way:
+    class person {
+      greet: function(){},
+      constructor(name){
+        this.name=name;
+      }
+        
+    }
+   
+   let p= new person("Chandler");
+Note that a constructor is always called.
+    - One class implies one constructor only in JS.
+    - The function call for constructor need not match the protoype.
+    - Creation of a object guarentees, the constructor call. 
+    - Creation of a a child object causes parent constructor function call unless super() function is called in the child constructor. 
+    - Both constructors will be called irrespective of argument match.  
+    - Using the Object of a child class parent method(not talking about constructors)can be called by using the dot operator. Also keep in mind the parent method will be called only when there is no function in the child with same signature.
+    - For a "normal"(no child-parent story): first the function with exact match is searched, if exact match is not found then the method with the name same name is called(irrespective of the EXACT signature match).
+    - If the method (being called ) is present only in the parent class, then child object can call parent method.
+    - However if the parent class and Child class both have the same function then child class method is called. Note that even if just the name matches then also the CHILD class method will be caused. 
