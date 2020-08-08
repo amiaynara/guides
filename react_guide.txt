@@ -85,10 +85,58 @@ const menu=this.state.map((dish){
   //we use it when we see that we have to do some repetitive work
   //dish is an array
 }
+---------------------------------------------------------------------------------
+Important note: All documents about using reactstrap is present on its github pagehttps://reactstrap.github.io/
+---------------------------------------------------------------------------------
+============
+State
+------------
+Each component can store its own local information in its "state" 
+  - these states are private and fully controlled by the component
+  - can be passed as 'props' [short for properties] to children
+  - only a component implemented as a Component can have a local state. 
+[This means that we have react component that are not implemented as class]
+  - the state information is usually declared in the constructor
+  - to update the state of a 'component' -> [cannot be done by changing the property values]-----> can only be done through the setState() method. 
 
+Never do the following:
+    this.state.selectedDish=dish;
 
+--------
+props
+--------
+A parent component can be storing the state. this state can be passed to a child component using 'props' as a single object. 
+    <Menu dishes={this.state.dishes}/>
+Here the dishes are available as props within the Menu Component and can be accessed as 'this.props.dishes'
+So this way data can be passed DOWN the heirarchy. 
+But what to do when we need to passes the data up the heirarchy and cause the changes everywhere to take place. This is called 'Lifting State Up'.
+-----------
+Handling Arrays
+-----------
+const menu = this.props.dishes.map((dish)=>{
+  return (
+    <div key={dish.id}>
+      <h1>{dish.name}</h1>
+      <p>{dish.description}</p>
+    </div>
+  );
+}
 
+Note the use of 'key'. This is used so that when there are changes to the list, then it helps in re-rendering of the page. React modifies only those parts of DOM that 'Need' to be modified.  
 
+React Component Lifecycle
+-------------------------
+First it does not exist, then it gets created; it changes if necessary and finally gets removed/unmounted. During each phase of its life cycle there are certain methods that are/can be invoked. 
+1. Mounting: 
+    - constructor()
+    - getDerivedStateFromProps()
+    - render()
+    - componentDidMount()
+Tip: A good web-developer tool is React-dev-tool (extension available for all chrome and firefox).    
+
+Informal classification of components
+--------------------------------------
+- Presentational(like 'DishDetail') vs Container 
 __________
 npm way
 -----------
