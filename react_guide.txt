@@ -137,6 +137,81 @@ Tip: A good web-developer tool is React-dev-tool (extension available for all ch
 Informal classification of components
 --------------------------------------
 - Presentational(like 'DishDetail') vs Container 
-__________
-npm way
------------
+- Skinny vs Fat [you can see why they are informal]
+
+2. Updating
+  In the project at hand our 'DishDetail' has this stage of the life Cycle. AS a different dish is selected the view is changed(partially).
+At this stage we again have certain hooks/methods that are called:
+  - getDerivedStateFromProps()
+  - shouldComponentUpdate()
+  - render()
+  - getSnapshotBeforeUpdate()
+  - componentDidUpdate()
+
+
+These can be shown to be invoked by putting them in the code at appropriate places and then do console.log()
+
+Functional Components
+------------------------
+We have been creating components using the classes; there is simpler method.
+We have been "extending" React.Component class to get class components. And here we are required to include 'render()' method.
+JavaScript function that returns a React element or a collection of React elements that define the view 
+Note: this receives props as parameter. 
+      CANNOT have a local state. 
+
+When to use functinal components?
+When you have components that PURELY use the 'props' as passed from the parents. They don't have(or don't need to have any local state) then we can/shold use functions to implement such components. 
+Another hint is given by 'yarn start' : "Line 6: Useless constructor' ;)
+Enough of talking... how do I do it?
+    function RenderMenuItem({dish,onClick}) {
+      return (
+        <!-- some HTML code -->
+        <-- which can also have {dish.image} included javascript -->
+      );
+    }
+
+Another WAY:
+    
+    const Menu = (props) => {
+      const menu = props.dishes.map((dish)=>{
+        return (
+          <div>HI I am a new component!</div>
+          );
+        });
+      }
+Virtual DOM
+------------
+Browser DOM is a browser is a browser object.
+React also maintains an in-memory Document object model; it is light weight representation of the browser DOM. Another advantage advantage to using this that it is very fast and hence re-rendering occurs very fast[complete re-rendering does not take place and only the components that have changed their states only re-render].
+It uses Diffing algorithm. Recall that we use 'key' while using multiple items : for example while using lists. This keeps track of only those items that have changed and re-renders only those that have changed. Additionally, there is a newer algorithm in React16 that is lot more faster than 'diffing' --> React Fiber.
+
+Adding header and footer to our application
+-------------------------------------------
+install font-awesome
+    yarn add font-awesome@4.x.xx
+    yarn add bootstrap-social@x.y.z
+React Fragments: 
+    <>
+    </> or </React.Fragment>
+A react fragment enables to group together a bunch of html elements and bind it together. Adding <div> will add an "EXTRA" node in the react DOM.
+Note: A Jumbotron allows to add some content.
+
+React Router
+--------------
+Install react-router-dom
+    yarn add react-router-domk
+router component: <Browser Router>
+<HashRouter> if you are using a static server
+
+So recall that using <a> tag for creating link would require to reload the content of the page. Therefore react comes up with a clever way to overcome this time lag. Using <BrowserRouter> , <Route> and <Switch> we can first load all the pages at once but this will be accessed only when a particular "path" in the browser is found. 
+What happens is all the components [ Menu, Footer, Header...] are stacked as they should be in the Main.js, but only some of these components are rendered when a particular path is met on the browser. This is achieved using "exact" within <Route> 
+SPA[Single Page Application]
+------------------------------
+  - Loads only once
+  - ofcourse the data will be fetched from the server as and when required
+  - Search Engine Optimisation is difficult
+  - But gives smooth user experience 
+ However, this does not mean that MPC are always, as with everything the depends up on the situation we are in.
+ 
+ So, do you realize how we brought everthing together? I could already see that we are trying to do something different here as, I have written in the section above. This means that I am understanding the subject matter. 
+ Also note that SPAs have "VIEWs", and the beauty and its utility is that it a view can have some component and the other can completely ignore that.   

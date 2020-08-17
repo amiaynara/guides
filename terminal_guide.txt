@@ -1,0 +1,17 @@
+This will sound RANDOM, but believe me it is not!
+
+Making an IP static on a LAN
+-_---------------------------
+    vim /etc/dhcpcd.conf
+    
+    interface wlan0
+    static ip_address=192.168.0.104             # the static ip you want
+    static routers=192.168.0.1                  # gateway ip
+    static domain_name_servers=8.8.8.8 8.8.4.4  # you could give any
+    reboot
+
+Display all devices on network
+----------------------------------
+    sudo apt install arp 
+    ping 192.168.0.255      # replace last section of gateway(.1) with .255
+    arp -a
