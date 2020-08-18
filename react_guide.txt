@@ -215,3 +215,60 @@ SPA[Single Page Application]
  
  So, do you realize how we brought everthing together? I could already see that we are trying to do something different here as, I have written in the section above. This means that I am understanding the subject matter. 
  Also note that SPAs have "VIEWs", and the beauty and its utility is that it a view can have some component and the other can completely ignore that.   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+How to pass parameters in the URL:
+-----------------------------------
+The route parameters spcefied in the path specificatino as a 'token'
+  - e.g., path: 'menu/:id' where id is the token
+  - <Link to{`/menu/${dish.id}`}>
+  - Route passes three props to the component:
+    - match
+    - location 
+    - history
+match Object:
+it provides info about how a <Route path> matched the URL
+  - params: an object that contains key/value pair parsed from the URL corresponding to the dynamic segments of the path
+  - if path is specified as /menu/:id, then a path like /menu/42 will result in match.params.id being equal to '42'
+
+basically all this will enable us to pass data from one component to the other. 
+Job: if we click at on any dish, the corresponding 'id' will be passed.
+
+DishDetail.js : tells what to display using the props[a particular dish and the corresponding comments]. It basically makes a view that displays the selected dish along with its details. One at a time, dish will be selected from the view associated with the MenuComponent.js
+
+MenuComponent.js: This component just lays out a view in which a menu of four dishes is presented on the page. This view is accessed when the "route" matches "/menu" exactly. Also, this component adds component to each of these dishes using <Link to={`/menu/${dish.id}}`}>. In this way each card gets "linked" to its corresponding view. 
+
+MainComponent.js: It just basically lays out all the components. Which view will be shown when is managed here in this component by specifying appropriate route. <Route path="/menu/:dishId" component={DishWithId} />, ofcourse a functional component will be defined within the render() method of the Main component. This also passes props to the DishDetail.js as : dish and comments. This "dish" and "comments" will be received by the functional compoent-> DishWithId, using the "match" prop [ one of the three props that is always passed when component is associated with/created using <Route>]. 
+    parseInt(match.params.dishId,10) will find the parameter passed with the URL and parse it into an Integer, which should be done if it is being compared for equality).
+    crux: use match.params.dishId to get the parameter passed using URLs 
