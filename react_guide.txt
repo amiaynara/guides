@@ -336,3 +336,62 @@ Similarly, we have a function to handle the submit action.
       console.log('current state is " + JSON.stringify(this.state));
       event.preventDefault;
     }
+
+  Also note that it requires 'binding in the constructor to get the function to work. 
+
+  Validation can also be done.
+  How please refer to the confusion/src/components/ContactComponent.js in react folder for detailed syntax.
+
+
+Uncontrolled components
+------------------------
+We might not always need all the intrecacies of the 'controlled forms', instead we might want to keep it light. So we can use ref provided with uncontrolled components.
+Side Note: HeaderComponent.js demonstrates toggling.  
+
+Positioning in the nav bar:
+  1                 <Navbar dark expand="md">
+  2                     <div className="container">
+  3                         <NavbarToggler onClick={this.toggleNav} />
+  4                         <NavbarBrand className="mr-auto" href="/"><img src='asset    s/images/logo.png' height="30" width="41" alt='Ristorante Con Fusion' /></NavbarB    rand>
+  5                         <Collapse isOpen={this.state.isNavOpen} navbar>
+  6                             <Nav navbar>
+  7                             <NavItem>
+  8                                 <NavLink className="nav-link"  to='/home'><span c    lassName="fa fa-home fa-lg"></span> Home</NavLink>
+  9                             </NavItem>
+ 10                             <NavItem>
+ 11                                 <NavLink className="nav-link" to='/about'><span c    lassName="fa fa-info fa-lg"></span> About Us</NavLink>
+ 12                             </NavItem>
+ 13                             <NavItem>
+ 14                                 <NavLink className="nav-link"  to='/menu'><span c    lassName="fa fa-list fa-lg"></span> Menu</NavLink>
+ 15                             </NavItem>
+ 16                             <NavItem>
+ 17                                 <NavLink className="nav-link" to='/contact'><span     className="fa fa-address-card fa-lg"></span> Contact Us</NavLink>
+ 18                             </NavItem>
+ 19                             </Nav>
+ 20                         </Collapse>
+ 21                                                     <Nav className="ml-auto" navb    ar>
+ 22                                 <NavItem>
+ 23                                     <Button outline onClick={this.toggleModal}><s    pan className="fa fa-sign-in fa-lg"></span> Login</Button>
+ 24                                 </NavItem>
+ 25                             </Nav>
+ 26                     </div>
+ 27                 </Navbar>
+ 28                 <Jumbotron>
+ 29                     <div className="container">
+ 30                         <div className="row row-header">
+ 31                             <div className="col-12 col-sm-6">
+ 32                                 <h1>Ristorante con Fusion</h1>
+ 33                                 <p>We take inspiration from the World's best cuis    ines, and create a unique fusion experience. Our lipsmacking creations will tickl    e your culinary senses!</p>
+ 34                             </div>
+ 35                         </div>
+ 36                     </div>
+                                                                   33,17         7
+
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+                    <ModalBody>
+                    
+                    </ModalBody>
+                </Modal>
+
+    isModalOpen is stated that is initialised to 'false'
