@@ -287,3 +287,52 @@ MainComponent.js: It just basically lays out all the components. Which view will
         
         - const RenderLeader({leader}){return(<Media> put the media JARGON here </Media> )} 
         - Map here will have done the magic and there you go you are done. 
+
+
+  Controlled Components:
+  ----------------------
+Controlled forms: [recall control-form class from the Bootstrap course]
+Forms are convenient and compelling way of getting informations from the user. Here we are going to validate or add constraints to the data that is being entered in to the form. 
+Recall-
+  <form>
+    <input> type: text, password, submit radio, checkbox, ...
+    <textarea>
+    <button>
+    <select>
+  </form>
+
+Note: Every element of a form maintains its own state. We will try to use this proproperty. 
+
+Now, Form being fully interactive component will change states, these states will be 'related' to the react components' state, and will be maintained as 'Single source of truth'. tying the form state to component state results in Controlled Component. We use various functions to maintaing this 'tie-up'. 
+
+- Every state mutation will have an associated handler function
+
+    <Form onSubmit={this.handleSubmit}>
+      <FormGroup row>
+        <Label htmlFor="lastname" md={2}>Last Name</Label>
+        <Col md={10}>
+          <Input type="text" id="lastname" name="lastname" placeholder="Last Name" value={this.state.lastname} onChange={this.handleInputChange} />
+        </Col>
+      </FormGroup>
+      </FormGroup row>
+      <Col md={{size:10, offset:2}}>
+        <Button type="submit" >Send feedback</Button>
+        </Col>
+      </FormGroup>
+    </Form>
+
+Two functions must be created to handle the event [onChange and onSubmit] 
+    handleInputChange(event){
+      const target=event.target;
+      const value= target.value? target.checked:target.value;
+      const name=target.name;
+
+      this.setState({
+          [name]:value
+      });
+    }
+Similarly, we have a function to handle the submit action.
+    handleSubmit(event){
+      console.log('current state is " + JSON.stringify(this.state));
+      event.preventDefault;
+    }
