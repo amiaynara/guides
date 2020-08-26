@@ -15,3 +15,16 @@ Display all devices on network
     sudo apt install arp 
     ping 192.168.0.255      # replace last section of gateway(.1) with .255
     arp -a
+
+
+basic commands : believe me you will need them and also believe me you will forget them
+--------------------------------------------------------
+
+    pwd
+    cd ~home_directory/
+    wget url_for_.sh_file
+    bash the_above_file.sh
+    conda install jupyter
+    conda init bash  # when powerline-shell: command not found while activating env
+    pipx install powerline-shell # or may be sudo apt does the job as well
+    jupyter notebook

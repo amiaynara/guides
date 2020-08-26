@@ -395,3 +395,60 @@ Positioning in the nav bar:
                 </Modal>
 
     isModalOpen is stated that is initialised to 'false'
+From internet------------->
+  MVC Architecture
+MVC is well-known for its three-layer development architecture and it divides applications into three components:
+
+Model: Maintains the data and behavior of an application
+View: Displays the model in the UI
+Controller: Serves as an interface between view & model components
+
+Whenever the controller receives the request from the user, it uses the appropriate Model & View and generates the response sending it back to the user.
+
+Flux Architecture
+After learning a few highlights regarding the instability and complexity of the MVC architecture, the Facebook development team made some important changes in the system and released Flux as an alternative to MVC architecture. The Flux architecture is based on the following components:
+
+Store/ Stores: Serves as a container for the app state & logic
+Action: Enables data passing to the dispatcher
+View: Same as the view in MVC architecture, but in the context of React components
+Dispatcher – Coordinates actions & updates to stores
+
+Redux
+-------
+Redux is a library, which implements the idea of Flux but in quite a different way. Redux architecture introduces new components like:
+
+Reducer: Logic that decides how your data changes exist in pure functions
+Centralized store: Holds a state object that denotes the state of the entire appRedux Architecture
+----------------------------------------------------000000----------------------------
+
+What are design patterns?
+When we work on certain area, we often encounter repetitive tasks. For the first time we 'invent' a solution. But we don't want to keep reinventing the solutions again and again. Here, comes the importance of 'design patterns'. These are nothing but a well documented solution to a recurrin propblem. Also called design architectures.
+All of this may/should look abstract to you at this point, because they are in fact Abstractions. This should become clear as you go on.[Flux is an architecture and supposed to be Abstration!]
+
+One implementation of flux is - Redux: where you take away state from the components and place them in 'store' 
+
+Redux
+--------
+First things first, React has nothing to do with Redux; it just that Redux has been widely leveraged by the React Community, hence they are always talked about hand-in-hand. 
+It supports single source of truth.
+Why Redux?
+  - Logging: Here always New States are created, older remain 'immutable'.
+  - API handling
+  - Undo/Redo
+  - State Persistance
+  - "time-travel-debugging"
+Some people tend to see Redux as an implementatin of flux, but the Russian Engineer is here to disagree,at least partially.
+Terms:
+  - State: stored in plain JS object
+  - Action: plain object with a type field that specifies how to change something in the state
+  - Reducer: pure function that take the current state and action and return a new state. 
+
+On hand session
+----------------
+    yarn add redux
+    yarn add react-redux
+then
+    mkdir confusion/src/redux
+    cd src/redux
+    vim reducer.js
+this will import the data dishes, comments and so on. As it should, for the reducer function is pure and works with state although it cannot change the state. untionb

@@ -1,0 +1,394 @@
+Python : Intro
+-----------------
+  - created in 1990 by Guido van Rossum
+  - Python3 released in 2008
+  - Readability and ease of coding
+  - focuses on optimising developer time rather than computer's processing time. 
+  -
+Data Types
+-----------
+Numbers:
+
+In python (3/2) is 1.5 not 1.
+No matter how many digits you’re willing to write down, the result will never be exactly 1/3, but will be an increasingly better approximation of 1/3.
+
+In the same way, no matter how many base 2 digits you’re willing to use, the decimal value 0.1 cannot be represented exactly as a base 2 fraction. In base 2, 1/10 is the infinitely repeating fraction
+
+0.0001100110011001100110011001100110011001100110011...
+Stop at any finite number of bits, and you get an approximation. On most machines today, floats are approximated using a binary fraction with the numerator using the first 53 bits starting with the most significant bit and with the denominator as a power of two. In the case of 1/10, the binary fraction is 3602879701896397 / 2 ** 55 which is close to but not exactly equal to the true value of 1/10.
+
+Many users are not aware of the approximation because of the way values are displayed. Python only prints a decimal approximation to the true decimal value of the binary approximation stored by the machine. On most machines, if Python were to print the true decimal value of the binary approximation stored for 0.1, it would have to display
+
+>>>
+>>> 0.1
+0.1000000000000000055511151231257827021181583404541015625
+
+It is completey fine to use : 
+    my_dogs=2
+    my_dogs=["ram", "rahim"]
+because Python is 'Dynamically Typed' not 'Statically'
+
+
+The list: 
+
+type(var_name) : type of var like int or float etc
+Strings:
+-----------
+Indexing starts from 0. and the last character is str[n-11]. 
+Slicing: [start : stop : step_size]
+str='thiis is a string'
+str="this is also a string"
+Note: to use 'isn't' is confusing, so "isn't" is used.
+escape sequences:
+print('hello \n world') : prints a new line in between
+print('hello \tworld') : for tab
+len(str) : gives the length of the string. 
+my_string[-1] : is the last char of the string. 
+
+str="abcdefghijk"
+str[2:] => gives all the elements starting from index 2 to the last index (10 here). 
+
+str[2:11] => gives all the elements starting from index 2 to the index 10. Note that grabbing stops just before the last integer provdied in the [].
+
+so to grab 4 elements starting from 3rd index we will give str[3:7], not 6!
+Below prints the whole string:
+str
+str[:]
+str[::] => third is the step and is 1 by default.
+
+Trick Time: 
+str[::-1] => Reverses the string
+Strings are immutable.
+If we try to change the value of a character using string notation then, we will be get an error saying: string object does not support item assignment
+name='Sam' #name[0]='P' gives error
+nm=name[1:] 
+nm='P' + nm     # 'nm' becomes 'Pam'
+
+Concatenation:
+x='hi'
+name='Amiay'
+msg=x+name
+msg_ten_times=msg*10
+print('{} {} {} amiay narayan'.format('My', 'name', 'is')) 
+>> My name is amiay narayan
+# automatic numbering only when all are not filled.
+# automatic worked when number of arguments is greater than {}
+# but vice versa not true => error
+print('{n} {n} {n} amiay narayan'.format(m='My', n='name', i='is')) 
+>> name name name amiay narayan
+Note: either use the names or the indices not both in combo.
+This is in sync with the logo, 'Optimising time for programmer'
+Another 'newer' way is to use  String literals.
+name='amiay'
+cgpa='8.76'
+'string{r:1.2f}'.format(r=result)
+'i like %s'%'amiay'
+i like amiay
+lists:
+-------
+len(list_name) : gives the length of the list. 
+concat: l1+l2+l3
+list1.append('item') : appends to the end of the list
+list1.pop()          : pops the last item in the actual list; returns the popped item
+list1.sort()         : sorts the actual list; it also works on list of strings
+Slicing and indexing work same as in strings.
+
+Dictionaries:
+---------------
+dictionary={'name':'amiay','id':11640140,'Grade':'a', 'Marks':[99, 93, 92,96,95]}
+dictionary['name'] returns the value : 'amiay'
+dictionary['Grade'].upper() returns  : 'A'
+dictionary['Grade'] = 'A+'           : updates the value 
+dictionary.items()        : returns list of tuples of key-value pair
+dictionary.values()       : returns just the values only.
+dictionaries do not keep things in order they nothing but a mapping where value retrieval is very fast. But there are 'ordereddict' objects that cause to store the values with indexing.
+
+Tuples
+------
+Immutable lists that are defined with ()
+my_tuple=(1,2,35,3)
+they are also flexible, data type-wiseA
+like lists tuples also has .index('a') .count('x') built-in functions
+i
+sets
+-----
+my_sets=set()
+# unordered collection of UNIQUE numbers. 
+l='Mississippi'
+my_set=set(l) gives {'M', 'i' , 'p' , 's'}
+my_set=set([x for x in l])    # both give the same answer=> you can pass both a string on a list
+Sets can be really handy if you really understand the concept of unions and intersctions. 
+intersection_set=set_a.intersection(b)
+union_st=a.union(b)
+.difference()=> only components of first set
+and .symmetric_difference()=> returns all the elements in both the sets except the intersectino elements.
+.issubset() and .issuperset() also represent the boolean value and are quite straight forward your mathematical concepts of sets are clear. 
+All of the above can easil y be understood with the help of a Venn diagram 
+
+Space for Venn Diagrams:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I/O
+----
+myfile_reader=open('test.txt')
+whole_content_as_a_giant_string=myfile_reader.read()
+# this sets the pointer to the EOF
+myfile_reader.seek(0)
+line_as_string=myfile_reader.readline() 
+# file pointer still increments to the End of Line
+list_of_lines=myfile_reader.readlines()
+Windows is an exception: 
+    myfile=open("C:\\Users\\username\\folder\\file_name.txt")
+with open('file_name', mode='r') as f: 
+  print(f.read())
+modes----> 'r', 'w', 'a', 'a+', 'wb' , 'rb' 
+
+Control flow:
+-------------
+If, else and elif:
+-----------
+if(condition):
+  execute some code
+elif cond2:
+  execute no code.
+elif cond3:
+  execute yet some other code
+else: 
+  execute some other code
+
+For
+---
+Lot of objects in Python are iterable. 
+Hence you are gonna be using a lot of 'for'.
+lis=[(1,2),(3,4),(5,6),(7,8),(9,10)]
+for item in lis:
+  print(item)
+
+for a,b in lis:
+  print(a)
+  print(b)
+
+for _ in range(len(lis)):
+  print('list is cool')
+Note: In Dictionaries d.items() gives key-value pair tuple. Now we can 'unpack' them in the loop variable.  
+  
+While
+------
+x=0
+while x<5:
+  print(x)
+  x+=1
+else: 
+  print('the number >= 5')
+
+break: Breaks out of the closet enclosin loop
+continue: goes to the top of the closest loop
+pass: Does nothing at all.  
+
+Note: range(3,10,2) # generates numbers with step size of 2; it does not return a list. So,
+  list(range(3,10,2) # will do the job for us
+
+word='abcde'
+
+for index,letter in enumerate(word):    #enumerate will generate tuples and they will be 'unpacked'
+  print(index)
+  print(letter)
+  print('\n')
+for item in zip(l1,l2,l3):
+  print(item)
+Note : the same trick will works as for range and list. 
+An example form exercise:
+def has_33(nums):
+    for index,num in enumerate(nums[:-1]):
+        if(num==3 and nums[index+1]==3):
+            return True
+    else:
+        return False
+'in' keyword
+-------------
+  - returns True or False depending
+  - works for lists, strings and even dictionaries. 
+min(list_name)
+max(list_name)
+
+'random' library
+----------------
+from random import shuffle
+
+shuffle(list_name) => shuffles the actual list. Returns None Type.
+
+List Comprehensions
+--------------------
+They are a quick and ease way to create lists. 
+Q. Create a list from the letter of a string. 
+Soln=> my_string='abcdefg'
+       mylist=[]
+       for letter in my_string:
+         mylist.append(letter)
+       
+       mylist=[letter for letter in my_string]
+another use could be:
+    # creating a list of numbers 
+    mylist=[x for x in range(0,10)]
+    # doing operations as well
+    mylist2=[x**2 for x in range(0,10)]
+    # we can add for adding an element to the list.
+    mylist3=[x for x in range(0,10) if x%2==0]
+    /# we can also add else but there some change
+    mylist3=[x if x%2==0 else 'ODD' for x in range(0,10)]
+
+## Just be kind to yourself, because after a month you won't be able to understand yourself. 
+
+Functions are finally here:
+--------------------------------
+The best way to learn function is by PRACTISE(surprise!!)
+
+def function_name(arguments):
+  function_definition_block   # you know CamelCasinghere we have Snake casing    
+  return something
+
+'''
+docstring is represented here
+'''
+If in function definition arguments have been defined then the function call also has to pass those parameter, irrespective of those parameters being actually used inside the function. 
+
+*args and **kwargs
+-----------------------
+    def myfunc(*args):
+      return sum(args)*0.05
+    myfunc(10,20,30,... as may as you want)
+you can use anything but to avoid confusion we use 'args'. 
+keyworded args
+--------------
+So these are used to pass arguments as dictionary.
+def myfunc(**kwargs):
+  print(kwargs)
+  if 'fruit' in kwargs:
+    print('My fruit of choice is {}'.format(kwargs['fruit']))
+  else: 
+    print('I did not find any truth here')
+  
+  myfunc(fruit='orange', veggie='lettuce')
+
+# we can also do
+    def myfunc(*args, **kwargs):
+      ...
+
+    myfunc(10,20,30, fruit='orange', veggie='lettuce') 
+
+Note: This order of *args and **kwargs should be maintained while function call. 
+Inside the function the 'args' is a tuple, and we can carryout all the operation that we can on a normal tuple. 
+
+Lambda Expressions Map and Filter
+----------------------------------
+Lambda expressions are One-Time use functions, we just use them once and forget about them. 
+def square(num):
+  return num**2
+
+# Normal approach
+l=[1,2,3,4,5]
+for item in l:
+  print(square(item))
+
+# List Comprehension
+[print(square(x)) for x in l]
+
+# Using map()
+print(list(map(square,l)))
+# map just runs the functions multiple number of times. 
+# this number is equal to the number of elements in the list
+# Also note that map(function_name, parameter_list) does not make a list of values(generated as a result of multiple execution of the function). But instead we have to cast these values into a function. 
+
+Note that here we had to take  up space to define the function 'square(num)' here before using the map() or list comprehensions. 
+
+What if we could directly define the function where it is being used. This, now seems similar to ES6+, arrow function. 
+
+the above functionality can be achieved by direct use of lambda expressions. 
+
+print(list(map(lambda num: num**2, l)))
+
+filter(function_name,list_name)
+Advice: Do not use lambda function when carrying out complex operations on the parameters. Just maintain the readability. 
+
+LEGB Rule
+------------
+Local:within a function
+Enclosing: self-explanatory
+Global:
+Built-in: Keyword for python
+The order of lookup is top to bottom. 
+We can print the value of a higher x inside a lower level(such as inside a function, when no such local variable is found). However, we cannot change that value. If we wanted to do so we will have to use the keyword-'global'
+    x =40
+    def func(num):
+      global x
+      print(x)
+      x=30
+      print(x)
+
+    print(x)
+  >> 40 
+     30
+     30     # now the change has effect outside the function
+Accepting 'Int' inputs from the use
+--------------------------------------
+def user_choice():
+  choice="Wrong"
+  while choice.isdigit()==False :
+    choice=input('enter a valid integer choice')
+
+  return int(choice)
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------
+List of Useful Commands
+-----------------------------------------------------
+str="Hi is a string with % and 88'
+print('hello')
+len(string_variable)
+'Hello world'[0] 
+Strings are immutable! name[0]='P' => ERROR!
+Concatenation requires both to be strings.
+str.upper()   : Returns not changes the string 'str' letters and symbols are not affected.
+str.lower()
+str.split('a')   : Always returns a list!!!, splits on space by default. 'a' will be removed.'ami' can also be passed.
+'example string{}'.format(n='name')
+print(f'I will use variable name directly here {name}')
+len(list_name)    : gives the length
+l1.append('item')
+f_reader=open('test.txt')
+content=f_reader.read()
+lines=f_reader.readlines()
+line_wise=f_reader.readline() # one line at a time
+myfile.close() # you need to do this always PIA
+with open('test.txt') as new_file:
+  contents=my_new_file.read()   # avoid the above PIA
+sorted(list_name)       # returns the list itself unlike the list_name.sort()
+By default dictionaries are iterated left to right and using the dictionary name in for prints the VALUES. for whole key-value pair use dictinary_name.items()
+shuffle(list_name)
+randint(1,100)     # generates random number
+result=input('give me something') # result is always a string. 
+result=int(input()) # only now is result an integer
+new_list=[f(x) for x in range(2,100) if x%==0]
+str.replace('what to replace', 'with what to')
+char.isupper() # returns true if upper cse
