@@ -452,3 +452,38 @@ then
     cd src/redux
     vim reducer.js
 this will import the data dishes, comments and so on. As it should, for the reducer function is pure and works with state although it cannot change the state. untionb
+
+React-Redux forms
+-------------------
+A versatile, fast and intuitive library for creating complex and perfomant form in React and Redux.
+Imagiine a situation where you fill a form and by mistake you go to some other page. When you come back you find that the data that was filled has been gone by now. But this can be avoided by using the Redux and its concept of stores.
+So, we see it is needed when we need PERSISTENCE. If we are in a situation where we don't need Persistence then we can go with LocalForm[storing the state locally].    
+    yarn add react-redux-form
+
+In ContactComponent.js
+    import { LocalForm, Control, Errors } from 'react-redux-form';
+
+And we remove various other classes : Form, Input and so on. 
+
+Here, we will make changes in the 'ContactComponent.js'
+Note that previously we had to take care of the current state of the component using various state defined in the constructor as properties of and object. Now we get rid of all those. We also get rid of the functions that 'handledInput and Blur'. All these will be taken care by the classes provided by the 'react-redux-form'. 
+We can already realise that our job has been shortened already a lot. It looks simpler[ however we have got rid of the validation part].
+Here the 'react-redux-form' also provides us with the ability to carry out validation as well. 
+
+Important Link to create an alternate form:
+---------------------------------------------
+https://medium.com/@steida/react-form-validation-without-abstraction-41264608473c
+
+Assignment III
+---------------
+Task I : Add a button to bottom of the comments section of a dish, where details are shown. 
+This can be easily achieved by creating a new file in the components folder = CommentSubmitComment.js. This will have 'CommentSubmit'  and export it. Use reactraps' Button to create button [just have a look at the documentation]. Then use the Bootstrap's 'fa fa-pencil' to add the finishing touch. And then add the class to the DishDetailComponent.js to render it, ofcourse after importing it. 
+
+Task-II
+This is easy as well. But I wasted my time because of the importing 'Label', 'Row' and 'Col' in 'react-redux-form' instead of the importing them in 'reactstrap'=> A blunder = A rookie mistake.  It is alright, I learnt be it the hard way as always. 
+previously we     had to update the states as soon as it was filled by the user[these states were d    efined in the constructor of the component]. this was then later used to 1. VALID    ATE 2. SHOW in the form of alert. 
+
+Task-III 
+Validation : refer to ContactComponent.js: Nothing new here
+
+button created in TaskI will be used to toggle a Modal. For that we have to create a modal[ can be looked up]. But more importantly notice the use of toggle() method. This uses the current state [show] to show or hide the modal. Also, the toggle is applied to isOpen={this.toggle.show} and to the ModalHeader as well toggle={this.toggle}
