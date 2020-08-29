@@ -351,6 +351,204 @@ def user_choice():
 
   return int(choice)
 
+OOP
+----
+class Sample():
+  pass
+
+my_sample=Sample()  # creating an object
+>> type(my_sample)
+>> __main__.Sample   # the my_sample object belongs to Sample class in __main__
+
+
+
+----------------------------------------------------------------------------
+class student {
+  private:
+  string name;
+  int class;
+
+  student(int cls){
+      //Constructor
+      class=cls;
+  }
+  public:
+  string get_name(){
+    return name;
+  }
+
+  ~student(){
+    cout<<destructor called<<endl;
+  }
+}
+
+public class Employee {
+
+   String name;
+   int age;
+   String designation;
+   double salary;
+
+   // This is the constructor of the class Employee
+   public Employee(String name) {
+      this.name = name;
+   }
+
+   // Assign the age of the Employee  to the variable age.
+   public void empAge(int empAge) {
+      age = empAge;
+   }
+
+   /* Assign the designation to the variable designation.*/
+   public void empDesignation(String empDesig) {
+      designation = empDesig;
+   }
+
+   /* Assign the salary to the variable	salary.*/
+   public void empSalary(double empSalary) {
+      salary = empSalary;
+   }
+
+   /* Print the Employee details */
+   public void printEmployee() {
+      System.out.println("Name:"+ name );
+      System.out.println("Age:" + age );
+      System.out.println("Designation:" + designation );
+      System.out.println("Salary:" + salary);
+   }
+}
+--------------------------------------------------------------------------------
+class Dog():
+  pi=3.14
+  def __init__(self,breed,name):
+    self.breed=breed      # this is like 'this.name=name' in java => Constructor
+    self.name=name        # name becomes an attribute of the class
+    self.height='3'       # note not every attribute needs to be passed as a parameter
+    def bark(self,number):       # is a method
+      print('woof!his name is {}'.format(self.name, number))# number is not a class attribute, just a regular method parameter. 
+
+
+  # the above could have been written as 
+  def __init__(self, my_breed):
+    self.breed=my_breed   # this means that this 'breed' is the Attribute[left side]
+    print('the value of pi in this world is ',self.pi) # this can be rewritten
+    print('the value of pi in this world is ', Dog.pi) # help for largeclasses
+
+Creating object
+=================
+    my_dog=Dog(my_breed='huskie')
+    or
+    my_dog=Dog('huskie')
+In [35]: class Circle(): 
+    ...:     pi=3.14 
+    ...:     radius=3 
+    ...:     def area(self): 
+    ...:         area=self.pi*self.radius**2  # this area is not a class Attribute
+    ...:         print(area) 
+    ...:                                                                             
+
+In [36]: circ=Circle()                                                               
+
+In [37]: circ.area()                                                                 
+28.26
+# you don't need to have a 'Constructor'
+Inheritence and polymorphism
+-----------------------------
+In [41]: class Animal(): 
+    ...:     def __init__(self): 
+    ...:         print("Animal class created") 
+    ...:     def who_am_i(self): 
+    ...:         print("I am an animal") 
+    ...:     def eat(self): 
+    ...:         print("I am eating") 
+    ...:                                                                             
+
+In [42]: class Dog(Animal): 
+    ...:     def __init__self(): 
+    ...:         Animal.__init__(self) 
+    ...:         print("Dog Created")
+
+We can reuse the code by using 'inheritence'. for example we can call the function eat with help of an object created using the class Dog. 
+
+mydog=Dog()
+>> Animal class created. 
+   Dog Created.
+mydog.eat() 
+>> I am eating. 
+Also we can rewrite(overwrite) the method here as per our need. 
+Polymorphism
+-------------
+A method common in two or more classes[used to create corresponding objects]. then we can use a general name for object_name and call all of those methods[which are different by the class they are contained in but same by name]. 
+
+class Dog():
+  def __init__(self):
+    print(' I am a dog ')
+  def speak():
+    print('I bark')
+
+class Cat():
+  def __init__(self):
+    print('I am a cat')
+  def speak():
+    print('I meow')
+
+Note that, they have a similar structure. Even if they did not have this; it wouldn't have mattered much as long as they had a common methods. It is no compulsion that the common methods definition be similar as well. In fact, the more difference in method definition, the more profound the difference in the result=> better use(exploitation) of the polymorphism. 
+Can exist in several form. 
+
+So the 'speak()' method exists in various forms => Polymorphism. 
+def pet_speak(pet):
+  print(pet.speak())
+niko=Dog('niko')
+felix=Cat('felix')
+pet_speak(niko)
+>> I bark
+pet_speak(felix)
+>> I meow
+
+Another example => abstract methods
+
+class Animal():
+  # constructor
+  def speak():
+    raise NotImplementedError("Subclass must implement this abstract method")
+
+  class Dog(Animal):
+    def speak(self): return "says wooof"
+  class Cat(Animal):
+    def speak(self): return "says meow"
+
+Note that 'Abstract methods' have been named so for a reason. Abstract means something that is just an 'idea' yet and has slight information on what is should look like or what is it that its creation has been done for. In python polymorphism, the concrete form is provided by the children classes, as and when they need it and in the way they need it.Another example could of open_File() method. You would like to have the same function to open all the types of files. irrespectively. So You would define the abstract in the parent class and have the definition in the subsequent chidren. 
+
+Special(Magic/Dunder) Methods
+_------------------------------
+We are able to use len(array_name) to get the length, or we are able to print the array directly, where in some languages(like in Java) you have to do some extra work to get an array printed. 
+So, we can also make this functionality available to the abject created using the classes that we have defined.
+Some them of these functions have some defined tak already, to which we can add some of our own ideas. While some provide s with a greater over the things that a Dunder(__) method will do.  Thiese are to be put in the class definition as methods. 
+for example:
+      def __str__(self):    # this is called when we say print(object_name)
+        return f"{self.first_attribut} by {self.second_attribute}"
+      def __len__(self):
+        return self.pages     # offers slightly better control over behaviour
+      def __del__(self):
+        print("A book object has been deleted") # note that have we have added a small functionality to the __del__ which already has a more 'dominant' behaviour of deleting the object it is attached to. 
+
+PyPi
+-----
+    pip install requests  # request info from online website
+    pip install colorama  # change the color of the output
+
+    from colorama import Fore 
+    print(Fore.RED + " this will be red")
+
+Writing Your own modules and packages. 
+-------------------------------------
+Modules are just .py scripts that you call in another .py script.
+Packages are a collection of modules. Basically they will a folder/directory of modules or subpackages. Package and its sub_package directories MUST HAVE __init__.py file. 
+
+
+
+
+
 
 
 
@@ -392,3 +590,12 @@ result=int(input()) # only now is result an integer
 new_list=[f(x) for x in range(2,100) if x%==0]
 str.replace('what to replace', 'with what to')
 char.isupper() # returns true if upper cse
+
+class class_name():
+  # Class Object Attributes
+  species='mammal'
+  # below are user defined attributes => user will give the values
+  def __init__(self, par1,par2):
+    self.par1=par1
+    self.par2=par2        # a typical class definition in python
+
