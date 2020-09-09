@@ -544,6 +544,552 @@ Writing Your own modules and packages.
 -------------------------------------
 Modules are just .py scripts that you call in another .py script.
 Packages are a collection of modules. Basically they will a folder/directory of modules or subpackages. Package and its sub_package directories MUST HAVE __init__.py file. 
+        .
+        ├── MyMainPackage
+        │   ├── __init__.py
+        │   ├── __pycache__
+        │   │   └── __init__.cpython-37.pyc
+        │   ├── some_main_scipt.py
+        │   └── SubPackage
+        │       ├── __init__.py
+        │       └── mysubscript.py
+        ├── my_module.py
+        ├── my_program.py
+        └── __pycache__
+            └── my_module.cpython-37.pyc
+1   from my_module import my_func  # imports just a function from a module
+  1 from MyMainPackage import some_main_script # imports a module from a Package
+  2 from MyMainPackage.SubPackage import  mysubscript   # imports a script[module] fr    om a subpackage. 
+  3 my_func()
+  4 some_main_script.report_main()
+  5 mysubscript.sub_report()
+>> 
+python my_program.py
+I am in my_module.py
+I am in some_main_script in the Main Package
+Hey a I'm a function inside mysbuscript
+
+__name__ and __main__  [Are you using function as imported module or original .py]
+-----------------------
+whenever we run a script:
+    python one.py
+A variable named __name__ always gets initialised to "__main__" , Always!!
+This happens only when this .py file or (function) is directly run => i.e. it shows that the function has not been imported. This can be proven by following
+    cat >> one.py
+    print(__name__)
+    python one.py
+    __main__      # is the output
+However if we import the function into other .py and run that file. Then the value of __name__ is not "__name__". Infact the variable is assigned the name of the file. In this case, the value assigned is "one", which is nnothing but the file name. 
+one.py------->
+print(__name__)
+
+def func():
+	print("I am from one.py")
+	print(__name__)
+
+UseFul?
+------
+This really becomes handy when we want to create a script that can be run as well as CALLED. 
+
+def func1():
+  # func definition
+def func2():
+  # func definition
+.
+.
+.
+def fun_N():
+  # this could go one for a while making things very complex. 
+
+if __name__=="__main__" :  # when imported this becomes 'false' and below are not executed. 
+  func1()
+  .
+  .
+  .
+  func_N()  # python runs everything that is '0'-indented. so with this condition this will run the functions. as well instead of just defining. You might say that just don't run the functions just define them! Again, this, I think, is to preserve it's idependent execution as well. 
+
+Errors and Exception Handling
+------------------------------
+No one is perfect, and errors are natural---> especially when someone else uses your code in an unexpected way. This part will save the day for us that day. Because whole program is going to stop because of just one error. This can really be devastating.
+  try: an attempted piece of code. 
+  except: block that will take over if error occurs in 'try' block
+  finally: occurs regardless. 
+    
+    while True: 
+      try: 
+        result= int(input("please provide number: "))
+      except: 
+        print("whoops!! that is not a number")
+        continue    # Go and check the "condition" to get into the loop
+      else:
+        print("yes thaank you")
+        break       # do not forget. 
+      finally:
+        print("End of try/except/finally")  # this will run even after the break=> makes people not use finally along with 'else' but may become handy somewhere, so it is good to know. 
+One more thing to take note of is: 
+    try:
+    
+    except TypeError:
+
+    except OSError:       # we if we have more knowledge of Errors and types then we can take advantage of this feature. to make things more user friendly. 
+
+
+        EAT, SLEEP, CODE, REPEAT is NOT my LIFE..... I have bigger things to do.
+Unit Testing
+-------------
+pylint: library that reports back possible issues. It is very meticulous, it requires comments for every function and every script as a 'docstring'.
+Hop over to : /home/tesla/Code_it/CodeChef/mode_of_frequencies.py 
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+
+To see this 'magical' result after running pylint. Very rare sight.[-.71 initial]
+unittest: a library that we import into our test_cap.py ( a script that runs validation on the main script that is present as another .py file. ). 
+    import unittest
+    class test_one_word(self):
+        def test_func(self):
+            # definition of func
+        def test_func2(self):
+            # func definition
+    if __name__ == '__main__':
+        unittest.main()
+
+Decorators
+-----------
+Allow you to add extra functionality to an already existing  function. This becomes handy because the "normal" way would be to delete or update the code, this would then affect the function call as well. There has to be a better solution. 
+ENTER @
+syntax
+    @some_decorator         # this functionality can be turned on or off
+    def func():
+        # code
+A shocker!
+new_function_representator=func # Functions can be assigned as well this new function points to the function object. 
+So if we do:
+    del func
+    func()      # returns name 'func' is not defined. 
+    new_function_representator()    # still runs just fine
+
+Functions can be defined inside of a function but they cannot be called outside its scope[ for example not in the 'main' program]
+def hello(name='Jose'):
+    print('the hello function has been executed!')
+    def greet():     # calling this outside the function will give an error
+        return '\t this is the greet() function inside hello!'
+    print(greet())          # this is perfectly fine. 
+    def func1(self):
+        def func2():
+            return "this is func2"
+        return func2        # this can be, then, accepted by a variable in main
+
+We saw that function() can be treated like variable and returned by another functiin which it had been defined. Similarly, a function can also be accepted by another function as an argument in python[ something that I had never seen before. ]
+    def outer():
+        print('this is the outer function, the global one')     # return instead of print make the whole set work 
+    def func(outer):    # note the 'ABSENCE' of ()
+        print('this will be actually called')
+        print(some_def_func()) # note that this will print 'None' as outer does not return anything, hence 'NoneType' is returned
+So, you see one thing you can come upon, if you give it some time. What we are actually doing is taking some 'original' function 
+and adding some additional code to it and then returning the new function. In a way we are decorating the original function. 
+    def new_decorator(original_func):
+        def wrap_func():
+            print('some extra code, BEFORE the original function')
+            original_func() # execute the original function
+            print('some extra code, AFTER the original function')
+        return wrap_func
+    
+    def func_needs_decorator():
+        print("I want to be decorated")
+    func_needs_decorator()  # >> I want to be decorated
+    decorated_func = new_decorator(func_needs_decorator)        # decorated function is created and assigned. decorated_func() gives the desired result. 
+    @new_decorator                          # performs the job of RIGHT side of the above line
+    def func_needs_decorator():             # the original function that is to be 'decorated'
+        print("I want to be decorated")     
+
+This comes handy while using Django and flask. We just add certain code, so we will need decorators there. 
+
+A framework is a type of software library that provides generic functionality which can be extended by the programmer to build applications. Flask and Django are good examples of frameworks intended for web development.
+
+A framework is distinguished from a simple library or API. An API is a piece of software that a developer can use in his or her application. A framework is more encompassing: your entire application is structured around the framework (i.e. it provides the framework around which you build your software).    
+
+Generators
+-----------
+Another wish of a python programmer could be to have a feature that allows to generate things as an when required on the fly. This funcitonality was granted by the GENERATORS. When a generator function is compiled they become an object that supports an iteration protocol. That means when they ar called in your code they actually return a value and then exit. when asked to generate a number it creates a nubmer from the point we left off the last time.  This makes it more memory efficient and faster. Instead of generating 1000000 numbered list, it is convenient to generate numbers as and when required. And when a list list required this number can always be ast intoa list.
+They don't return and exit .... instead the suspend and resume. by using a keyword =======> yield. 
+# code to create fibonacci numbers
+    def fib((n):
+        a=0
+        b=1
+        seq=[]
+        for x in range(n):
+            # yield a         <===== adding this makes it a generator
+            seq.append(a)  # for the normal case of return using lists not generators
+            a,b=b,a+b
+            
+        return a
+    for number in fib(10):
+        print(number)
+Note: both will print the exact same result but the generators are far more memory efficient. 
+the key to understanding generator is 'next' and 'iter' function.    
+    def simple_gen():
+        for x in range(3):
+            yield x
+    for number in simple_gen():     # here we don't run into error because python internally calls next() and stops when len exceed
+        print(number)       # note that simple_gen() can be iterated but not be but not printed
+>> 0 1 2
+    
+    g=simple_gen()
+    print(g) # >> gen at some 0xa;sldfseso3338
+    print(next(g)) >> 0
+    print(next(g)) >> 1
+    print(next(g)) >> 2             print(next(g)) >> Error!!1
+using for we can iterate over a string but strings in itself are not iterators. 
+string='hello'; next(string) >> gives and error. but the following works
+    ss=iter(string); next(ss) >> h; next(ss) >> e .... you get the idea. 
+
+Python Modules
+--------------
+1. collections
+    from collections import Counter
+    mylist=[1,1,1,1,2,2,2,5,5,5,6,'a','a','b','b']
+    x=Counter(mylist)
+>>  Counter({1:4,2:3....}) -------> a subclass of dictionary
+    for t in x:
+        print(t)    # t are the keys
+        print(x[t]) # x[t] are the values of the corresponding key= COUNT
+
+from collections import defaultdict
+Normal dictionary spits an Error msg and stops the program when a dictionary is used with a 'wrong' key. But this is taken care by the defaultdict; by assigned a default value using a lambda function. 
+    ddict=defaultdic(lambda: 0)
+    d['not_assnd_key'] 
+    >> 0            # it will also add that element to the dict as well.
+from collections import namedtuple
+Dogs=namedtuple('Dog',['age','breed','husky'])
+sammy=Dogs(age=5,breed='husky',name='sam')
+sammy
+>> Dog(age=5,breed=....) # prints the whole thing
+sammy.age >> returns the age. 
+sammy[0]
+>> 5
+
+os module and shell utility module
+----------------------------------
+    - navigate
+    - move things around and delete files and folder
+
+# be extremely careful while using commands. 
+pip install send2trash  # to avoid 'May-Day'
+    send2trash.send2trash('file')
+    
+os.walk
+--------
+for folder, sub_folders, files in os.walk(path):
+    print(f"Currently looking at {folder}")
+    print('the subfolders are: ')
+    for sub_fod in sub_folders:
+        print(.......)
+        ------------------Discover yourself----------------------------
+
+import datetime
+------------------
+    mytime= datetime.time(13,20,1,20) # (hour, min, sec, microsec)
+form datetime import datetime
+mydatetime=datetime(2021,10,3,14,20,1)
+mydatetime.replace(updated datetime)
+
+from datetime import date
+date1 - date(2021, 11, 3)
+date2= date(2020, 11, 3)
+result = date1 - date2 
+result.days     # returns days
+
+math and random
+----------------
+math.ceil()
+math.round()
+math.floor()    # of course the float goes in
+math.log(x, base)       # math.log(x) => base of e
+math.e  math.pi math.sin(radian angle) 
+
+import random 
+random.randint(0,100)   # generates a random number between ? search for limits
+# setting the seed 
+random.seed(42)     # setting the seed allows two computers to get the same value
+# note if seed is 101 then the third number will always be 69
+# sampling with replacement
+random.choices(population=mylist, k=10) # k for number of randoms => a choice can be repeated 
+random.sample(population=mylist, k=10) # sample WITHOUT replacement => k <= len(mylist)
+    # does not affect 'mylist' 
+random.shuffle(mylist) # actually affects 'mylist' 
+random.uniform(a=10,b=100)      # Uniform distribution # all are equally likely to be chosen
+random.gauss(mu=0, sigma=1)   
+
+Python script debugging
+--------------------------
+A tool to stop the execution in the mid by setting .set_trace and checking what values have been assigned
+to what variables.  'q' to quit the debugger. 
+pdb.set_trace() # put this where you want to debug. 
+
+RE
+---
+    'dog' in 'my dog is great'  # gives true
+(555)-555-5555
+r"(\d\d\d)-\d\d\d-\d\d\d\d"
+r"(\d{3})-\d{3}-\d{4}"
+    import re
+    text="the agent's phone number is 408-555-1234. Call soon!"
+    pattern="phone"
+    match=re.search(pattern, text) # has info such as match.span(), match.start(), match.end()
+    # gives the first match only, unfortunately or fortunately depending on the situation. 
+    matches=re.findall(pattern, new_text) # matches is an array of 'pattern'  
+    len(matches) # gives number of matches. 
+    for match in re.finditer('phone', text):
+        print(match.group())        # now match can be used as normal match object for single search
+Important Note: 
+                    \d      A digit
+                    \w      An alphanumeric
+                    \s      A whitespace
+                    \D      NOT a digit
+                    \W      NOT an alphanumeric
+                    \S      NOT a whitespace
+We use Quantifiers to provide number. 
+    phone=re.search(r'\d{3}-\d{3}-\d{4}',text)
+                    
+                    +       Occurs one or more times        Version \w-\w+      Version A-b1_1
+                    {3}
+                    {2,4}   Occrus 2 to 4 times 
+                    {3,}    3 or more. 
+                    *       Occurs 0 or more times          A*B*C*              AAACC
+                    ?       Once or none                    plurals?            plural
+Now suppose we need some information to be extracted again from the 'text', but this time we need 
+the pattern to be arranged in group, internally. We might need certain components of the pattern. 
+For this we use     
+re.compile()    
+        phone=re.search(r'\d{3}-\d{3}-\d{4}',text)
+        phone       >> <_sre.SRE_Match object; span=(19, 31), match='408-555-7777'>
+        phone_pattern=re.compile(r'(\d{3})-(\d{3})-(\d{4})')    # notice the Grouping using ()
+        results=re.search(phone_pattern,text) 
+        results=group()     # '408-555-7777'
+        results.group(1)    # outputs the first group
+
+        re.search(r'cat|dog', 'The cat is here')    # searches for either 'dog' or 'cat'
+        re.findall(r'.at', 'That cat in the hat sat there at.') # '.' is a WILDCARD for single character
+        # the above will return a list as ['hat','cat',hat','sat',' at'] # notice the whitespace b4 'at'.
+Start with-'^'    and End with- 
+    re.findall(r'^\d',text) # matches only if the text starts with a digit
+    # must not include => [^\d]
+    re.findall(r'[^\d]', text)  # returns a list of all the characters as a list excluding all the digits
+    re.findall(r'[\d]+', text) # returns only digits.
+    re.findall(r'[^\d]+', text) # returns only words or phrases as a list. split where ever digit was there.  
+    re.findall(r'[^!.?]+', text) # EXCLUDES these punctuation marks where ever and returns a list again    
+    re.findalll(r'[\w]+-[\w+]', text) # returns a list of all the hyphenated alphanumerics Note: [] used for clarity
+    re.findall(r'cat(fish|nap|erpillar)', text) # searches for catfish or catnap or caterpillar
+
+Timing your code
+-----------------
+Often used to find out the most efficient code. 
+    import time
+    start_time=time.time()
+    # do something 
+    func1()
+    func2()
+    finish_time=time.time()
+    time_taken=finish_time-start_time
+    print(time_taken)       # this is okay but not 'pro'
+    
+    import timeit
+    # statement and setup are passed as strings to the function 
+    stmt='''
+    one_func(100000)
+    '''
+    setup='''
+    def func_one(number):
+        # function definition goes in here
+    '''
+    timeit.timeit(stmt,setup,number=10000) # Running the function multiple times, MAGNIFIES the gap => easy to visualize
+
+for jupyter notebook
+%% timeit 
+func_too .... default for 100000 loops
+
+Zipping and unzipping
+-----------------------
+f=open('fileone.txt','w+')
+f.write('one file')
+f.close()
+f=open('fileone.txt','w+')
+f.write('one file')
+f.close()
+import zipfile
+#first we create the zip file then move the new content in there. 
+comp_file=zipfile.ZipFile('comp_file.zip', 'w')
+comp_file.write('fileone.txt',compress_type=zipfile.ZIP_DEFLATED))
+comp_file.write('filetwo.txt',compress_type=zipfile.ZIP_DEFLATED)
+comp_file.close()
+zip_obj=zipfile.ZipFile('comp_file.zip','r')
+zip_obj.extractall('extracted_content')
+Normally, when we archive/compress we generally do it with folders not with files, for that
+'shutil' is the way to go. 
+    import shutil 
+    output_filename=example
+    shutil.make_archive(output_filename,'zip',dir_to_zip) # to zip the directory
+    shutil.unpack_archive('example.zip','final_','zip') # in the end is the formal of unpacking
+    # In terminal I am gonna use shell directly instead of going with the 'shutil'
+    
+Web Scraping
+-------------
+Automating the techniques involving automating the gathering of data from a website. This also requires the understanding of
+the internet and a bit of HTML and CSS and JS. I think I am good for it.  
+IF YOU EVER HEARD THAT I COMMITED SUICIDE... THEN BE SURE THAT I WAS MURDERED!!!!!!!
+
+Setting up the library:
+    pip install requests lxml bs4    # bootstrap for beautiful soup not bootstrap
+
+    import bs4
+    import requests
+    result=requests.get('https://www.example.com')
+    type(result)    # is a response object
+    result.text     # gives the actual source code equivalent to the souce browser Ctrl+Shift+J---- is a string
+    soup=bs4.BeautfulSoup(result.text,'lxml') # notice the Camel Casing
+    soup.select('title') # returns an array # 'soup' is not string but BeautifulSoup object
+    soup.select('title')[0].getText() # returns the string as we want
+    # grab a class => use '.'
+    soup.select('div')
+    soup.select('#some_id')
+    soup.select('.some_class')
+    soup.select('div span')
+    soup.select('div > span') # nothing in between div and span
+Grab an image from web
+An application of the process that we have learnt in the previous section.
+    - grab the <img> element
+    - get its URL
+    - download the image and write it to the disk, ofcourse after checking the permissions. 
+
+    computer_image=soup.select('.some_unique_selector')[0]
+    cpu_image=soup.select('.some_unique_selector')[1]
+    # now we can treat image_object as a dictionary with properties as the keys
+    source_location= computer_image['src']   >> returns the location of the image. 
+    image_download=requests.get('https://'+source_location)
+    image_download.content >> gives the rgb values of the pixels
+    f=open('my_image','wb')     # note the binary writing. 
+    f.write(image_download.content) ; f.close()
+Grabbing multiple pages and elements
+######## www.toscrape.com #######
+    base_url='http://books.toscrape.com/catalogue/category/books/sequential-art_5/page-{}.html' # find generalisation
+    soup.select('tag .class1.class2') # is also a way to grab element + will return a list.
+
+There are a lot of ways to do the things that we have done. 
+
+Images with Python
+-------------------
+    pip install pillow
+    #  pillow is basically fork of PIL [Python Imaging Library]
+    # documentation at      pillow.readthedocs.io
+
+    from PIL import Images
+    photo=Image.open(image_path')
+    photo.show()    # for jupyter notebook => just 'photo' does the trick
+    # image properties
+    photo.size() # tuple of sizes (width,height)
+    photo.filename; mac.format_description
+    photo.crop(topleft and rightbottom)     # (x,y,width,heiht) x=0 => left corner line
+    mac.paste(im=image_to_be_pasted,box=(0,0),mask) # can be done multiple size and is not permanent
+    photo.resize((3000,500))    # mind that tuple this does not crop this squeeses the photo to the new size
+    photo.rotate(90) 
+Transparency RGBA , A for Alphe=Transparency
+Alpha varies from 0 to 255; 0 for completely transparent
+    photo.putalpha(0)   pdf_output.close()# makes the image transparent
+    photo.save("photoname.png") # will create a new image file if it does not exist
+
+working with PDFs and Spreadsheets
+------------------------------------
+Pandas is a great tool. Here we will work with 'csv' module. Openpyxl is yet another tool.
+Google Sheets python API is also available. 
+    import csv
+    data=open('example.csv')
+    csv.data=csv.reader(data)
+    data_lines=list(csv_data) # spits an error F! 'charmap' codec can't decode ... [super common err]
+    # this is due to incorrect incoding---> in this case python wasn't able to read '@' symbol
+operations and manipulation can now be done as we do generally with the lists. Using loops concatenation
+and all that good stuff. 
+Writing a .csv file. 
+    file_to_output=open('file_name.csv', mode='w', newline='')
+    csv_writer=csv.writer(file_to_output, delimiter=',') # delim. separates columns. Guess .tsv=? \t
+    csv_writer.writerow(['a','b','c'])
+    csv_writer.writerows( list of lists that should match the above number of elements)
+    file_to_output.close()
+    f=open('to_save_file.csv', mode='a', newline='')
+    csv_writer=csv.writer(f)
+    csv_writer.writerow([ '1','2','3'])
+    f.close()
+PDFs
+------
+Portable Document Format. Adobe created this format. 
+pip install PyPDF2
+    import PyPDF2
+    f=open('example.pdf','rb')
+    pdf_reader=PyPDF2.PdfFileReader(f) # pdf_reader object is not iterable
+    pdf_reader.numPages
+    page_one=pdf_reader.getPage(0)
+    page_one_text=page_one.extractText()
+    # to write ----> open() as before and then get a page
+    pdf_writer=PyPDF2.PdfWriter()
+    type(page_one)
+    pdf_writer.addPage(first_page)
+    pdf_output=open('some_brandnew_doc.pdf', 'wb')
+    pdf_writer.write(pdf_output)
+    f.close() 
+    pdf_output.close()
+
+Email with Python
+-------------------
+Sounds to me like the Google Scripts, that I used to automate the google web apps. 
+This is gonna be similar, or may be not? 
+While sending an email, there are a lot of stuff that happen automatically. And while automating,
+we will have to carry out these steps manually. 
+    - connecting to an email server
+    - confirming connection 
+    - setting a protocol
+    - logging and 
+    - finally sending the message. 
+These tasks are made easier by simple function calls, by using the library.
+Each major email provider has their own SMTP Server.e.g. - Google- smtp.gmail.com, smtp.mail.yahoo.com for yahoo. 
+here we are going to with Gmail; in Gmail, we will need to generate an app password(different from user-account)
+password. 
+    import smtp
+    # create smtp object and the use port 587 for tls... 
+    # detail is provided in the jupyter notebook 
+Similarly, python has libraries such as 'imaplib' and 'email' to handle the  received messages. 
+'imaplib' also provides us with the facilities to access the inbox and search and all that cool
+stuff. Of course this will also requrie to create object first and also require - A 2-step verified 
+google account set  up as before, while sending an email. Note the use of t
+    password=getpass.getpass('enter the password')
+
+Advanced Numbers
+----------------
+hexadecimal : hex(anumber)
+binary: bin(1234) # arg is decimal
+
+GUI section
+-----------
+There is BEST framework for game development. It is subjective. 
+PyGame for game gui. If you are making web app, html,css and JS are more suited for the job. 
+While python's Flask and django are the frameworks for the backend.
+IpyWidgets
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -599,3 +1145,70 @@ class class_name():
     self.par1=par1
     self.par2=par2        # a typical class definition in python
 
+gencomp = (item for item in my_list if item > 3)        # is a way to create a generator. [gener. comprehsn]
+str_itr=iter(str)       # lets use go next(str_itr), strings are only iterated using loops
+
+x=Counter(list_or_string) # generates counts of basic element as a dict. Counter from collections
+x.most_common(2) # returns two most common as list of tuples
+list(x) # returns list of keys => kind of equivalent to set()
+# os and shutil
+pwd         # >> present working directory
+os.getcwd()
+os.listdir() # current path
+os.listdir('path') 
+shutil.move(src, destination)  # mv in shell command  ## permission required
+os.unlink(path)
+os.rmdir(path)
+shutil.rmtree(path) # Extremely careful! Permanent Removal.
+os.walk             # yields a 3-tuple => dirpath, dirnames, filenames 
+mytime=datetime.date(hr,min,sec, microsec)
+today=datetime.date.today() # today.year/month/day
+random.randint(0,100) # inclusive of both
+random.seed(42)
+random.choice(mylist) 
+matches= re.findall(pattern, text)  # len(matches) will be the number of matches.
+match=re.search(pattern, text)  # gives the first of all the searches. 
+match.span() >> (starting index, ending index) # of the first search result
+'\n is a new line \n another new line'.strip() # gets rid of the escape sequences.
+for match in re.finditer(pattern, text): print(match) # match is an object and will have the positions of the match.
+hex(decimal_number)
+bin(decimal_number)
+pow(base,exp) # pow(base, exp, mod) => calculates power and then takes modulo with mod
+abs(number)
+round(3.1) # by def. rounds to 3.0 # round(3.141592,2) -> rounds it to 2 places. 
+string.capitalize()
+s.count('o') 
+s.find('p')
+s.center(20, 'z') # string 's' will be centered around zz's and the total length will be 20
+'hello\thi'.expandtabs() # pretty straightforward , expand the tabs
+s.isalnum() # checks for alpha-numeric  s.isalpha()
+s.islower()
+s.istitle()
+s.endswith('o') # all return True or False
+s.split('e') # splits at every instance of 'e'
+s.partition('i') # creates 3 partition front, sep, back
+####### advanced sets #######
+ss=set()
+ss.add(1) 
+sss=ss.copy() #  changes should not affect the original 
+ss.difference(set2) # return a set with the difference; typical as in set theory
+ss.discard(2) # removes the element if it is there in the set, else does nothing. 
+ss.intersection(s3) # again natural intersection set. '
+ss.intersection_update(s3) # carries out the intersection AND assigns the intersection set to 'ss'.
+ss.isdisjoint(s4) # checks for disjointness of these two : you know the definition, don't you?
+ss.issubset(s5) # checks for subset
+ss.issuperset(s6) 
+ss.symmetric_difference(s2) # returns a set of elements that are only present in exactly one set.[XOR(?)]
+ss.union(s2) # simple : returns the union
+#### Advanced Dictionaries ####
+{x:x**2 for x in range(5)} # or {k:v**2 for k,v in zip(['a','b'],range(2))} # dictionary comprehension
+for k in d.iteritems(): #iterkeys() or itervalues()
+dict.viewvalues() # or keys or items
+### Advanced List ###
+l.extend(anotherlist) 
+l.index('value') 
+l.index(index, object_to_be_inserted)
+l.pop() # by default it is thelast element and index can be arg. 
+l.remove(instance_you_wanna_remove) # first instance only removed # beware of error handling 
+l.reverse() # permanently affects the actual list.
+l.sort() # changes the actual list
