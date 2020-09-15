@@ -28,3 +28,36 @@ basic commands : believe me you will need them and also believe me you will forg
     conda init bash  # when powerline-shell: command not found while activating env
     pipx install powerline-shell # or may be sudo apt does the job as well
     jupyter notebook
+
+vim Plugins
+-----------
+I am using tpope's "pathogen". 
+    mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+    curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+    execute pathogen#infect()           # add this particular line to .vimrc , in my case to /.vim/vimrc
+That is it ! now start installing plugins... git clone
+
+Using Vundle
+-------------
+Better. 
+requires more setup steps but pays in the long run.
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    set nocompatible              " be iMproved, required
+    filetype off                  " required
+
+    " set the runtime path to include Vundle and initialize
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+    " alternatively, pass a path where Vundle should install plugins
+    "call vundle#begin('~/some/path/here')
+    Plugin 'VundleVim/Vundle.vim'
+    "" other plugins go in here as well <-----------
+    call vundle#end() 
+in the command line of .vimrc
+    :source  %
+    :BundleInstall "" changes will be in effect immediately
+Don't forget to do BundleInstall after ever Plugin addition.
+Warnings: Do not stage the whole .vim => add a .gitignore with 'bundle/' in it. 
+
+
+
