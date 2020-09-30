@@ -487,3 +487,18 @@ Task-III
 Validation : refer to ContactComponent.js: Nothing new here
 
 button created in TaskI will be used to toggle a Modal. For that we have to create a modal[ can be looked up]. But more importantly notice the use of toggle() method. This uses the current state [show] to show or hide the modal. Also, the toggle is applied to isOpen={this.toggle.show} and to the ModalHeader as well toggle={this.toggle}
+
+Redux Actions:
+--------------
+They are simply Payloads of information that send data from your application to the store. 
+- Done with the help of store.dispatch()
+Action is a plain javaScript object. This JS ojbect essentially must have a 'type' property, this will tell the reducer function, what type of action is 
+to be performed. define action types as String constants. Rest of the oject is the data or the payload. 
+Action Creators : The functions that are responsible for creating action objects. 
+Reducer functions, as already discussed, are functions that take the previous state as i/p and return the new state, WITHOUT changing the previous state. 
+Reducer will take this action and depending upon the action type, it will generate the new state, if necessary. Note: if our state consists of independent
+properties, dishes, comments, chefs..., they are independent, so these can be handled by different reducer functions. Then finally combine them to generate
+the overall state. 
+To achieve the spitting of the reducers, we go to the 'redux' directory and then move the states (dishes, comments, promotions, leaders) to its individual 
+reducers functions, and then finally combine them in the configureStore.js use 'combineReducers'. [ note that dishes , promotions are data present in the 
+shared folder]. 
