@@ -502,3 +502,7 @@ the overall state.
 To achieve the spitting of the reducers, we go to the 'redux' directory and then move the states (dishes, comments, promotions, leaders) to its individual 
 reducers functions, and then finally combine them in the configureStore.js use 'combineReducers'. [ note that dishes , promotions are data present in the 
 shared folder]. 
+
+Having done that, we will now do an exercise to carry out Redux action. Action will potentially modify the content of the data[store]. But there has
+to be something that creates the action object for the reducers which will then modify the state. Here we are going with the comments. In ASsIII, we created, 
+a form [ inside of a modal] that accepted a comments. We are going to add that comment to the comment database that we maintain. 

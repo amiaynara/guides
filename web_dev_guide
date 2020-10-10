@@ -1,0 +1,179 @@
+Html 5
+----------
+tags:
+
+forms:
+create an input region on the page
+    - <input type="text" value="amiay narayan" place_holder="Your Name"> // value and placeholder are two different things. 
+    - <input type="radio" name="age" checked>
+    - <select>
+        <option></option>
+        <option selected></option> // selected is used to preselect from a list of options. 
+      </select>
+    - <input type="submit" value="Click me">  // value controls the text that appears on the button. 
+
+Tables:
+------
+<table>
+<thead>
+<thead>
+<tbody>
+    <tr> <td> data1 </td></tr>
+    <tr> <td> data2 </td> <td> seconddata</td></tr>
+</tbody>
+</table>
+
+Links
+-----
+anchor tag used,    
+        <a href='https://www.google.com'>click for google</a> // active link
+        <a href="link_of_wikipedia"><img src='img_name_with_the_page'>click</a> // relative link
+        <a href='#some_id_within_the_page'>clink me</a> // anchor link  
+
+Html entities:
+-------------
+special symbol printing on the browser. Numbers or Names : &nbsp; is the name and &#160 is the number.
+
+iframes:
+--------
+Basically it can open a whole other webpage as a Frame in my webpage. 
+    
+    <iframe src="" frameborder='0'></iframe> 
+
+CSS:
+----
+
+float : right/left; /* this property allows us to position the div element to certain side left or right. if we change the width of viewport this remains relative. 
+'center' is not a valid value for the float property. If we want to put some content below float eelements, then we have to 'clear:both' to remove the floats on the
+both sides.
+
+Positioning:
+-----------
+Gives better precision that 'float', to position the contents. 
+.class_name{
+    position: relative;
+    left: -20px;
+    z-index: 2; // higher z-index appears on top.
+}
+// relative means that it, given parameters left and right, it will appear x px and y px away from the position that it might have been, if no positioning was applied. 
+// z-index requires the presence of 'position: ' 
+
+    position: absolute;
+    left: 650px;
+'absolute' positioning => The element is taken out of the flow. The page is rendered as if the the current element is absent. not even changing the width of the screen affects the position of the element. 
+
+.class_name{
+    position: fixed;
+
+}
+'fixed' also takes the content out of flow, but when we scroll, the div remains at the fixed place. like used for navigation bar.
+
+Margins:
+-------
+.class_name{
+    background: red;
+    margin: top bottom;
+    margin-bottom : ;
+    margin-top: ;
+}
+See we can also create the left space using postion: and then left: 39px. Margin is meant for the purpose. another differenc is: 'element remains in the flow'.
+Also margin the space before the <tag> is about to start , depending on the side on which it is provided. but padding is applied for hte elements inside.
+
+padding:
+-------
+Padding adds space beween the div and its inner elements. 
+Browsers add by-default paddings andmargins. To git rid of them body { margin: 0; padding:0} 
+
+border:
+-------
+#id_name{
+    border: width color style;
+    border-width: top right bottom left;
+    border-style: '';
+    border-color: '';
+
+}
+
+Fonts Styling:
+-------------
+.class_name{
+    font-family: "Times new Roman", serif;
+    font-weight: 300; /* 800 */
+    font-size: 2rem;
+    font-style: italic;
+    text-decoration: none;// for anchor tag. 
+}
+
+aligning text:
+left right or justified(spread to fill the parent div)
+
+pseudo class:
+-------------
+a:hover{
+    text-decoration: none;
+}
+a: visited{
+    color: green;
+}
+a:link{
+}
+a:active{
+}
+Note:
+.clear {
+    clear: both; /* right/left */
+}
+
+External CSS: As we already know, avoids reloading of the styling again and again thus improving
+performing. It also makes things much cleaner and maintenance much more obvious and smooth. 
+
+JS
+---
+Java script is also three types, using which we can insert JS to our html page.
+
+<button onclick="alert('Hi')>click me </button>
+
+Arrays:
+-------
+let myarr= new Array();
+let arr=[1,34,555] // is also an array
+
+jQuery
+-------
+A JS framework that sits on top of JS. Javascript is used to make webpages interactive. With the 
+help of jquery it becomes a lot simpler. There are other frameworks that serve the same purpose. but jQuery
+is by far the most popular of them all. 
+
+Note the difference in usage of jquery and javascript: In plain vanilla JS we referred to an element by
+    document.getElementById("id_only").onclick=function(){
+        ... some more code ...
+    }
+But in jQuery, we start with a '$' almost always.
+
+    $("#id_with_that_hash_infront").click(function(){ ..some code..});
+
+So, we can already see the compactness of jquery, and the Brit has said that it is more flexible, I will take
+his word for it. 
+$('.class_name').click(function(){
+    $(".idname").html(); // gets the content of the or could be used to modify the element. 
+}
+
+.click --> .hover
+
+we can also change the attributes of a tag/element. this can be done :
+    $("element_name").attr("attribute","value_of_attribute");
+We can also change the STYLES: 
+    $("#id_name").css("property", "value");// note the usage of "" while passing the arguments.
+again here as well, we can 'query' the value of a css-property
+This allows us to do all sorts of interesting stuff. We can ask for the screen width. 
+    $('html_or_body').css("width"); // we can use some sort of alert of console.log()
+    $("element").fadeOut("slow"); // self explanatory but you see how easy it is. 
+Callback functions:
+-------------------
+We might want to do certain action just after another action has finished. Callbacks to rescue, 
+These are passed as parameter to the previous function. shown as follows:
+    $('#id1').click(function(){
+        $('.class_name').fadeOut("slow",function(){
+            console.log($('this').attr("id"), ' has faded out');
+        });
+    }); // infact after '.click(function(){' is also a call back function. 
