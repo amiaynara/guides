@@ -142,7 +142,8 @@ jQuery
 -------
 A JS framework that sits on top of JS. Javascript is used to make webpages interactive. With the 
 help of jquery it becomes a lot simpler. There are other frameworks that serve the same purpose. but jQuery
-is by far the most popular of them all. 
+is by far the most popular of them all. In order to be able to write jquery, we must install locally or use the following link order to access the jquery library:
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
 
 Note the difference in usage of jquery and javascript: In plain vanilla JS we referred to an element by
     document.getElementById("id_only").onclick=function(){
@@ -175,5 +176,47 @@ These are passed as parameter to the previous function. shown as follows:
     $('#id1').click(function(){
         $('.class_name').fadeOut("slow",function(){
             console.log($('this').attr("id"), ' has faded out');
+           
         });
     }); // infact after '.click(function(){' is also a call back function. 
+
+Toggling (back and forth)
+-------------------------
+<script>
+        $("#toggle_btn").click(function(){
+                if(("#para").display()=="none")
+                        {
+                                $("#para").fadeIn();
+}
+else{
+                        $("#para").fadeOut();
+}
+});
+
+</script>
+
+Another way is to use a variable, that will change state when 'true' or 'false', and toggle between them.
+
+
+Animate
+-------
+$(".className").click(function(){
+        $(this).animate({json object of properties and values},time_in_mili_sec});
+}
+
+These css properties will be acquired by the element, the time provided. 
+We can also add fall-back functions after the time.
+
+Note: The property name in jquery object is sometimes different than its css-counterpart.
+      e.g., height, width are same in both cases. But 'background-color' becomes backgroundColor.
+      Just a matter of camel casing. Not too serious. 
+
+Handy functions in jQuery
+--------------------------
+.fadeOut("slow") // fades out the selected element
+.fadeIn()       // fades in selected element
+.html()         // returns the content of the element
+.css("property", "value")       // alters the value of the the selected element
+.css("property")                // returns the value of the "property"
+console.log($('this').attr("id"),'has fadedout') // returns the associated element. 
+.animate({JSON_object_of_properties_and_values},time_in_mili_sec) // 

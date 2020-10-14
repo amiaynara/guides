@@ -1,0 +1,452 @@
+CSS
+----
+<link rel="stylesheet" src="" href="location/of/file/relative.css">
+
+Note that threre is a distinction between 'src' and 'href', where 'src' just embeds the code 
+from other place to the current location, while 'href' does not cause waiting of the loading
+of the whole page. This is the reasion styles can be put in the head, but <script> are not. 
+'href' specifies the location of the 'resource', like the location of the stylesheet.
+
+- Note that inline has higher precidence the internal or external css,code. Hence be careful
+while searching for a bug. external<internal<inline.
+
+Css selectors:
+--------------
+tag_name < classes < id's
+
+one element can have only one id. while one element can have multiples classes. 
+Id's have higher precedence over classes. 
+Id's have to be unique.     
+
+Pseudo-classes. 
+---------------
+Html elements have states. after certain action and before it. e.g., :hover, 
+img:hover{
+    color: gold; // will change the color to gold each time the 'img' is 'hovered'.
+}
+
+Making my own website
+---------------------
+favicons : are the icons that appears at the top of the page in the besides the title. 
+
+
+Box model:
+-----------
+The box model of css. Everything is regarded as a box. And the height and width can be manipualted
+as required. This can be done either using a 'px' or '%'. to acquire the specified dimension the 
+element will force oother elements out the way as well. 
+Important: The border is NOT included in the dimension of the element. By default it is 3px on each
+side. So adding a border will lead to requirement of some extra space around the actual box. 
+    
+A box will automatically fit the content, by resizing it if it falls short. Therefore the content 
+might appear very close to the edge of the box. So we can add something called padding. These
+PADDINGS will further increase the dimension of the box, if it is required. We can think of padding
+as space within the box and the content. 
+
+Margin: is the buffer space "OUTSIDE" the box. This will not increase the size of the box.  
+It gives spaces between two boxes. 
+
+blocking and inline elements
+------------------------------
+The blocking elements create, by default, a box that occupies the whole width of the viewport(parent).
+While the inline elements ALLOW next element to be right next to them. 
+Disadvantage of using inline elements : Their width cannot be changed. They occupy the content's width.
+While <div>'s can easily be changed by width or height. Note that this will still NOT ALLOW the next
+element to sit next to it. It still occupies the whole of the line. 
+Four choices:
+    - display:
+            - inline   // like <span>, can't change the width
+            - block     // width can be changed, but no next element allowed in the same line
+            - inline-block // multiple elements allowed + changeable width
+            - none          // Takes the element out of the flow of the page.  
+Note: 'visibility' is another css property that allows us to hide an element on the page. But HERE
+      the space for the element is present , just the element is not visible. 
+
+Note: Although the width of BLOCK element is always the viewport width, the Height is the content
+        width. 
+
+      Order comes from the content of the order of content in the html file. 
+
+      Children sit on top of parent by default. <div><h1>HI</h1></div> => HI will be displayed 
+      over div [ not behind it]. 
+These were the default behaviour, and expected these can be altered using the 'position' in css.
+        
+        - static        // default, normal flow as per above 3 rules. 
+        - relative      // position relative to the default value 
+            - left
+            - right
+            - top
+            - bottom
+                    Note: It does not affect the position of anything else, even in case of 
+                            collision. 
+                            It does not take the element out of the flow of the document. 
+        - absolute
+                    Note: It TAKES the element out of the flow of the document=> others AFFECTED.
+                          This is done wrt the parent element. 
+            
+        - fixed  // remains fixed irrespective of scrolling. 
+
+centering
+---------
+text-align: center;     // it has to provided in the parent element, of the element which contains 
+                        // a bunch of elements which we want to align to center. 
+                        // div : contains lot of items
+                        // that div is in body => body{ text-align:center}
+margin: 0 auto;         // applied to the desired block element.
+
+Font Families
+-------------
+    - serif
+    - sans-serif
+    - monospace
+    - cursive
+    - fantasy
+Each of the above font families are available with font types such as Arial, Times New Roman and so on.
+fall back font family is put after the intended font families. 
+    font-family: "Helvetica Neue", Arial, sans-serif; /* means that if none is available, what ever
+                                                       sans-serif is installed will be used.*/
+however, if we want to ensure the exactness of rendering of fonts. The obvious solution is to 
+use web, as a source of delivery. And Google-Fonts come to rescue. They are commercially free. 
+Type faces. 
+
+Dynamic font sizes: By default font appear at 16px, if we use exact values[like 90px], then even if the
+    user changes the size to be large, the selected text will remain 90px, because have used absolute 
+    height. However, if we want to change height of the fonts as the page is scaled, then we will have
+    to use ---> % or em. 1em = width of 'M', convention in action. In modern days: 1em=16px.  
+zooming in is different though, zooming will scale irrespectively. 
+
+consider following piece of css:
+                    
+                    body{
+                        font-size: 2em; // could be in percent 
+                    }
+                    h1{
+                        font-size: 3.5em; // could be in percent // 'em' is inherited.
+                    }
+        Note: the size of h1 will turn out to be 7em, i.e. 7*16px, 112px !
+So to avoid this, we have 'rem' in css3. This 'root em' does not do unwanted scaling. 
+
+float: Use it only when you want to wrap the text around the some another div. Sounds similar to 
+'inline-block', 'block'... and position: relative.  However, this has to be used very carefully.
+Avoid using 'float'  all over the page. Instead try to use 'relative', 'absolute', 'fixed'..
+
+
+With that now we move on to bootstrap
+--------------------------------------
+front end libraray... makes it easy to design the front end of our website. Twitter. github. 
+After downloading the bootstrap files, you will have whole lot of .css files. Among them is 
+bootstrap.css. This class is the key to link the previous concepts to whatever bootstrap does. 
+Previously we wrote our own styles.css and accessed it using the <link rel="stylesheet" href="">
+This time around we have files that already has 'humongous' number of lines of css codes. That 
+has a lot of classes defined within it. And these classes are meant for style particular elements.
+For example <button> in plain vanilla html would invoke a button which is quite 'boring'. But 
+If we look into the  bootstrap.css file. We will find that there are lot of classes that add 
+properties to the button classes. And we can choose from these predefined classes and modify 
+our 'boring' looking button into something really good looking. 
+
+It also cuts down the time to desing, 'cause we already have built in classes on the bootstrap off-
+icial site as well. However, one must note that this add some bit of complexity to the front end 
+part. as we have lot ( and I mean a lot!) of classes that we down know about, and cannot know about, 
+even if we wanted to. This might make the webiste files overall, look bloated and heavier than it 
+actually should be. 
+
+Instead of downloading the bootstrap files individually to our each website project, we can just 
+use the service provided by CDN[content delivery network ]. CDNs have multiple copies of our sites
+present at various location on the globe. And it makes the delivery process of the contents of the 
+site more efficient. 
+Another thing that bootstrap exploits is its popularity. A vast majoriy of the sites use bootstrap, 
+so the moment we access a website that uses bootstrap, the smart browswers cache the bootstrap classes
+and other required items. And next time we go to another website that uses bootstrap, these classes
+need not be downloaded again, this makes the rendering of the website very fast. 
+
+Note: to exploit the caching it has to 'mass-recognisable' using your own dowloaded version does not 
+        help. 
+
+WireFraming and Mockups:
+-----------------------
+WireFraming is a quick process to start the processing of designing. Just the blueprint. 
+Mockups are like the final products' screenshot. 
+
+wireframes ==> layout ==> mockups ==> prototypes. 
+
+transform: rotate(45deg); // rotates the element box by 45 deg clockwise. 
+
+
+Media queries: Using Native CSS=> Making pages Responsive.
+----------------------------------------------------------
+                
+                @media <type> <feature> { ... }
+
+                @media screen (min-width: 900px){ ... }
+                @media print { h1{ color: red} }  // while printing on a paper change color-> red. 
+
+                @media (min-width: 900px) {
+                    h1{
+                        color: red;
+                }
+                } // if the minimum width of the screen(media) is 900 or greater than 900px. 
+                  // Change the color of h1 to red. 
+                
+                @media (min-width: 900px) and (max-width: 1000px) {
+                    h1 {
+                        color: green;
+                    }
+                }
+ViewPort is NOT the same as the device screen size. 
+
+CSS selectors:
+--------------
+            selector1, selector2 {
+                background-color: red;
+            }   /* selects both selector1 and selector2 and applies the css property.
+
+            selector1 .class_name tag_name {
+                font-family: "Montserrat", sans-serif;
+            }  /* is used to select tag_name inside of '.class_name' which is inside selector1
+    combined Selectors:
+            .class#id2 {
+                color: red;
+            }       /* Note that there id no space between the selectors. 
+
+Before combining selectors, just think that whether this combination will bring a logical
+structure and more readability. If the answer is YES, sure go ahead. 
+
+Principles of webdesign
+-----------------------
+        - Color theory
+        - User Interface Design
+        - Typography
+        - User Experience Design
+
+Color theory:
+-------------
+red: tells energy, biology, attraction
+green: fresh, good.
+Yellow: difficult to avoid, color of sun. 
+Blue: trust, reliability
+Purple: Royality, feminine [pink]
+
+In the color wheel we can combine the colors : adjacent to each other, opposite to each other
+a triangle or a perfect square. 
+
+Typography:
+-----------
+Serif: they have little feet. Inspired from the marble carving. Makes your design look old.
+        Provides authority. Legitimacy. 
+        - Old Style : Least prominent difference in width fo feet to pillers. 
+        - Transitional: lesser difference. 
+        - Modern : Most visible. 
+
+Sans-serif: Simple, Sensible, Straightfoward, Approachable.
+
+Manage User attention:
+---------------------
+        - Making the important part standout. 
+        - Layout : wikipedia => not good. 
+        - Alignment : Reduce the number of lines of alignment. 
+        - White Space : Adding whitespace can make you appear expensive. 
+        - Audience :  feel free to break upper rules to fit the audience. 
+
+User Experience
+---------------
+        - F-Layout
+        - Z-Layout
+        - With greater power comes greater responsibility. 
+            
+
+Bootstrap4:
+-----------
+
+.container : They are by default responsive. And it is convenient to have it as a parent.
+             By def. has some margin on both sides. 
+.container-fluid : Occupies total width of the viewport. This also responsvie.
+.btn btn-primary : 
+
+
+carousel
+--------
+Tip: First create the content of the caraousels for each slide style them using appropriate
+    classes and properties. Then move ahead and put them in the carousel template.  
+
+Buttons [ arrows ] are described using the <span> tags previous and next. 
+
+
+Code Refactoring
+----------------
+It is of utmost importance that we write code that are more readable and easy to maintain. 
+        - Readability
+        - Modularity
+        - Efficiency
+        - Length 
+Maintance does not always have to do with the very very high efficienct code. The code should be
+efficient enough, meanwhile is should be more readable so that a person reading it a year later
+[ that could be yourself ] can easily understand what is going on. As Angela suggets think of that
+person as a murderer. It truly can help you save a lot time and brush upon some skill very very 
+quickly. 
+Also try to Keep the code DRY. 
+
+
+JavaScript
+-----------------------
+Built in 10 days, to make the browsers more dynamic. Has its origin in NetScape, Mozilla. 
+They were standardized as ECMA Scripts. ES6 is a version. Initially, built just for toying,  now
+it has become the most popular language, because of its simplicity and availability. C++ and Java, 
+were regarded as more serious language due to their closeness to the hardware and being compiled. 
+JS is interpreted language and it line wise read by the engine. 
+
+typeof()
+alert()  // only strings can be printed, so use '+' to concatenate.
+console.log() // use ',' to separate. you can use '+' here but, this will convert number to string.
+word.length
+string.slice(start_index,end_index+1)   // like in python. "test_string".slice(x,y) works just fine.
+string.toUpperCase() // returns a string with upper case // the current string remains as such.
+string.toLowerCase()
+x++, --x    // are all the same as previous c++ // this is not valid in python though.
+Math.round(number)
+Math.ceil()
+Math.floor()
+Math.random() // generates a random number [0,1)
+===     // exactly same
+==      // does not care about the data type. [coersion]
+&& AND
+|| OR
+!  NOT
+arr.includes()  // returns true or false based on the presence or absence of the element in the array. 
+arr.push(element) // similar to python's append() ==> adds to the end of the list. 
+arr.pop;        // no paren, unlike python. 
+
+
+
+
+
+
+
+collections
+------------
+var arr=[];
+ 
+
+
+
+There is place in google chrome : snippets where we can create our own script and run Ctrl+Enter.
+Hard reload and clear cache can be done using the refresh button on google chrome.
+
+Concatenation
+--------------
+var a="amiay";
+var b="naraya";
+var name=a+" " + b;
+
+'+' will convert numbers to string.
+
+
+So we saw how we can use inline CSS code to modify the style of the content on our page. 
+        style="background-color: red"
+
+Similarly we have, inline javascript code. 
+        onload="alert('hello');"
+
+similarly we have <style> and <script> as internal css and javascript respectively. 
+
+        <script src="index.js" type="text/javascript">  <!-- for external js--> 
+
+DOM
+---
+Document Object Model
+
+    var heading=document.lastElementChild.firstElementChild;
+    heading.innerHTML="Changed_Heading";
+This will change the content of the page on the fly. While rendering the element of a page, the
+browser converts these elements in the form of a tree. And elements have parent-child relation
+among them. However, using plain vanilla JavaScript we can manipulate the content, style and beha-
+viour of our page. 
+This can be done by selecting the particular element, and then modifying the css ... 
+Also, selection can be done in a number of ways. 
+So each element on the page is described using an Object, for example, body is an object, a button
+is also an object. And so on and on. Hence the Name : D Object M. 
+So Being an Object these will also have 
+            - Properties : color, background-color, height...
+            - Methods : which can change the properties and all sort of other action can be done. 
+Example :
+<button>
+    Properties: innerHTML, style, firstChild
+    Methods: click(), appendChild(), setAttribute()
+
+document.getElementsByTagName("h1")         // this will ALWAYS return an array            
+document.getElementsByClassName("h1")       // this will ALWAYS return an array
+document.getElementById("id_name") // note that this will return single object
+document.querySelector("h1 #id_name")       // similar to CSS selector. // RETURNS ONLY FIRST.
+document.querySelectorAlL("#list li")[1]    // array hence using indices. 
+.getAttribute("href")
+.setAttrubute("href", "src")                // sets the attribute to the second string. 
+
+Note: 'font-size' becomes fontSize in JavaScript. Camel-Casing in action. 
+
+<button class="btn">Click here</button>
+
+document.querySelector("button").classList; // returns a list of class associated with "button".
+document.querySelector("buttton").classList.add("amiay")   // will add class
+So, the new html will be:
+        <button class="btn amiay">Click here</button>
+
+We could also change color, height, and all sorts of things using ONLY JavaScript. But this is not
+what JavaScript is meant for; ofcourse we will encounter cases where it only befitting to use 
+JavaScript to change the CSS style of the element, but normally for general styling we will always
+use styles.css.
+
+one use could be to toggle between hiding and showing elemnet. 
+
+
+styles.css:
+        .invisible{
+            display: none; // visibility: none;
+        }
+
+document.querySelector("button").classList.add("invisible");
+The above JS code will make the button go 'invisible'. and we can type following to make it visible:
+
+document.querySelector("button").classList.remove("invisible");
+document.querySelector("button").classList.toggle("invisible");
+
+innerHTML vs textContent
+------------------------
+<h1><p>This is a para</p></h1>
+document.querySelector("h1").innerHTML =====> <p> ... </p>
+document.querySelector("h1").textContent =====> "This is a para"
+
+
+Note: while changing the value of the element, make sure to use "", because it is not JS. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Some useful websites
+----------------------
+colorhunt       : lets you choose hex code of nice colors 
+flaticon        : lets search for icons... a huge collection
+giphy.com       : animated gifs
+codeply.com     : write code for bootstrap.
+ui-patterns     : choose UI patterns according to your needs. 
+dribble         : designer have put forward their port-folios. 
+sneakpeekit     : printout and start 'wireframing'
+balsamiq        : industry standard
+bootsnip.com    : snippets of various useful template (pricing, navigation), to get inspiration from. 
+mobilefriendtest: tests how mobile friendly your site is. 
+adobecolorpalet : Lets you play around with colors and select color combination 
+canva.com       : online graphic editing program. Something you can quickly build and SHOWCASE. 
+idiomatic.js    : Living doc. => everybody has to stick to the same style. [ Elements of Style ]. 
+
+karelrobot      : a robot that works in 2D space. 
+russian programmer: now that is what i call a hacker
