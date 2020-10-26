@@ -1,0 +1,526 @@
+Machine Learning:
+---------------------
+
+Machine learning is a part of AI, which believes in achieving the goals of AI by making the computer learn with EXPERIENCE. Deep learning is further a part of ML, that involves deep layers of neural networks. ML requires manual extraction of features.
+ML is the science of getting computers to learn, without specially programming them(but by experience.).
+
+Data pre-processing
+--------------------
+The first step in the carrying out the process is to collect GOOD data, Garbage in Garbage out. The comes the important part of preparing 
+the data according the model, filling or removing unavailable data and so on, for that we have got some python libraries as our tools, 
+which make this process more faster and easier, after all this is the whole aim of Python. 
+
+        1. pandas
+        2. matplotlib
+        3. numpy
+
+To process the data we have to import it first. Importing can be done traditionally:
+        
+        file_reader=open("data.csv",'r')
+        content=file_reader.read()              # reads whole file as a single string. 
+                    
+                            Or
+
+        with open("data.csv", 'r') as file_reader:
+            content=file_reader.read()
+        
+However, if you have tried using it yourself, you very well know the difficulty of processing in this manner, and computationally, this is
+slow as well. So, we use 'pandas' instead.
+        
+        dataset=pd.read_csv("data.csv") 
+        t=dataset.iloc[:,0]                 # include all the rows of the first col(excluding the default serial number)
+        t2=dataset.iloc[:,:3]               # all the rows of first three data columns 
+        x=dataset.iloc[:,:-1].values               # all the rows of all the columns(except the last one)
+
+Note that x will store that data row-wise and ofcourse is an numpy array
+        
+        type(dataset)   # pandas.core.frame.DataFrame
+        type(t)         # pandas.core.series.Series
+        type(t2)        # pandas.core.frame.Dataframe
+        type(x)         # numpy.ndarray
+
+So we encounter some 'alien' data types here. These are done so as to effectively store the data. Also notice that pandas, dataframe and np
+work hand in hand. 
+
+Series, DataFrame are some new data types that we have encountered.
+Note that:
+        dataset[:-1]  
+        dataset[:]      # print the same result that is the whole of dataframe.
+        dataset.iloc[:,:-1]     # prints all except the last  and type is still a dataframe (if the number of col is >1)
+
+Taking care of missing data
+----------------------------
+One soluttion is to simply get rid of that data-row. But this is feasily only if we have much larger dataset. If we don't have
+it then we and some data points are missing then we will have to substitute using 'the mean' value. 
+
+        from sklearn.impute import SimpleImputer                        # import
+        imputer=SimpleImputer(missing_values=np.nan, strategy="mean")   # define the strategy to replace and what to replace
+        imputer.fit(x[:,1:3])                                           # choose only the numerical columns
+        x[:,1:3]=imputer.transform(x[:,1:3])                                   # now apply the changes and update the x.
+
+Encoding the Independent variable : Categorical Data
+------------------------------------
+We don't want to assign values to the 'non-numerical' data points. This might make the model think that this some kind of order.
+So to avoid such assumption. We do 'One Hot Encoding'. 
+
+        from sklearn.compose import ColumnTransformer
+        from sklearn.preprocessing import OneHotEncoder
+
+        # note that column will be TRANSFORMED into many. 
+        ct=ColumnTransformer(transformers=[('encoder',OneHotEncoder(),[0])],  remainder='passthrough')
+        # passthrough allows to keep the other columns else we get only the transformed columns
+        x=np.array(ct.fit_transform(x))
+
+        from sklearn.preprocessing import LabelEncoder
+
+        le=LabelEncoder() # since we have only 'Yes' or 'No' values
+        y= le.fit_transform(y)        # this will have only one dimensional array.
+
+Splitting dataset into Training and Test set
+-----------------------------------------------
+To check the accuracy of our model, we have to have some values to test the model upon. We split the given dataset itself into
+these two parts. One thing should be always made clear, WE have to always try to keep the training data away from the training'
+to ensure the true testing of the model. For example applying feature scaling. When should we apply feature scaling, before or
+after the splitting process? The answer is: After. Because feature scaling involves computing the Standard Deviation and varia
+-nce of the whole data. Then coming up with a factor to scale. And we if we include the test data as well in the process, then
+the testing will not be fair at all. This will lead to significant variation of the tested accuracy and the actual accuracy of
+the model when tested in the real world. 
+    So, actually we will require four sets: x_train, y_train, x_test, y_test
+
+        from sklearn.model_selection import train_test_split
+        X_train, X_test, y_train, y_test = train_test_split(x,y, test_size=0.2, random_state=1)
+
+Feature Scaling
+-----------------
+        # feature scaling
+        from sklearn.preprocessing import StandardScaler
+        sc=StandardScaler()
+        X_train[:,3:]=sc.fit_transform(X_train[:,3:])
+        X_test=sc.transform(X_test[:,3:])
+
+We have two techniques of scaling: Standardisation and Normalisation. While working with multiple features
+we are likely to encounter the two features of very different units magnitude wise. This might end up
+tricking the model, making one feature much dominant over the other. So to avoid this we need to carry
+out the scaling. This should be done after the splitting of data. Also the scaling factor of the test
+and the training set should be the same. 
+    Now, one thing to note is that, the data need not be normal for the standardisation to be performed. 
+This just makes the spread(SD) of the distribution of the data between -3 to 3. And the normalisation 
+makes them appear between 0 and one. Formula:
+
+
+
+
+
+
+Note that you don't carry out the 'fit' with the test data. Also we don't do this on the dummy variables. 
+Sometimes it might produce a better performance. But at the end of the day, this one Hot encoding was done
+and this we just nullify the process. And we might recognise what was what. 
+
+
+Linear Regression
+------------------
+        import numpy as np
+        import matplotlib.pyplot as plt
+        import pandas as pd
+
+        # load the data
+        dataset = pd.read_csv('Salary_Data.csv')
+        X = dataset.iloc[:, :-1].values
+        y = dataset.iloc[:, -1].values
+
+        # break the data into test and train sets
+        from sklearn.model_selection import train_test_split
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/3, random_state = 0)
+        # random _state sets the state.
+
+        from sklearn.linear_model import LinearRegression
+        regressor = LinearRegression()
+        regressor.fit(X_train, y_train)
+
+        # now to test 
+        y_pred= regressor.predict(X_test)   
+
+        # now we compare the values from above with 'y_test' can measure the performance. 
+        # below is how I did it
+        import matplotlib.pyplot as plt
+        plt.plot(y_test,'o')  # plots as dots
+        plt.plot(y_pred, '*') # plots as stars on the same plot ,, the prediction looks pretty good. 
+
+        # in Udemy they use plt.scatter which I think is better 
+        plt.scatter(X_train, y_train, color='red')
+        plt.plot(X_train, regressor.predict(X_train), color='blue')
+        plt.title('Experience Vs Salary (Training Set)')
+        plt.xlabel('Years of experience')
+        plt.ylabel('Salary')
+        plt.show()
+        
+        plt.scatter(X_test, y_test, color='red')
+        plt.scatter(X_test,y_predicted, color = 'green') # this will always lie on the line
+        plt.plot(X_train, regressor.predict(X_train), color='blue')
+        # here we don't have replace by test because we need the line not, and the line was 
+        # determined by the X_train and y_train only. 
+        plt.title('Experience Vs Salary (Test Set)')
+        plt.xlabel('Years of experience')
+        plt.ylabel('Salary')
+        plt.show()
+
+
+Multivariate regression
+------------------------
+When we have more than one feature data, and we want to make the prediction based on them.
+Here might have categorical data along with numerical feature (e.g. name of countries) . If there
+are two countries only, then we add two another columns for the each country and do one hot encoding
+and removing the last one. So we have added 2 cols and removed one. It is more column than we actually
+need. 1's and 0's are enough to represent the data. we have to remove the last dummy variable. 
+So we are now left with the same number of columns as before. 
+
+    Dummy Variable Trap: Inclusion of all the dummy variables leads to two features being inter-dependent
+and the model is not able to capture the effect of both properly. We also talk about how sure we are 
+of certain outcome, by hypothesis testing. If the null hypothesis is prevelent with more than 95% confidence
+then we can say that the null hypothesis is true. for example, for a fair coin to land four consecutive heads
+is highly unlikely given that the universe is fair. So we can reject the null hypothesis with a confidence of
+95%. 
+
+
+Building a model
+----------------
+5 methods:
+        
+        1. All-in : Take all the features and build, domain knowledge, you know before hand. 
+        2. Backward Elimination : 
+                a. Start with all the features and build the model. 
+                b. Consider the model with the hightest p-value. if this p-value > SL, got to step(c).else fin.
+                c. Remove that feature. 
+                d. fit the model without this feature. 
+        3. Forward Selection:
+                a. Fit all possible regression models, taking one feature at a time. 
+                b. Choose the lowest p-value regression model. 
+                c. Now choose another feature, all possible of them and then choose the one which gives the
+                    lowest p value with the one chosen in the second step. Re-evaluate the model. 
+                d. If this p-value < SL, then go to step (c) again. If the p-value > SL, the stop. No further 
+                    addition of feature into the regression model.
+        4. Bidirectional elimination
+        5. Score Comparison : Take all possible, models 2^N-1. This will take a lot of resource. 
+
+        2,3,4 -> step-wise regression. 
+
+Why do we need to reduce the number of features?
+    By removing features, remember that we throwing away data. But sometimes we need to do it because 
+if GIGO. Also the model becomes very complex to explain and understand as well. We are removing data
+so we have to extra caucious about it. Above 5 methods are used to do the reduction of feature. 
+
+
+Code in action
+----------------
+        
+        # after the loading, splitting and ENCODING
+        # note that we don't have to take care of 'dummy variable trap'; sklearn also takes care of
+        # backward selection and other things .
+
+        from sklearn.linear_model import LinearRegression
+        regressor=LinearRegression()
+        regressor.fit(X_train, y_train)
+        # how he has done it
+
+
+########    Note:  X_train has have to a shape of (10,1)  ###################
+
+
+        y_pred=regressor.predict(X_test)
+        np.set_printoptions(precision=2)
+        print(np.concatenate((y_pred.reshape(len(y_pred),1), y_test.reshape(len(y_test),1)),axis=1))
+        # np.concatenate((list1,list2),axis=1) # axis = 1 for horizontal concatenation
+
+WE should also be able to get the coefficients and the intercept(theta0), that came out as a result of 
+training. This done as follows:
+        
+        hyper_parameters=regressor.coeff_           # theta1, theta2, ... , thetan
+        intercept = regressor.intercept_            # theta0
+
+
+
+Polynomial Linear Regression
+-----------------------
+
+A Linear Regression is named so because the hyper parameters are experessed as linear combination of 
+features ( x0, x1, ..., xn). Here in polynomial these (theta0, theta1, theta2 ..., thetan) are exressed
+as polynomial of the features. Which ones to choose, how many to choose, are the critical questions. 
+    If you consider, polynomial creation is a kind of 'preprocessing' as we have to add new features to
+'Design Matrix'. And then we simply apply the LinearRegression on the new features Matrix. 
+
+        # polynomial implementation
+        from sklearn.preprocessing import PolynomialFeatures
+        poly_reg = PolynomialFeatures(degree=3)
+        poly_X = poly_reg.fit_transform(X)
+
+        lin_reg2 = LinearRegression()
+        lin_reg2.fit(poly_X,y)
+        y_pred_poly = lin_reg2.predict(poly_X)  # mind the dimensions of the features' matrix
+
+        plt.plot(X,y,color="blue")
+        plt.plot(X,y_pred_lin,color="red")
+        plt.plot(X,y_pred_poly, color = "green")
+        plt.legend('red')
+
+        
+Decision Tree
+---------------
+CART : Classification And Regression Tree
+
+This is fit for applying on data with more than one feature. I was surprised that the value that I 
+got was exactly to the training value for 6. when I was asking for 6.5. 
+
+        import numpy as np
+        import matplotlib.pyplot as plt
+        import pandas as pd
+
+        dataset = pd.read_csv('Position_Salaries.csv')
+        X = dataset.iloc[:, 1:-1].values
+        y = dataset.iloc[:, -1].values
+
+
+
+        from sklearn import tree
+        regressor = tree.DecisionTreeRegressor(random_state = 0)
+        regressor.fit(X,y)
+
+        regressor.predict([[6.5]])   # predicts the value for 6 present in the training set. 
+        
+In this particular dataset what the algo, did was assing [2.5 , 3.5] a particular value ( = y(3))
+And constructed a step wise function in order to fit. This led to the peculiar graph. 
+
+Random Forest
+---------------
+Ensemble Learning: We take an algo and put together multiple time. What we do is build several models. 
+And take the prediction of all the models and average them inorder to predict for a new data point. 
+Due to this, generally the ensemble methods are more stable. 
+
+
+R squared
+----------
+This R^2 = 1 - SS(res)/SS(tot) , this will always be less than 1. Suppose we have 5 features and initially,
+we chose only two of them to represent the model. Now we think that adding a third variable might lead
+to a better performance. Also, note that closer the value of R2 to 1, the better the performace.
+Now if we add another feature and construct a new model, this can only lead to INCREASE in R2 value.
+Because the newer model ( that is the new coefficients theta's) will adjust such that either the value increase
+or remains the same ( model will assign the corresponding theta to be very negligible, making the contri-
+bution of that feature almost none). 
+
+
+K-Nearest Neighbours
+----------------------
+Algorithm : 
+            1. Choose appropriate 'k', as the number of neighbours you want to check.
+            2. Measure the Euclidean distance [ or any other like manhattan ] of its k-nearest neighbours.
+            3. Count the number of points in each category.
+            4. Assign the new_data_point to the category whose count was maximum. 
+
+        import pandas as pd
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        dataset = pd.read_csv("Social_Network_Ads.csv")
+        X = dataset.iloc[:,:-1].values
+        y = dataset.iloc[:,-1].values
+
+        # splitting 
+        from sklearn.model_selection import train_test_split
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state =0)
+        # on changing random_state from 1 ====> 0 accuracy score changed from 88% to 93%.
+
+
+        # feature scaling
+        from sklearn.preprocessing import StandardScaler
+        sc = StandardScaler()
+        X_train = sc.fit_transform(X_train)
+        X_test = sc.transform(X_test)
+
+
+
+        from sklearn.neighbors import KNeighborsClassifier
+        #from sklearn.neighbors import NearestNeighbor   # to get the neighbours
+        classifier = KNeighborsClassifier(n_neighbors=5, metric = 'minkowski', p=2)
+        # without the 'metric' and  'p' accuracy_score was 0.88
+        # with these parameters as well the accuracy_score was 0.88
+
+        classifier.fit(X_train, y_train)
+
+        y_pred = classifier.predict(X_test)
+
+
+        from sklearn.metrics import confusion_matrix, accuracy_score
+        print(confusion_matrix(y_test, y_pred))
+        print(accuracy_score(y_test, y_pred))
+
+Note : 'minkowski' is for Euclidean Distance.
+
+Support Vector Machine Classifer
+--------------------------------------
+This works by finding the closest data points of the two classes  these act as the support vectors. 
+This form a region, and the decision boundary between these two  points. For n>2 this boundary ofcourse
+changes into a hyperplane which are difficult to visualize. 
+    Also, note that the choice of kernel is also important,
+            kernel='rbf'        # draws curve region
+            kernel='linear'    # draws only a line 
+
+        # building the model
+
+        from sklearn.svm import SVC
+        classifier  = SVC(kernel='linear', random_state = 0)
+        classifier.fit(X_train, y_train)    
+        y_pred = classifier.predict(X_test)  # no need to transform as X_test has already been transformed. 
+
+Also note that linearly separability is also important factor. If the data we have is so, then all well and
+good. However, if we don't have such a data (like player in stadium with thousands of supporters). Then we
+can use some different hypothesis(classifier like polynomial make a circle). Or we could come up with 
+some clever tricks to be able to apply the linear-separability to the same data set.
+    One such technique is, increasing the dimension of the data. But this can be very computationally inten-
+sive task. 
+
+    Another thing that we can do is to apply KERNEL TRICK. This will allow us to different types of kernel
+functions and then place the 'kernel function' where it can capture the difference class of data points. 
+
+Types:
+        - Gaussian RBF kernel
+        - sigmoid Kernel
+        - polynomial kernel 
+
+Non-linear Kernel SVR <---------
+----------------------------------
+We use an RBF kernel here and project the data points onto the gaussian rbf and then in that higher dimension 
+we come up with hyper planes (equivalent to the tubes in linear SVR). And only now we can get the tube by 
+projecting on the smaller dimension. In the process we get a 'NON Linear' model to fit our data. 
+    In reality however we use 'kernel' trick avoid this computationally expensive method to arrive at af
+feasible model. 
+
+    using non-linear SVR allows us to classify using smooth lines, unlike the 'edgy-lines' in the linear 
+SVR.
+
+    This is done simply 'kernel = "rbf"' as the paramter of the
+                
+                classifier = SVC( kernel = "rbf") 
+
+Naive Bayes
+-------------
+These are also non-linear classifier, they classify using curvy-lines. These also have pretty fair accuracy.
+It also assumes that the features are Independent. This makes it Naive. It causes very less over-fitting. 
+
+Decision Trees : CART
+----------------------
+Decision trees basic performs split on the data points. How? This algo should be understood, which I dont
+know as of now. And we can use this for two reasons:
+        
+        1. For regression: assign the value of the new point as the average value of the leaf
+        2. For regression: assign the new point to the leaf it falls under. 
+
+How this is done is: by minimzing the ENTROPY. This will result in the optimal split. 
+
+Note: Decision trees are very old and they were kind of dying off. They were reborn when the Random Forests
+and Gradient Boosting werer introduced.      
+
+        from sklearn.tree import DecisionTreeClassifier
+        classifier = DecisionTreeClassifier(criterion="entropy", random_state=0 )
+        classifier.fit(X_train, y_train)
+
+# using the criterion="entropy", the performance increased by 1%. The default is 'gini' (what is this?).
+
+0.91 ----> accuracy. 
+
+
+This might suggest that 'Forest' (collection of trees) is likely to have a better score. 
+The result will be very different from previous ones. You will have regions with class '1' and class '0'.
+
+NOTE: Till now we have best score with the k-nn classifier. 
+
+Random Forest
+---------------
+You take club a number of same(or different) algorithm and construct a new model => (Ensemble learning)
+
+Algo:
+    
+    1. Take k data points randomly ( or may be some algo)
+    2. construct a decision tree out them and model the data.
+    3. repeat the above to steps multiple times.
+    4. Now to predict : for a new data point get the result of each of the model(tree) and then take the 
+        average of all the prediction. 
+
+implementaion core:
+
+        from sklearn.ensemble import RandomForestClassifier
+        classifier= RandomForestClassifier(n_estimators=10, random_state=0, criterion="entropy")
+        classifier.fit(X_train,y_train)
+
+Accuracy : 0.91             # on Social_...csv   # with "entropy" as criterion
+
+if we tune the above model and change the criterion to ----> "gini" (which is the default) 
+Accuracy: 0.92              # which is better than "entropy" 
+
+
+
+
+-------------------------------
+How to select the Classifier?
+-------------------------------
+As with the regression, we had to try all the models here as well we will have to try all the models.
+Now, we see the importance of creating the template so the we are able to run the model in a 'flashlight'.
+
+
+Case Study: On Data from UCI, Cancer
+                                                    
+                                                dataset.shape  #(683, 11)
+
+Logistic classifier                     ----------->    0.9473684210526315
+K-nn classifier                         ----------->    0.9473684210526315
+Support vector machine classifier        ---------->    0.9415204678362573
+kernel svm                              ----------->    0.9532163742690059
+Naive-bayes                             ----------->    0.9532163742690059
+Decision Trees                          ----------->    0.9590643274853801
+Random forest                           ----------->    0.935672514619883
+
+
+Here we find that the model that seems best at this time is: Decision Trees!
+With that learnt, right now we don't have any 'rule of thumb' to say which will model will be the best. 
+However, a good knowledge of the features and the algorithms should be enough to give some valuable, 
+insights in selecting a particular model over the other.
+
+Accuracy is measured using the Adjacency matrix and Accuracy_score. However, these can be sometimes
+misleading.Once we get to understand the accuracy paradox. Hence we have to use something called CAP Curve.
+Cummulative Accuracy profile :
+
+
+            ^
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |-------------------------------------------------------------------------->
+
+
+suppose there are 10000 people in a city and out of that at max only 10%(100) people buy your product.
+Why? You know it based on the past surveys that you conducted. 
+    Now you make another product and start the process of contacting every person in the city in order
+to pursue the to buy, even after knowing that only 10% will buy. And you do it randomly. After you are
+done selling the product to the whole city, you will indeed be able to sell the product to 100 people.
+but you will have wasted your time and resource. 
+    If you carried your analysis on the data that you had collected earlier, we can actually improve
+our results, by carefully targeting the people with some favourable features. This will allow us to 
+contact those 100 people(who are actually going to buy our product) much faster, and we can save a lot
+of time and resources. If the new line is above the "Random" line than we are doing better and more the 
+area between the random and the new line, the better is our performance. 
+    Also if after research we are getting the new-line below the 'random line' than actually we should 
+disregard the technique that sorts the customers on the priority list and start doing things Randomly!!!
+
+ROC should not be confused with CAP. 

@@ -1,0 +1,224 @@
+Andrew suggests octave for machine learning. Quite similar to Matlab and python. 
+
+comment ----> %
+string  ----> 'hi'
+pi  ----> 3.1416
+disp(var)  ----> displays the variable
+variable  ---->    a=3;
+;     ---->     suppresses the output. 
+disp(sprintf('2 decimals: %0.2f', a))  ----> shows 3.14
+format long ----> 
+format short  ----> 
+
+
+matrix:
+-------
+
+A = [1 2; 2 3; 9 10]  % note that there is no comma like in python. 
+
+v = 1: 0.1 : 2   % column vectors. 
+
+w = ones(2,3)
+
+w = zeros(2,3)
+
+r= rand(3,3) % gives a matrix of 3*3 each entry is random and between 0 and 1. 
+
+gaussin_rand_matrix = randn(1,3)  % mean = 0 and SD = 1
+
+matrixx = randn(3,3) + 1 ;       % will add 1 to each entry of the matrix
+
+hist(mat)       % brings up the histogram  % this is quite neat about the Octave. 
+
+hist(randn(1,111), 5) % number of items in each bucket. 
+
+identity_mat = eye(3)
+
+help(__any_command__)
+
+size(matrix)  % returns the order #row #col 
+size(matrix, 1) % number of return the #row in matrix 
+
+length(matrix) % gives the longer dimension
+
+v=[1 2 3 4] 
+size(v)         % 1 4
+length(v)       % 4
+
+
+ML and octave:
+---------------
+Load and move data. 
+
+load file_name.dat
+load('file_name.dat')
+
+name of the file become the variable to call the data. The file_name will print the data on the console. 
+
+who         % current variable in the memory
+whos        % more detail on these variable 
+
+slice_of_data = priceY(1:10)
+
+save new_file_name.mat variable_name;       % saves new files. 
+
+save new_file.txt variable_to_save -ascii;  % sve as text (ASCII)
+
+A= rand(3,2)
+
+A(3,2)
+A(2,:)  % second row of A
+A(:,2)  % 2 column of A.  % octave uses 1 indexing. 
+A([1 3], :)  % show all entries of column 1  and 3rd column
+A(:, 2) % all rows of second column ==> second column itself. 
+A(:,2) = [1 3 5] % reassigns the column 2 
+
+A(:)    % puts all the elements of the matrix into a single vector. 
+
+A=randn(1,3)
+B=randn(1,3)
+C=[A B] % concatenates makes a broader [A, B]  is same. 
+
+Note: you have to take care of the dimensions ,,, Dimensional mismatches are not entertained. 
+
+Computation in Octave
+-------------------------
+
+A*B  % simple matrix multiplication
+A.*B % element-wise multiplication
+A.*.B %
+1 ./A % reciprocal of all the entries on its place
+log(A) % is also valid
+abs(A) % element wise absolute
+-A
+A'   % transpose
+
+v=[1 3 5]
+v+1  % adds to all the entries also works for matrices
+v+ones(length(v),1)         % matching the dimension 
+max(v)      % max value of vector /// for matrices it just returns columns wise
+
+[val ind] = max(v)  % we also get the index of max value in the vector. 
+v < 3  % element wise comparison and returns a boolean array. 
+
+
+[r c] = find(A >= 7)   % each index is accesible by two numbers r(1) and c(1) will give you first required. 
+
+sum(a) 
+prod(a)
+floor(a)
+ceil(a)   % rounds to nearest integer
+
+max(A,[],1) 
+max(A,[],2)  % finds max per row
+max(max(A))
+max(A(:))
+
+sum(A,1)    % columns wise sum
+sum(A,2)    % row-wise sum
+
+A=magic(9)
+A .* eye(9)     % only diagonal elements remain and rest become 0
+sum(sum(A .* eye(9)))       % gives the diagonal sum 
+
+flipup(eye(9))  %  flips main diagonal is flipped. 
+magic_matrix = magic(3) % returns a nice matrix
+
+pinv(A)     % return the inverse of A. 
+find(v < 3)   % returns the index of elements that are less than 3 in vector v.
+
+Doing above operations keep in mind the dimensions of A and B. 
+
+
+
+Plotting the data
+------------------
+t=[0.0 : 0.01 : 0.98 ]
+y1=sin(2*pi*4*t)
+y2=cos(2*pi*4*t)
+plot(t,y1)
+plot(t,y2)   % this will replace sign plot with cos
+
+hold on;    % allows to plot on top 
+
+xlabel('time')
+ylabel(value)
+legend('sin','cos')
+title('my plot')
+print -dpng 'filename.png';
+
+close % get rid of figure
+
+figure(1); plot(t, y1);
+figure(2); plot(t, y2);
+subplot(1,2,1) ; % divides plot a 1x2 grid, access first element
+axis()
+
+% neat trick to visualize my matrix. 
+
+imagesc(A) % displays matrix as a color
+imagesc(A), colorbar, colormap gray;
+
+
+control statements
+------------------------
+
+for loop:
+----------
+            v = zeros(10,1); 
+            for i=1:10,
+                v(i) = 2^i;
+            end;                % note that indentations don't matter 
+
+            
+            i=1
+            while i<=10,
+                v(i) = 100;
+                i=i+1
+                if i==5,        % note the replacement of ':' with ','
+                    break;
+                elseif i==3,
+                    disp('you still have long way to go');
+                else
+                    disp('you know what to do next');
+                end;
+            end;
+
+functions
+----------
+
+functions are stored in files. 
+
+% content of the function file
+function y = squareThisNumber(x)        % this function  will return y
+y=x^2;
+% content ends here
+
+addpath('the location where you want to frequently visit')
+squareThisNumber(5) ; will call the function if the function has been called in a legal locatiion. 
+
+
+function [y1, y2] = some_operation(x) ; % this  function will return two values.
+
+Vectorization
+--------------
+h(x) = Summation(theta_j * x_j) | from j=0 to j=n  % there are n features
+
+This can be done by running loop: 
+        
+        prediction = 0.0;
+        for i=1:n,
+            prediction = prediction + theta(j) * x(j) 
+        end;
+
+And the other is by using the vector notation and some external libraries, which are present in most
+of the programming languages.
+
+vector form of the hypothesis. 
+    
+       prediction = theta' * x    % inner product of the coeffecient matrix and feature row. 
+   
+
+
+
+
