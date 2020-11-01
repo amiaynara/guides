@@ -524,3 +524,185 @@ area between the random and the new line, the better is our performance.
 disregard the technique that sorts the customers on the priority list and start doing things Randomly!!!
 
 ROC should not be confused with CAP. 
+
+
+
+Unsupervised Learning
+------------------------
+
+k-means clustering:
+
+        1. Choose 'k', choice of k is also a point for discussion. 
+        2. Choose 'k' points, not necessarily from the dataset. 
+        3. Now choose a distance measure, and assign all those points to one of 'these k' points. 
+        4. Now take the 'centroid' of these 'k' groups, Now we have new set of k points. 
+        5. Again measure the distance from the these new 'k' points. if there is some reassignments, 
+            then restart the process from step 3. Else you have your 'k' clusters. 
+
+Note: The algorithm might not always converge to the desired solution. This can happen due to random
+    initialisation of the centroids. To encouter this will have k-means++ algorithm.
+
+Another decision to be made is while deciding the number of clusters. One way to measure the performance 
+of k-means is to use the squared distance from the corresponding centroids. As we increase the number of
+clusters, this squared distance will always decrease and finally  converge to 0, when number of clusters
+is equal to the number of number of data points. But this seems to an overkill. 
+    To determine the optimal number of cluster, we draw WCSS(within cluster squared sum) vs the #of clu-
+sters. In the plot we will generally observe a sharp decrease in WCSS initially but later that becomes
+lesser and lesser. The optimal point is where the decrease just started to become slow. This method is 
+called elbow method. As an 'elbow' can be seen at the optimal point.
+
+        from sklearn.cluster import KMeans
+        wcss=[]
+        for i in range(1,11):
+            kmeans=KMeans(n_clusters=i, init='k-means++',random_state=42)
+            kmeans.fit(X_train)
+            wcss.append(kmeans.inertia_)
+
+        plt.plot(list(range(1,11)),wcss)
+        plt.show()
+        # the above curve show k=5
+
+        kmeans_optimal=KMeans(n_clusters=5,init='k-means++',random_state=42)
+        kmeans_optimal.fit(X_train)
+        y_kmeans=kmeans_optimal.fit_predict(X_train)
+        # visualising the clusters
+        for i in range(5):
+            plt.scatter(X_train[y_kmeans==i,0],X_train[y_kmeans==i,1], label='Cluster'+str(i))
+
+        plt.scatter(kmeans_optimal.cluster_centers_[:,0], kmeans_optimal.cluster_centers_[:,1])
+        plt.scatter(X_train[:,0],X_train[:,1])
+
+Note that we run the k-means++ for all the values, and then choose the 'elbow point' using the plot.
+Also, it worth noting that, since it was a 2-D plot we could visually look at the classifications, 
+but in case of higher dimensions, it would not be possible should we would have to rely on WCSS.
+
+Hierarchical Clustering
+========================
+There are two approaches to this:
+    1. Agglomerative
+    2. Divisive
+
+1. 
+    a) We are start we assuming each point as a cluster.
+    b) Take next CLOSEST CLUSTER and combine them together.
+    c) Continue doing this. 
+
+There is one point though how to go about defining the distance b/w the clusters:
+    1. dist. b/w the closest points.
+    2. dis. b/w the farthest points. 
+    3. avg of the distance. 
+    4. centroid distance. 
+
+Dendogarms: Memory of the HC algorithm. 
+Seems like a tree. Which can store the information regarding the formation of the final cluster.
+Also note that these graphs also tell us the information regarding the dis-similarity/similarity among
+the clusters. 
+
+
+
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            |
+            ---------------------------------------------------------------------------->
+                                                Datapoints
+On yaxis we have : euclidian distance. 
+
+setting the threshold gives the number of optimal clusters that you will need. These can be done by
+analysing the length of the lines on the dendograms, hence these are important. 
+
+Application:
+        
+        import scipy.cluster.hierarchy as sch
+        dendrogram = sch.dendrogram(sch.linkage(X, method = 'ward'))
+        plt.title('Dendrogram')
+        plt.xlabel('Customers')
+        plt.ylabel('Euclidean distances')
+        plt.show()
+
+
+
+
+Association Rule
+--------------------
+People who bought also bought ... That is what Association Rule Learning will help us figure out!
+
+        1.Apriori
+        2.Eclat
+1. Apriori
+
+    a) Support: what fraction have a particular feature. (say S=0.1 fraction people watch x-machina)
+    b) Confidence: what fraction who have above feature also have another feature. (c=0.5, frctn who 
+                                                have watched x-machine out of those who have watched 
+                                                intersteller)
+    c) lift : c/S.  
+
+If we recommend xmachina to every one, then we only 0.1 frn will like the movie; we are less efficeint.
+However, if we associate this to watching intersteller, i.e., to recommend only to the people who have
+watched intersteller, then it is more likely that the person will also like xmachine. Hence more percent 
+of people will like the movie, we are being more efficient in recommending. It is therefore important 
+that we find strong and reliable association, else we might loose customers, but smart association can 
+have huge profits as well. 
+
+#apyori takes the data in the form of a list of list of the data-row
+# as done above
+# also note the conversion to string will creating the list
+# support means to me how much support this product has gotten from the customers in
+# the market.. so that now we can leverage this "support" and then associate with
+# some other product having certain confidence.
+
+2. Eclat
+It only has Support. It works in sets of. If  movie1 and movie2 both are present in the watched list of
+the user. And then we calculate the percent of such users, and find pretty high number( this number is 
+support). Then we should pick people who have only movie1 or only movie2, and recommend the other to them.
+So, support here is the fraction of people who have watched both 1 and 2.
+        Algo:
+
+        1. set min support
+        2. takke all the subsets in transactions haveing higher support than minimum support
+        3. sort these subsets by decreasing support. 
+
+Note: Eclat does not have confidence & lift. 
+
+
+
+Reinforcement learning
+-------------------------
+
+Upper confidence Bound
+========================
+One armed monster are basically, gambling machines with a lever. But here we will have multiple of them.
+It is known that some of these machines are wicked and have very skewed distribution which makes us 
+loose most of the times. This is a kind of cheating. 
+    Problem at hand  : We now have a multiple of them and we have to find the best of them. One option is
+to test each huge nubmer of times and that will give us a distribution and we can then find the distribution
+But a major problem is that we will have to play at 'wicked' machines as well. We will loose resoure(time
+and money) while trying to play at 'wicked' ones. UCB helps to overcome this two-step process. 
+    UCB finds the best. But it does that minimizing the number of losses by playing at bad machines. 
+
+1. assign a random expected value to each of the machine. 
+2. With keep trying on these machine and capture the data for return; one machine at time. 
+    There are also confidence bands around these initial expected values. 
+3. If the actual return value is less than the assumed value, we lower the assumed value towards the
+    value that we actually received by small amount. This also allows to be more confident in the expected
+    value as we have more data now. 
+4. we keep repeating for next greatest confidence bound until our distribution converges. 
+5. This will allows us use the machine that was most fair, maximum number of times. 
+
+
+
+
+

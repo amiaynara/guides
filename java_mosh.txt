@@ -1,0 +1,429 @@
+Java
+----------
+
+
+
+
+
+
+
+
+
+
+
+1. Compilation and Execution
+=============================
+
+A code written in java is compiled by JavaC, which comes when we install JDK. This converts the code
+into ByteCode. It can be observed, Main.class along with other classes will be created as separte
+files. These files are platform independent. Why? Here another component comes into play, JRE[Java 
+Runtime Environment]. It has a software component called- JVM (different for each platform: linux,
+MacOs, windows). This converts these classes as native code, that is understood by the machine and
+hence run.
+Evidence:
+        
+        import com.package_name;
+        public class Main{                              # Main can be replaced but then Refractor!
+            public static void main(String[] args){     # main() is must
+                System.out.println("Hello World");
+            }
+        }
+
+        $javac Main.java            # converts the .java into .class
+        $ls                         # will show you the Main.java & Main.class
+        $cd ../..                   # move to the source folder in Intellij
+        $java com.package_name.Main # Hello world ----- is printed. 
+
+Note: unless specified the code snippets are present in side this Main class, in the text that follows. 
+Important: It is important to place code blocks inside a function or a class.
+
+Variables:
+----------
+    
+    int age = 30;       # Declaring var , multiple can be declared in the same line
+    int herAge=age;     # assigning one var to the other
+    
+Types:
+Primitive    :
+
+    Type        | Byte      | Range     
+    byte          1           
+    short         2
+    int           4 
+    long          8
+
+    float         4                                 // above this only integers
+    double        8
+    char          2
+    boolean       1
+
+    int x=123_2123;  // is perfectly fine initialisation. but 123_ is not. 
+    long a=1233_12312342;   // assumes the number to intger => java: integer number too large
+    long a=1233_12312342l;  // is perfectly fine 'L' is alos good.
+
+    float x= 12.99          // java: incompatible types: possible lossy conversion from double to float
+    float x= 12.99F     // is ok
+
+"" ---> is string in java unlike python
+'' ---> is character in java
+
+
+Reference types:
+---------------
+        Date now = new Date();
+        sout(now);
+
+The Memory management of these reference types is very different from the primitive ones. On creation,
+a memory is allocated and the values are stored there. Name of the object is just a reference to that
+memory location => stores the address of that oject. So when a new reference variable is created and 
+assigned to an older reference variable, the new variable just starts 'pointing' to the oject memory
+location, instead of creating a whole new object. So both start pointing at the same memory location.
+So when the value of one of the references is changed the change is reflected in second as well. 
+[is similar to python's list, python also follows a similar memry mangment].
+    Also, note that the reference variable are created by user using 'new' and removed by JRE.
+
+Remember: reference types are copied by the references and the primitive by value.
+
+         Point p1=new Point(2,3);
+         Point p2=p1;
+         System.out.println(p2);
+         p2.x=99;
+         System.out.println(p1);        // [99,3] 
+
+
+String
+--------
+java.lang       // automatically imported not need to import
+
+        String s = new String("Hello world");
+        String s = "Hello world";       // shorthand because of the often use.
+
+        s=s+"hi";                       // concatenates
+
+some useful methods:
+--------------------
+    .endswith("!!")
+    .startswith("A")
+    .length()
+    .indexOf('e')           // returns index of 'e'
+    .replace(target:"!", replacement:"*")       // original string does not change
+                            // strings are immutable, we cannot change them.
+    .toLowerCase()
+    .toUpperCase()
+    .trim()                 // gets rid of white spaces before and after. 
+
+escape sequences: String name = "Hello \"Amiay\"";      // Hello "Amiay"
+                  String location = "C:\\";             // one back slash to escape the other.
+                  
+\t, \n                are some other. 
+
+Arrays
+----------
+
+They are also reference types. (or are they?) if not why are they declared using new.
+        
+        int[] arr = new int[5];
+         System.out.println(arr);       //[I@5674cd4d      <-----some random value
+
+         System.out.println(arr[0]);    //0  // this is true for any valid index
+                                        //Index 6 out of bounds for length 5
+This shows that are array are reference types and initialized with 0. We cannot exceed the index limit. 
+
+So the desired result can be achieved using:
+
+        import java.util.Arrays;
+
+        ...
+
+        int[] arr = new int[5];
+        sout(Arrays.toString(arr));         // string representation of the array
+                                            // this toString functiion is overloaded=> can be use for 
+                                            // float as well
+
+initialisation
+        
+        int[] arr={1,3,4,5};
+        arr.length                          // not '.length()'
+        Arrays.sort(arr)                    // sorts the actual array
+        int[] arr2 = new int[] {1,8,9};     // is also a valid declaration
+        sout(Arrays.toString(arr2));
+
+        int[] int_arr = new int[5];         // arr of 0's
+        String str_arr = new String[5]      // arr of nulls
+        boolean bool_arr = new boolean[5]   // arr of falses
+        // and so on
+
+As usual we can also declare multi-dimensional arrays
+
+        int[][]  mul = new int[2][3]        // note the two sq. braces.
+        sout(Arrays.deepToString(mul));     // notice the use of '.deepToString'
+
+        // initialisation
+        int[][] aa = {{1,2},{3,4}}          // two dim array
+
+final
+=-=====
+        
+        final float PI = 3.14F                // 'F' necessary(default is 'double')
+
+Upper case is used to define the constants. Final values cannot be changed. 
+
+Arithmetics
+============
+
+        int x=5/3;                  // returns 1 
+        int v=3/2;
+         System.out.println(v);     //1
+         double vv=3/2f;            // removal of 'f' will result in 1.0
+         System.out.println(vv);    // 1.5
+
+Adding a 'short' to an 'int':
+
+// Implicit casting  // 
+        int v=3/2;
+        short x=2;
+        //short c= v+x; // int cannot be converted to short
+         int s=x+v;     //
+         System.out.println(s);     // return 3
+
+// two different primitives cannot be operated upon. 
+
+short c=v+x; ===> java allocated a memory of '4 bytes' somewhere in memory, without any name. 
+                This chunk is of integer type and then copies 1 into that location, and only now
+                performs the addition with v(which is int).
+
+    Note: Implicit casting occurs such that there is no data loss. 
+            If it were to happen then, it will show error: lossy variable conversion.
+            In that case we will have to carry out 'Explicit Type casting'.
+            All the casting can happen when we have compatible classes. 
+    String s="1";
+    int x=(int)s + 1;  // explicit even won't work here
+    int c=Integer.parseInt(s)+1; // this works 
+    int xx=Integer.parseInt(dd)+3;      // this does not work incompatible types: double 
+                                                cannot be converted to java.lang.String
+Why such weird conversion?
+Normally, the user the data that we get from users are in the form of strings. That is why these become
+important.
+
+We also have : 
+        JDouble.parseDouble()
+
+Math
+=====
+        
+        int result=Math.round(1.1f);
+        result = (int)Math.ceil(1.1f); // note the explicit typecasting
+        result = (int)Math.floor(1.1f);
+        result = Math.Random(); // Random number [0,1)
+        result = Math.max(3,55);
+
+
+
+Note: Abstract classes cannot be instantiated.
+        NumberFormat number = new NumberFormat(); // java: java.text.NumberFormat is abstract; cannot be instantiated
+        NumberFormat number = NumberFormat.getCurrencyInstance();  // Factory method.
+        String res = currency.format(1234)
+        String mon = n.format(1234);
+         System.out.println(mon);       //  ₹ 1,234.00
+         String indian_money = NumberFormat.getCurrencyInstance().format(7000);     // method chaining
+
+Reading inputs, Scanning rather
+---------------------------------
+         import java.util.Scanner;
+         ...
+
+         Scanner sc  = new  Scanner(System.in);
+         String name = sc.next(); // does not accept spaced input
+         System.out.println(name);
+         int age = sc.nextInt();    // .nextDouble(), .nextFloat(), nextByte()      But no .nextString()
+         String lover = sc.nextLine();      // "Kate winslet" also acceptable.
+         String pre_spaced = sc.nextLine().trim();
+         
+Control Flow
+-------------
+
+    if(condition){
+        boolean block_scope = true;
+    }
+
+    sout(boolean);      // yields error as the 'block_scope' has scope only in side if block
+                        // cannot find symbol
+    // additionaly below is not valid
+    if(condition)
+    int x =33;          // declaration not allowed
+
+
+            
+    boolean isHighIncome;
+    
+    if(income>100_000){
+        isHighIncome = true;
+    }
+    else {
+        isHighIncome = false;
+    }
+
+    // **Pro-programmig**
+
+    boolean isHighIncome = income > 100_000; 
+    // **Pro-programming**
+
+Ternary operator
+------------------
+    String className = income > 100_000 ? "First" :"Economy";
+
+switch
+----------
+
+    String role = "admin";
+    switch(role){
+        case "admin":
+            sout("you are an admin");
+            break;
+        case "moderator":
+            sout("you are a moderator");
+            break;
+        default:
+            sout("you are just a normal employee");  // if none of them cases are true.
+    }
+
+-------------------------------------------------------
+    
+    String s="hello";
+    sout(s == "hello");         // prints true          // is not recommended --> reference tyepes
+
+    // instead
+    sout(input.equals("hello");     // is fine. 
+
+
+for each loop
+----------------
+
+        String[] fruits = { "Apple" , "Mango", "Orange"};
+        for(int i =0; i< fruits.length; i++){
+            sout(fruits[i]);
+        }
+
+        // alternate and quite cleaner
+        for(String fruit : fruits){
+            sout(fruit);
+        }
+
+
+Methods
+---------
+Still working with the "Main" class, which already has 'main()' method which is necessary. 
+We will add another method, self defined one. 
+
+        public static void printJunk(){
+            System.out.println("there is some junk in the trunk");
+        }
+Static is used because JVM will not create an object of the Main class, there fore to make 
+the method attached to the class(rather than the object) we use the 'static' keyword. 'void'
+means this will not return anything back to the calling method(which is 'main()' here). No 
+parameter because we aren't passing any 'argument'.
+       
+        public class Main {
+
+            public static void main(String[] args) {
+            // write your code here
+                MyUtils.sum2num(3,4);
+            }
+        }
+        class MyUtils{          // default access modifier
+            public static void sum2num(int a, int b){
+                System.out.println(a+b);
+            }
+        } // declared in the same file. 
+
+Above code works fine. However, 'public class MyUtils' will throw error, and can be resolved
+by creating another file :
+    java: class MyUtils is public, should be declared in a file named MyUtils.java
+
+Note: MyUtils.java will not be Runnable as it does not have a main() method. 
+
+Access Modifiers
+-----------------
+
+            type            private         public          protected       default
+            ---------------------------------------------------------------------------
+            class                           yes                             yes
+
+            method          yes             yes             yes     
+
+private: locally available, only available to the class
+
+
+        public class Main {
+
+            public static void main(String[] args) {
+            // write your code here\
+                c2.f2();
+            }
+        }
+
+        class c1{
+            public static void f1(){
+                System.out.println("I am fucntion one");
+            }
+        }
+
+        class c2{
+            public static void f2(){
+                System.out.println("I am function 2");
+                c1.f1();
+            }
+        }
+
+Importance of private
+--------------------------
+
+        public class Main {
+            public static void main(String[] args) {
+            // write your code here\
+                c2.f2();    // this is fine
+                c1.f1(); // <------------ error: private member cannot be accessed from out
+                            // side of the class
+            }
+        }
+
+        class c1{
+            private static void f1(){
+                System.out.println("I am fucntion one");
+            }
+            public static void ff1(){
+                System.out.println("I impersonate f1");
+                f1();       // within class so no need to use .operator
+            }
+        }
+
+        class c2{
+            public static void f2(){
+                System.out.println("I am function 2");
+                c1.ff1();
+            }
+        }
+
+
+public:
+    1.) with methods: makes accessible by any other class. [provided the enclosgin class is also public]
+    2.) with class: Makes this class accessible anywhere in the project.=> we can instantiate this anywhere
+                    in the project. However, to access its methods make sure you have the access modifier
+                    of the methods set as 'public'(not private)
+private:
+    1.) with methods: makes the class visible only withins package. 
+
+Note: when we are  calling classes from other packages, remember to 'import package_name'.
+
+
+Object Oriented Programming
+-----------------------------
+
+        Class_name reference_var;
+        reference_var = new Class_name();  // Class_name() ===> is the constructor for Class_name
+
+The object comes alive only when the 'new' returns the reference.
+Objects are runtime concept, and come into picture only during runtime. 
+
+
+
