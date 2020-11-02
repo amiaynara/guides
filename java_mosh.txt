@@ -37,6 +37,31 @@ Evidence:
 Note: unless specified the code snippets are present in side this Main class, in the text that follows. 
 Important: It is important to place code blocks inside a function or a class.
 
+Deployment
+---------------------
+The way to share the executable is by using JAR(Java ARchive) file. If we go and download Super
+Mario Bros Java. Since we have been using JDK(which brought with it JRE and Javacompiler) therefore
+we will be able to run this. JRE makes it happen. This will run on any platform(Windows, Mac, linux)
+given we have java runtime on it.  This is what makes it platform independent. So if you download it
+we will save it .jar file [Mario.jar]. Way to launch the file: 
+        java -jar Mario.jar
+        jar -tvf Mario.jar      // lists all the table of content of the .jar
+        jar -xvf Mario.jar      // xtract verbose file 
+Note that all java will be of the form .class which cannnot be run. Bur we might use the functionality.
+
+So if we wanted to deploy our java code, we will have to make a .jar file out of our java code. We need to 
+create 'manifest.mf' file inorder to create the .jar.
+        Main-Class: ClientProgram
+
+This manifest file will have the main-class, the entry point.
+        
+        jar -cvfm myProgram.jar manifest.mf *.class     // create verbose file with manifest file
+to run the .jar file
+        java -jar myProgram.jar         // can be shared ,, ... this is deployable,,, 
+                        // given the user has the java runtime. of the given version
+
+        java -tvf myProgram.jar         // to extract, you may get something more than expected.
+
 Variables:
 ----------
     
@@ -111,6 +136,11 @@ some useful methods:
     .toLowerCase()
     .toUpperCase()
     .trim()                 // gets rid of white spaces before and after. 
+    .substring(1)           // gives all except the first ~ python's stringg[1:]
+    .substring(3,5)         // ~python's stringg[3:5]=> excludes 5th INDEX
+    .charAt(3)              // character at the third index [-1] does not work here. returns a 'char'
+    .indexOf(char_or_string)// returns the index of first occurence
+    .indexOf(ch_or_str,strt)// search starts from the index--> 'strt'
 
 escape sequences: String name = "Hello \"Amiay\"";      // Hello "Amiay"
                   String location = "C:\\";             // one back slash to escape the other.
@@ -426,4 +456,415 @@ The object comes alive only when the 'new' returns the reference.
 Objects are runtime concept, and come into picture only during runtime. 
 
 
+class Car{
+    int hp; // instance variable
+}
 
+
+A variable provides us with named storage that our programs can manipulate. Java provides three types of variables.
+
+Class variables − Class variables also known as static variables are declared with the static keyword in a class, but outside a method, constructor or a block. There would only be one copy of each class variable per class, regardless of how many objects are created from it.
+
+Instance variables − Instance variables are declared in a class, but outside a method. When space is allocated for an object in the heap, a slot for each instance variable value is created. Instance variables hold values that must be referenced by more than one method, constructor or block, or essential parts of an object's state that must be present throughout the class.
+
+Local variables − Local variables are declared in methods, constructors, or blocks. Local variables are created when the method, constructor or block is entered and the variable will be destroyed once it exits the method, constructor, or block.
+
+
+What is the point of OOP?
+The is code organistion and providing logical structure to our code. In early days, for very small
+functionalities it would have been fine, to follow just the procedural method as assisted by C.
+But as the dependency, on the computers have increased exponentially, the code written on them 
+should become more reliable. When these codes git really big, it becomes very hard to add new 
+features and find bugs. But if we have implemented techniques such as
+            - modularity
+            - clean coding
+            - oops
+            - and so on.
+things become more easier to maintain. And this pushes more progress.            
+
+
+
+Inheritence
+-----------
+
+public class earth {
+    public static void main(String[] args){
+        animal ani = new animal("animal",3,34);
+        ani.sleep();
+        Fish f = new Fish("fish",2,5);
+        f.swim(); // access modifier ='default' => available anywhere in the package.
+        f.sleep();
+    }
+}
+// animal in a different .java file
+public class animal {
+    String name;
+    int age;
+    int speed;
+
+    public animal(String name, int age, int speed){ // default const. no more present
+        this.name=name;
+        this.age=age;
+        this.speed=speed;
+    }
+    public void sleep(){
+        System.out.println("I am sleeping");
+    }
+}
+// Fish in a different .java file
+public class Fish extends animal{
+
+    public Fish(String name, int age, int speed){
+        // Fish is animal, so it must be created the same way an animal is created.
+        // default constructor overwritten
+        super(name, age, speed);
+    }
+    public void swim(){
+        System.out.println("Swimming...");
+    }
+}
+
+
+
+Note: 'extends parent_class' is used to impose inheritence. This allows the child to inherit all the 
+        PUBLIC methods of the parent class(here 'animal'). find out the exact access modifiers. 
+     
+      The parent cannot access the child's methods.
+
+Interfaces
+-----------
+let us create another classes, 'bird' ,'sparrow' and 'chicken' to the above package. The chicken are 
+also a birds and sparrows are bird too. So we can see that bird is the parent here.
+
+
+        public class bird extends animal{
+            public bird(String name, int age, int speed){
+                super(name, age, speed);
+            }
+        }
+
+        // another file
+        public class Sparrow extends bird {
+            public Sparrow(String name, int age, int speed){
+                super(name, age, speed);
+                // can Sparrow sleep---> yes it is an animal afterall
+            }
+        }
+
+        // another class
+        public class Chicken extends bird {
+            public Chicken(String name, int age, int speed){
+                super(name, age, speed);
+            }
+            public void fly(){
+                System.out.println("Cannot fly...");    // fly() is being overwritten 
+            }
+        }
+
+Over-ridding is one solution, when we don't want a particular method to be inherited by the child. 
+This is one way. The other way is to use 'Interface', so you see how java provides us with an 
+infrastructure, which helps us to better organise our code. That is how we have different, OOPs
+each provide a different solution to a common solution to the problems that we face. Java has really
+been able to do that.
+
+    Interface is a Contract. Any class that wants to implement that 'interface' will have to 'implement'
+all the 'abstract methods' that have been mentioned in that interface.
+If in the above example, suppose, we have:
+        // removing the 'fly()' method altogether from the 'bird' class
+        public class sparrow extends animal implements Flyable{
+            public sparrow(three args){
+                super(three args);
+            }
+
+        // bird MUST  implement the abstract method fly()
+        public void fly(){
+            sout("flying...");
+        }
+        }
+
+        // 'Flyable' class is must
+        public interface Flyable {
+            public void fly();
+        }
+
+There are many 'birds' that don't fly, therfore it is in our favour to define an interface 'Flyable',
+which 'MUST' be implemented by the class that decides to use this 'Flyable' interface. Sparrow has to
+implement this. However, classes like 'Chicken' need not bother about implementing fly(), it can simply
+inherit the properties of the bird as usual, and since the bird class does not have 'fly()' method any-
+more, chicken will have never 'heard' of flying!
+
+NOTE: A class can 'extend' only and only "ONE" class. But a class can have many interfaces.
+
+Abstract Classes
+-------------------
+You cannot create an instance of an Abstract class. Abstract methods cannot hava a body.
+
+In the above example: 'animal' class can be made abstract. 
+        
+        public  abstract class  animal {
+            String name;
+            int age;
+            int speed;
+
+            public animal(String name, int age, int speed){ // default const. no more present
+                this.name=name;
+                this.age=age;
+                this.speed=speed;
+            }
+            public void sleep(){
+                System.out.println("I am sleeping");
+            }
+
+            // all animals can move but they do it differently
+            public abstract void move();
+        }
+
+        public class bird extends animal{
+            public bird(String name, int age, int speed){
+                super(name, age, speed);
+            }
+
+            public void move() {
+                System.out.println("Flapping wings...");
+            }
+        }
+        public class Fish extends animal{
+
+            public Fish(String name, int age, int speed){
+                // Fish is animal, so it must be created the same way an animal is created.
+                // default constructor overwritten
+                super(name, age, speed);
+            }
+            public void move(){
+                System.out.println("Swimming...");
+            }
+            public void swim(){
+                System.out.println("I can swim...");
+            }
+
+            // Fish , being child of animal has to implement the move function
+        }
+        public class Chicken extends bird {
+            public Chicken(String name, int age, int speed){
+                super(name, age, speed);
+            }
+        }
+        public class Sparrow extends bird implements Flyable {
+            public Sparrow(String name, int age, int speed){
+                super(name, age, speed);
+            }
+            public void fly(){
+                System.out.println("Flying...");
+            }
+        }
+
+
+        public class earth {
+            public static void main(String[] args){
+                animal sp = new Sparrow("bagada",3,21);
+                sp.fly();       // this line causes error
+                sp.move();
+            }
+        }
+
+  java: cannot find symbol
+  symbol:   method fly()
+  location: variable sp of type animal   // <-------------- note the type is animal not Sparrow
+
+replace 'animal' by 'Sparrow' in the creation of the object. An abstract class is a class that has abstract method.
+Also the method 'has' to be implemented by the child class(the class that extends it). Another interesting:
+we can make an 'animal' type to point at a Sparrow(present in the heap). [ Test whether this can be done
+without making the parent class abstract].
+    
+    public class earth {
+        public static void main(String[] args){
+            animal sp= new Sparrow("..",3,21); 
+            sp.fly(); // only move function can now be accessed using the 'sp' var of type animal
+            sp.move();
+        }
+    }
+
+Note that, you might think that making of animal class an abstract class does not help, as we have to
+implement both the move method in both classes(bird and fish). but this provides with a dynamic approach.
+
+public class earth {
+    public static void main(String[] args){
+        animal sp = new Sparrow("bagada",3,21);
+        animal fis = new Fish("machli", 2,10);
+        moveAnimal(sp);
+        moveAnimal(fis);  // now we don't have to create two different methods 
+                    // moveFish() and moveBird() 
+    }
+    public static void moveAnimal(animal anim){
+        anim.move();
+    }
+}
+
+AND THIS IS AN EXAMPLE OF POLYMORPHISM. WE HAVE USED THE 'IDEA' OF MOVING AND GENERALISED IT FOR 
+MULTIPLE CLASSES INSTANCE TYPE. The moveAnimal method can work with all types of animals. 
+
+public class earth {
+    public static void main(String[] args){
+        Flyable flyingBird = new Sparrow("mfug",3,33); // fine, bcs Sparrow implements Flyable
+        Flyable flyingbb = new bird("birddd",3,33); // incompatible types: bird cannot be converted to Flyable
+        flyingBird.fly();
+    }
+}
+
+Only a class(Sparrow) that implements an interface(Flyable), can create objects(in heap) that can be
+referenced by the interface class's reference variable(flyingBird, present in the stack).
+
+File Handling
+--------------
+like System.out, we have System.in, you can look into the class description to know more. 
+
+    import java.util.Scanner;
+    File file = new File("myfile.txt"); // java.io
+    Scanner input = new Scanner(file);
+
+    while (input(.hasNextLine()){
+        String line = input.nextLine();
+        System.out.println(line);
+    }
+
+    input.close(); // this is also important. 
+
+What happens if the file does not exist in the file location specified. 
+Two ways:
+        1. public static void main(String[] args)  throws FileNotFoundException {
+
+        2. try{ input = new Scanner(file);}
+            catch (FileNotFoundException e){
+                e.printStackTrace();
+            }
+           
+Method 1. 
+---------
+public class general_class {
+    public int sub10fromArg(int number) throws Exception{
+        // add condition to throw and exception
+        if(number < 10){
+            throw new Exception("Error message to be written here");
+        }
+        return number-10
+    }
+}
+
+in main class-->
+    general_class test_class = new general_class();
+    try{
+        test_class.sub10fromArg(9);
+    }
+    catch(Exception e){
+        e.printStackTrace();
+    }
+this will display our error message when the exception condition is satisfied. 
+
+Here the exception class was already implemented by java. But we can define our own 'exception' class.
+We can do this by extending the 'Exception' class. and continue from there on. When we actually do 
+implement our own exception we should to do it in another package. And the import that here we want to use. 
+Look it up more when you need it.
+
+File handling : a buffered file reader  
+-----------------------------------------
+This is an older way.
+
+import java.io.*;
+
+        public class Application {
+            public static void main(String[] args) {
+                File file = new File("my_file.txt");
+                BufferedReader bufferedReader = null;
+                FileReader fileReader = null;
+                try{
+                    fileReader = new FileReader(file);
+                    bufferedReader = new BufferedReader(fileReader);
+
+                    String line = bufferedReader.readLine();  // this might throw IOException
+                                                        // we can see this in the class definition
+                    while(line != null){
+                        System.out.println(line);
+                        line = bufferedReader.readLine();
+                    }
+                }
+                catch(FileNotFoundException e)
+                {
+                    System.out.println("File not found!");
+                } catch (IOException e) {
+                    System.out.println("Can read the file"+file.getName());
+                } finally {
+                    // this will always run
+                    try{
+                        bufferedReader.close(); // will also throw IOException, from the definition
+                    }
+                    catch(IOException e){
+                        System.out.println("Unable to close the file"+file.getName());
+                    }
+                }
+            }
+        }
+
+Another thing to take care about is that, when the file name is wrong, the FileReader fil....  line 
+will run and then code will crash and we will land into the catch block, note that we will have skipped
+the part where the buffered reader was assigned something to point to. But now it is still pointig to
+null, and we have skipped to bufferedReader.close() // note that we cannot call any method on null//.
+That is why we get a 'NullPointerException', and this will be caught by catch block. 
+    There should be a better way. The programmer does not have to catch a NullPointerException, becase
+we know the thing is going to be null.  'finally' must close the RESOURCES----> this is very important.
+
+In the above the finally should be replaced by
+
+ finally {
+            // this will always run
+            try{
+                //bufferedReader.close(); // will also throw IOException, from the definition
+                if(bufferedReader != null){
+                    bufferedReader.close();
+                }
+                if(bufferedReader != null){
+                    fileReader.close();
+                }
+            }
+            catch(IOException e){
+                System.out.println("Unable to close the file"+file.getName());
+            }
+        }
+
+
+Beyond java 1.7, we can use 'try with resource', which implements Autocloseable resource, so 
+we don't need to close things manually. 
+
+        import java.io.*;
+        public class App_new_file_reading {
+            public static void main(String[] args) {
+                File file = new File("my_file.txt");
+                // try with resource only after java 1.7
+                // this gets rid of the finally block
+                try(FileReader fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);){
+
+
+                    String line = bufferedReader.readLine();  // this might throw IOException
+                    // we can see this in the class definition
+                    while(line != null){
+                        System.out.println(line);
+                        line = bufferedReader.readLine();
+                    }
+                }
+                catch(FileNotFoundException e)
+                {
+                    System.out.println("File not found!");
+                } catch (IOException e) {
+                    System.out.println("Can read the file"+file.getName());
+                }
+            }
+        }
+
+we can also use our own implementation of AutoCloseable : 
+        
+        class myClass implements AutoCloseable{
+            @Override 
+            public void close() throws Exception{
+                sout("Closing");
+            }
+        }
