@@ -868,3 +868,566 @@ we can also use our own implementation of AutoCloseable :
                 sout("Closing");
             }
         }
+
+
+Collections
+-------------
+
+int n = scanner.nextInt();
+int[] arr = new int[n]; // you could create an array with a desired size, this size would be fixed. 
+
+So we see how we can have restrictions, in terms of flexibility. We need some sort of support which
+allows us to change the size of the array as and when needed. So this support is provided by the 
+collections. 
+    import java.util.ArrayList;
+    ArrayList words = new ArrayList(); // is a dynamic array provided by java // it is Raw Type
+
+    words.add("amiay");
+    words.add("narayan");
+    words.add("anything");
+    words.add(9);
+
+    words.get(0); // put the index here // this returns an object not a string
+    String s = words.get(1) // will not compileible :Object cannot be converted to java.lang.String
+    String s = (String) words.get(0) // 
+    String s = (String) words.get(3) // will give error : type mismatch '9' cannot be converted to string
+    Integer x = (int) words.get(3) // is fine.
+    Object obj = (String) words.get(2); // also fixes the error but, now we loose the type 'int' or String
+    
+    x+y => error when we use objects. 
+this forces the developer to always be aware of the data type that the a line is returning or working with.
+This avoids any confusion programming, and leads to proactive programming. Type Safety. i
+
+This was before Java 5. After that 
+        Enter Generics
+
+The problem was that ArrayList was letting in all the data types( strings, int, ...). What generics does
+it allows only one type of data to be stored in an ArrayList. The Type of data is flexible, in the sense
+that we can store any type of data, but we have to keep in mind that once we choose a type of data,
+we have to store the same type of data for rest of the ArrayList. <type>
+
+    ArrayList<String> words = new ArrayList<String>();      // Type safety.
+
+    words.add("hello");
+    words.add("narayan"); 
+    words.add(3);               // gives compilation error. 
+    words.add("3");             // is fine. 
+
+ArrayList<type> one of many collection that java provides. LinkedList<int> is another. <int> is not valid
+only <class> can be inserted into these <>. Only those types that are allowe inside the reference types, 
+which are Reference types. 
+        
+    ArrayList<int> int_arr = new ArrayList<int>();      // is Invalid.
+
+    ArrayList<Integer> int_arr = new ArrayList<Integer>();
+
+ArrayList<type> is simply dynamic list. 
+LinkedList<type> is simple a doubly linked list.   TYPE SAFE <= parameter.
+
+Iterate over
+------------
+        
+        ArrayList<String> animals = new ArrayList<String>();
+        for(int i = 0; i< animals.size(); i++){
+            System.out.println(animals.get(i));
+        }
+
+        // another way
+        for(String value : animals){
+            sout(value);
+        } // this can also be used for other collections as well. 
+
+ArrayList<referce_data_type_or_custom_class> list_name  = new ArrayList<........>(initial_capacity);
+
+        ArrayList<Vehicle> vehicle_list = new ArrayList<Vehicle>(100);
+        vehicle_list.add( new Vehicle(arg1, arg2......)) ; // we are creating object here. 
+        vehicle_list.add( new Vehicle(arg1, arg2......)) ; // we are creating object here. 
+        vehicle_list.add( new Vehicle(arg1, arg2......)) ; // we are creating object here. 
+        vehicle_list.add( new Vehicle(arg1, arg2......)) ; // we are creating object here. 
+        
+        // to loop over these vehicles. 
+        Vehicle temp_vehicle;
+        for(Vehicle veh : vehicle_list){
+            sout(veh.getPrice());       // Assuming our implementation of Vehicle has that method.  
+        }
+        // again we will have the @gibrish .. this is due to implementation of 'toString' in java.
+        // so we will have to @Override in the Vehicle class the 'toString' function.
+
+LinkedList<type> and ArrayList<type> both implement the interface <List>, so we can use <List> instead
+of these two, this can come really handy we have both the kinds of lists and we want to pass both of 
+them to a method, we can use List<type> as the parameter to the method. This will accept both ..
+remember polymorphism. 
+        LinkedList<type> ll = new .....
+        ArrayList<type> arr = new .....
+        operateOnBoth(ll);
+        operateOnBoth(arr);
+
+        ...
+
+        public static void operateOnBoth(List<type> listt){
+            // you can access the methods that are common to both ll or arr. 
+        }
+       // example of polymorphism
+
+
+
+Set
+-----
+
+        HashSet<Integer> values = new HashSet<Integer>();
+        values. add(33);
+        values.add(320);
+        values.add(33);
+        System.out.println(values); // sout works here  [320, 33]  is the output. 
+
+        <Integer> -------> <String>   , Ofcourse 
+
+Unique values, Order does not matter. 
+
+for ordered => LinkedHashSet<Integer> , but still not repeats. maintains insertion order. 
+
+two objects of a class are not equal by default implementation of '.equals()', we have to override the
+method '.equals()' in our class definition, to compare each of the properties one by one and only if
+all the values are the same in both objects the values is assigned to as 'true'
+
+        HashSet.get(0) is not valid, since it does not implement any order in the collection that it 
+maintains. 
+
+        HashSet<Animal> animals = new HashSet<Animal>();
+        animals.add(new Animal("dog"));
+        animals.add(new Animal("dog"));
+        animals.add(new Animal("dinosaur"));
+        animals.add(new Animal("cat"));
+        animals.add(new Animal("dog"));
+        for(Animal animal : animals){
+            System.out.println(animal.name);
+        }
+
+        // does not eleminate the duplicates. Even if we change the definition of '.equals()'.
+        This is because the duplicate are not removed using the '.equals()' method. It is done
+using hashcodes. Each entry is assigned some hashcode, and only if the hash codes are the same
+they both are treated as one.
+
+                System.out.println((new Animal("amiay").hashCode())); // 2001049719
+
+So to remove the duplicate in this case we have @Override the hashCode() method in our class definition.
+Such that the hashcodes are same for both the objects. 
+
+Some other useful methods:
+--------------------------
+        // list1 is a HashSet 
+        list1.addAll(newList1);     // adds all the elements of newList1 to list1.
+        list1.removeAll(newList1);  // removes all the elements that match in newList1 and list1.
+        list1.clear;                // removes all the items
+        list1.isEmpty();            // checks if the list is empty. 
+        list1.retainAll(newList1);  // removes the non-intersecting values, from list1.
+
+
+    List<Integer> li = new ArrayList<Integer>(list1);   // converts the HashSet---> list1 to list
+
+    // now we can sort the li
+    Collections.sort(li);
+
+How does it handle strings? it sorts alphabetically, which is a natural order. 
+
+But what to do when we have user defined objects. 
+        
+        HashSet<Employee> hashset = new HashSet<Employees>();
+
+        hashset.add( new Employee(arg1, arg2,....);
+        hashset.add( new Employee(arg1, arg2,....);
+        hashset.add( new Employee(arg1, arg2,....);
+        hashset.add( new Employee(arg1, arg2,....);
+        hashset.add( new Employee(arg1, arg2,....);
+        hashset.add( new Employee(arg1, arg2,....);
+
+        ArrayList<Employee> myList = new ArrayList<Employee>(); // we created a list here
+        Collections.sort(); // gives us an error
+
+So, the .sort() method is implemented in the Collections class. And it does not know what is the 
+order used to compare the employees( objects of the Employee class). We have to define that order.
+Collections implements the 'Comparable' interface. We will also have to implement that interface. 
+Now we have to implement ALL the methods declared in the Comparable interface. But luckily, we 
+have only one method there in the  body of the interface. 
+    
+        public int compareTo(T o);
+
+So, back in our class we will have implement (by overriding) the above method. 
+        
+        @Override
+        public int compareTo(Employee o){
+            if(this.salary < o.salary){
+                return -1;
+            }else if(this.salary > o.salary){
+                return 1;
+            }
+        }
+
+Note: sort() sorts in smallest to largest. 
+
+HashMap, 
+-----------------------------------------
+        
+        HashMap<String, String> dictionary = new HashMap<String, String>();
+        dictionary.put("key", "value of the key")
+        dictionary.put("key1", "value of the key")
+        dictionary.put("key3", "value of the key")
+        dictionary.put("key2", "value of the key")
+        dictionary.put("key4", "value of the key")
+
+        for(String word: dictionary.keySet()){  // note the use of .keySet()
+            sout(word);
+        }
+
+        LinkedHashMap<String, String> ordered_dictionary = new ...  // preserves the insrtion order.
+
+        // how to loop over both, the keys and the values 
+        for(Map.Entry<String, String> entry : dictionary.entrySet()){
+            sout( entry.getKey());
+            sout( entry.getValue()); 
+        } // look for implementation of '.entrySet()' in HashMap class definition
+
+        Note : we cannot use duplicate keys
+
+TreeMap
+----------------
+
+
+
+
+
+
+
+
+
+
+Java Generics
+-----------------
+Takes polymorphism to a whole new level. Same class definition can be used with diferrent types of data.
+
+        Container<Integer, Double> cont = new Container<>(33, 23.3);
+        Container<String, Double>  cont = new Container<>("amiay", 21.3); // provided our methods are good enough to handle.
+
+
+    public class Container<it1, it2> {
+        it1 item1;
+        it2 item2;
+
+        public Container(it1 item1, it2 item2){
+            this.item1 = item1;
+            this.item2 = item2;
+        }
+        // more method can follow similarly
+    }
+
+
+Similarly this can also be implemented for a method
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wild Cards
+------------
+        Object obj  = new Object(); // Object is grand daddy of all objects in java
+        MyClass myobj = new MyClass(); // Object can be replaced be any parent class of "MyClass"
+
+        obj = myobj;  // is perfectly legal (Polymorphism)
+
+        // but this is not true with generic class. 
+        ArrayList<Object> emp = new ArrayList<>();
+        ArrayList<MyClass> my_class_obj = new ArrayList<>();
+        
+        emp = my_class_obj;             // is not legal
+
+        // wild cards can be used here. 
+
+        ArrayList<?> emp2 = new Array<>(); 
+        ArrayList<String> accountant2 = new ArrayList<>();
+        em2 = accountant2;      // is now legal
+
+        //also
+        ArrayList<? extends Employee> employeee3 = new ArrayList<>(); // <> defines here the Upper Bound
+                // the highest type that can go here is 'Employee' and ofcourse its children
+        ArrayList<Accountant> accountant3 = new ArrayList<>(); // <String> is not legal
+        // <Object> here is not legal , since it is parent of all. 
+
+        // we can also set the lower bound
+        ArrayList<? super Employee> emp3 = new ArrayList<>(); // super <----- sets the lower bound
+                                // all the parent can be used to point that 'emp3'
+        ArrayList<Object> super_daddy = new ArrayList<>(); // is legal
+        ArrayList<Accountant> acc4 = new ArrayList<>();     // is NOT legal 
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Multithreading
+---------------
+One of comptetive advantage of java since the begining was its multithreading ability. 
+when we normally run our program, we have only one thread running, the 'main()' thread. but 
+we can start running multiple threads when we have use the .start() method and use the class
+object of Thread(or our class that extends Thread class).
+
+        package com.java_basics_package;
+
+        public class Main {
+
+            public static void main(String[] args) {
+            // write your code here
+                Task taskRunner = new Task();
+                taskRunner.start();
+                System.out.println("I am amiay");
+
+            }
+        }
+
+        class Task extends Thread {         // Thread implements Runnable
+            public void run(){              // Task cannot implement; it can only extend 
+            // if it tries to implement and just run .run() method it will just cause single 
+            // thread to run. multi threading has to start with .start()
+                for(int i=0; i< 100; i++){
+                    System.out.println(i);
+                }
+            }
+        }
+        // I am amiay ===== is printed before the 0 1 ... 99
+
+Remember, it is never legal to start a thread more than once. This will cause error. It may not be
+started once it has completed execution. adding 'taskRunner.start()' once more would cause error.
+if you want to do that, create one more instance of the Task class and run that again.
+
+... 
+    Task taskRunner = new Task();
+    taskRunner.start();
+    Task taskRunner2 = new Task();
+    taskRunner2.start(); // starting another thread. 
+    // you will see 0's and 1's and .... printed randomly, like two threads were intertwinded. 
+    // this is because of the cpu giving and regaining the core, using some scheduling algo.
+...
+
+        System.out.println(i+Thread.currentThread().getName());
+        // can be used to get the Thread-0 or Thread-1.. and so on convention is used.
+        System.out.println(i+Thread.currentThread().setName());
+        // can be used to set the name 
+
+However, there is another way:
+    psvm(){
+        Task taskRunner = new Task();
+        Thread t1 = new Thread(taskRunner);
+        t1.start();
+    }
+    class Task implements Runnable{
+        public void run(){ // implementing the abstract method run() from Runnable
+            // for loop to print the values from 0 to 99
+        }
+    }
+
+Yet another method is by using the anonymous classes within the Thread() constructor in the above
+code. And we have to IMPLEMENT the run() method there. 
+
+Syncronisation
+---------------
+The non-synchornous behaviour is due to the cpu-sharing by the threads. This is very likely to cause
+inconsistent results. This because of the lack of control over cpu, or OS rather. We are not able to
+tell the thread when to leave the thread, the OS does it and it is done randomly, or using some 
+scheme. To make this process of acquiring and reliquishing the cpu, we have to make the process atom-
+ic. This can be done, in Java, using the synchronized(this){ ........}, block.
+    
+    public class Sequence {
+        private int getNext(){
+        synchronized(this){     <------------------- 
+            value = value +1;
+            return value;       
+            }                   <-------------------
+        }
+    }
+
+or 
+    public class synchronized Sequence{.............}
+
+This is one way to make sure the Thread Safety.
+
+Threads and Lists
+------------------
+Concurrent collections. They are all synchronised.
+Vectors(they are old) were thread safe.
+
+But ArrayList<> is not thread safe. Simulatneous reading and writing of such a list is not supported.
+.join() or .sleep() are primitive ways to handle. 
+
+
+Producer Consumer pattern
+----------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+jshell
+-------
+    /type
+    /drop method method_name
+    /edit
+    /help           // opens up the help 
+    /exit
+    /history
+    /list
+    $ jshell -c name_of_jar_file.jar  // note .jar files are deployable version of our code(JRE runs it)
+
+
+
+
+Functional programming
+------------------------
+Behaviours do not exist outside of a class. In Java 8, introduced the concept of Functional Programming. 
+Here functions can exist without being wrapped inside a classs. It provides flexibitlity. Before that 
+we had something called anonymous classes(something close to functional programming).
+
+        public class App {
+            public static void main(String[] args) {
+                Human tom = new Human();
+                walker(tom);
+                Robot walle = new Robot();
+                walker(walle);  //<------------------------
+            }
+
+            public static void walker(Human human){
+                human.walk();
+            }
+        }
+The marked line will cause an error because the walker method cannot be called on Robot object walle.
+This to work:
+        1. Make A parent class "Walkers" and make Human and Robot extend them
+        2. Make an interface "Walkable" and make both Human and Robot implement them. 
+
+Going with the second:
+        public class Human implements Walkable{......}
+        public class Robot implements Walkable{......}
+        public interface Walkable{....} 
+        
+        public static void walker(Walkable walkingEntity){}// method expects a Walkable object
+
+We are good as long as we pass the right class object into the method. 
+so we could have an anonymous class defined in the main method. 
+
+                walker(new Walkable(){
+
+                    @Override
+                    public void walk() {
+                        System.out.println("Custom object walking...");
+                    }
+                }); // we created the object on the fly
+
+Using lambda to achieve the above:
+        
+        walker( () -> System.out.println("Custom object walking..."));  // looks similar to arrow functions
+                                                                        // in javascript
+why did above work?
+walker accepts only a Walkable interface(look at the param). And by using the above lambda expression actually we are
+actually implementing that method present in the Walkable interface. That is why it is able to run.
+If we add more methods to Walkable interface, it no more remains a 'functional interface' and we will 
+get error. 
+                                                                            
+        walker( () -> {System.out.println("Custom object walking...");
+                            });
+
+What is a functional interface?
+An interface with just one abstract method. 
+        public interface ALambdaInterface {
+            public void someMethod();
+        }
+
+        ALambdaInterface aBlockOfCode = () -> {
+            sout();
+            sout();
+        }; // RHS is lambda expression
+
+
+        walker(ALambdaInterface); // will give error because of the type of Walkable is not same 
+                    // as ALambdaInterface (although both are 'functional interface')
+
+        // so instead we use 
+        Walkable aBlockOfCode = () -> {
+            sout();
+            sout();
+        }; // RHS is lambda expression
+
+        walker(aBlockofCode); // Now this works just fine
+
