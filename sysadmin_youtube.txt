@@ -1,0 +1,262 @@
+Dave
+-----
+
+w                       # users info on the machine , ttys running
+top                     # pids , cpu usage # pids can be used to kill process
+netstate -tupln         # port and networks, run it with sudo
+htop
+ps -aux                 # process information, can be overhelming
+prog1 && prog2          # run prog1; iff successful run prog2
+id                      # 
+useradd -m -d /home/schnerg  -s /bin/bash   schnerg     # adds user but the password is not set
+passwd schnerg          # to add a password to the user login => /etc/shadow will change 
+usermod -L schnerg      # locks the account by placing '!' before the password
+usermod -U schnerg      # unlocks
+userdel schnerg         # everything deleted in shadow and passwd but home file stil remain
+
+newusers                # another way to create multiple users in batches. 
+echo $SHELL             # /bin/bash 
+Ctrl + A                # beginning of the command
+Ctrl + E                # end of the command. 
+Alt  + F                # move as words
+Alt  + B                # move as words backwards. 
+Ctrl + R                # while working with history
+
+man 2 chown             # default man is 8. 2 is for system calls. 
+
+
+
+Resources
+-----------------------------------------------------------------------------
+catb.org                # Eric Raymond
+RFC                     # Request for comments
+faqs.org                # get it printedA
+The linux man page      # presented properly
+Networking for System Administrators    # Michael W. Lucas
+-----------------------------------------------------------------------------
+tmux : Allows you to re-attach to the terminal where you left off during ssh session on server.
+Ctrl + b => for tmux not for shell
+Ctrl + b then c => create new tmux window (type exit to exit window)
+Ctrl + b then , then enter the new name for the window.
+
+prefix then p => previous
+prefix then n => next
+prefix then w => list the open windows and then you can select from the list
+prefix then % => splits vertically
+prefix then : => tmux command line appears, 'split-window' splits the window
+
+tmux: sessions
+--------------
+tmux new -s backupsession       # starts a session tmux new-session -s name_of_session # works
+        # we start a process
+prefix then d => dettaches from the session and we are on the shell of the server(out of tmux)
+ps aux | grep <process_name>    # will show that the process is still running
+
+even if I close the ssh session and go home and back the next morning, we will still find that 
+tmux session is still running. 
+# ssh into the server(rpi) and then 
+tmux list-sessions              # we can see the list of running tmux server on rpi
+tmux attach -t backupsession
+
+# closing the last window of tmux closes the tmuxserver itself on the ssh server.
+# another feature of tmux is sharing the terminal at the same time. 
+# we are assuming that => same user credentials have been used to log in to the server by both the
+# parties. 
+
+ssh server@ip                                       |   ssh server@ip
+tmux new-session -s backupsession                   |   tmux list-sessions  # shows the list
+new session created this user enters it             |   tmux attach -t backupsession
+any one can dettach at anymoment. 
+
+whatever typed here gets typed there as well. This can be a very good tool to present things. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+users info
+-----------
+vim /etc/passwd         # pi:x:1000:1000:,,,:/home/pi:/bin/bash
+                        # tesla:x:1000:1000:Amiay Narayan,,,:/home/tesla:/bin/bash
+ssh is also an user. but it has lower powers on the resources. 
+                        # sshd:x:128:65534::/run/sshd:/usr/sbin/nologin
+At the time of writing this my computer has 52 users. (jenkins is one of them!)
+
+vim /etc/shadow         # root:!:18422:0:99999:7:::
+                        # tesla:$6$ICX..KviQ8ZDPUcv$fqX2YId4TGeN2w.V5MafLb2TRTvG2s54WHpd16QZ4S8V0rT9ZzEXX1USx1XXAHVsiJx/Q.jF4KrIilUzrMGQ30:18422:0:99999:7:::
+
+'!' can lock the user
+
+
+Processes
+----------
+init has pid -> 1
+top                     # lists all the process
+pas aux                 # most of the processes have been spawned by the root
+htop
+
+
+
+
+A process has to be spawned by another parent process and if that parent gets killed init becomes the
+new parent of that child process. 'htop' gives all the info on these fields. Nicesness of the process
+Higher the niceness priority lower its priority in the priority queue while scheduling. Process comm-
+unitcate using Signals, with kernel and other processes. 
+
+kill 9
+kill pid_of_a_process
+ps aux | grep cups    # common unix printing system, newtork print
+sudo killall cupsd      # because the process does not belong to 'cupsd' user not 'tesla'
+
+htop is really help, in the way that we can select in-situ and send signals to the process.
+this can be used to figure the culprit process and trouble shoot from there on. We can also
+find out about the 'state' in which the process is right now, running, sleeping, zombie,
+stopped. 
+Niceness can be assigned by using a number from -20 to +19, -20 => super important process.
+Ans we should be very cautious in giving priority, to a process. 
+
+sudo renice -5 pid_of_the_process 
+
+The information about the processes is maintained by the operating system, virtual file system /proc.
+And     
+        man proc        # is always a good point to start. 
+
+
+A detailed information about the processes is in the /proc directory. 
+
+ls /proc        # this will have the process ids of the process  
+cd /proc/1      # init proces information # observe that all the file sizes are 0, cause the files
+                # are created on the fly as we ask for information. by quering it from the kernel.
+cat fd
+cat cwd
+cat maps
+cat statm       # some them we might not understand because it is meant to be so. Meant to be used 
+                # by programs such as top, htop.... using '|'.  
+
+strace          # runs the specified command until it exits. intercepts and  records  the  system
+                calls  which  are called by a process and the signals which are received by a process
+
+
+File system
+------------
+windows : FAT 
+Linux: 
+MacOs : 
+
+linux filesystem api. All the hardware present are reperesented as files. Also interprocess commuinaca-
+tion is also done using the filesystem. 
+
+to check the file system present : 
+    df -ah
+
+/etc        # has the configuration files for all the packages that are installed. 
+
+/sbin       # system binaries: ifconfig is here 
+/bin        # other binaries : cat, curl, du,  and other commands that we use are present here
+            # and this directory is by default added to the PATH
+/media      # root mounts the disk here. 
+/opt        # option software : google, zoom, containerd, lampp
+/usr/sbin   # 
+/var        # mainly used for 'log'
+
+drwx------
+drwxr-xr-x  # user group and others permissions
+
+d----> directory
+c----> 
+b----> blocks
+l----> links    # symbolic links
+
+Scheduling tasks with cron
+---------------------------
+crontab -l      # list your table of schedule
+crontab -e      # edit your table
+
+# maintained at /var/spool/cron/crontabs/dave
+
+sudo vim /etc/crontab       # opens system-wide crontab it has one more field for user
+
+crontab -e -u user_name     # can be used by root to edit a user's cron tab. 
+                            # this can be used to put check to some process that these crontab
+                            # are causing, may be overusing the network due to the schedule they 
+                            # they have put in there. 
+Note, we can also use this to run a particular script as sometime. (; .
+
+
+
+
+
+
+
+
+
+
+
+
+
+Why linux terminal is the way? 
+Remember the Linux video. Brian Kernighan and Ritchie demonstrate the power of pipes and 
+content redirection. These two were the competitive advantage.
+
+Where the output can be directed :
+    1.  Standard Output
+    2.  File
+    3.  Network
+    4.  Standard error ( which could also be a shell)
+
+    STDIN ----> 0
+
+    STDOUT ----> 1
+
+    STDERR ----> 2
+
+echo "some content for output"  1> file.txt     # 1>   can be only    >
+echo "some content for output"  >> file.txt     # appends
+
+echo amiay > file_name      # over-writes "amiay" string to file_name
+cat amiay > file_name       # writes the content of file amiay to file_name 
+
+ls      # amiay narayan     # these two files existed
+cat sumit > amiay           # will give error, since sumit DNE
+cat sumit > amiay 2> err    # no error, because the error(2) has been directed to file err
+cat sumit > amiay > swati   # cat: sumit: No such file or directory
+                            # but file an empty file swati is created
+# input redirection '<'
+mail -s "this is the subject of the message" < msg  # msg already exited in '.'
+
+ls -a | less
+ls -a | grep *.txt          # are example of hooking programs 
+
+cat > amiay
+name : Amiay Narayan
+class : None
+working: yes
+time : 1.30
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
