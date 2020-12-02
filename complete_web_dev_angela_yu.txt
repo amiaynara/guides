@@ -851,16 +851,358 @@ here layouts come to resque.
         ...
        <%- include("footer") -%>
 
+Modules in JavaScript
+---------------------
+        const express = require("express");     // means we are calling a module named 'express'
+Similary we can create our own modules. 
+        
+        // another file 'date.js'
+        console.log(module);        // module refers to the current module , similar to 'this'
+        console.log("hi");          // this runs    
+        function() getDate{
+            let today = new Date();
+            let options = {
+                weekday : "long",       // But this does not run.
+                day: "numeric",
+                month: "long"
+            };
+            let day = today.toLocaleDateString("en-US", options);
+        }
+        // in the app.js
+        const day = require(_dirname + "/date.js");     //This does not run the module,  
+        console.log(day);                               // Logs empty object.
+
+Binding and exporting
+-----------------------
+We can export certain string, function or objects from a module and use them when we 'require'.
+        module.exports = getDate;           // binds the function 'getDate' to export
+        // in another file
+        const date = require(__dirname + "/date.js");
+        let day = date();       // funtion exported gets bound to date, and we can call it whenever 
+                                // we want. 
+Note:
+-----
+'module.exports' is so common that there is a shortcut
+        exports
+module.exports is an object, hence it can have properties and behaviours => we can export multiple.
+    module.exports.getDate = getDate;
+    module.exports.getDay = getDay; 
+    // these can be used in another file after requiring
+    date.getDate();
+    date.getDay(); 
+During exporting, we can also try to make it more succinct using anonymous functions. 
+        // when we export in the above way, exports object has two functions that we can tap into.
+        exports: { getDate: [Function: getDate], getDay: [Function: getDay] }
 
 
+Two handy ways of loop
+-----------------------
+Method 1.
+
+        var array=['amiay', 'nara', 'yan']
+
+        array.forEach(function(element){
+            console.log(element);
+        }
+
+Method 2.
+
+        var array = ['tit','for', 'tat'];
+        for(element  of array){
+            console.log(element);
+        }
+
+These two methods save the pain of writing, array.length.
+
+Route Parameters
+-----------------
+Though regular expressions used in the route can provide flexibility as well. But Route parameters
+are better way to do it. 
+        app.get('/users/:userId/books/:bookId', function (req, res) {
+          res.send(req.params)  // params will have the parameter provided in the url.
+        })
+
+        Route path: /users/:userId/books/:bookId
+        Request URL: http://localhost:3000/users/34/books/8989
+        req.params: { "userId": "34", "bookId": "8989" }    // Json object that we get as the data. 
+
+WE can carry out, all sorts of operations using the  data that is passed on the navigation bar, we can 
+check the presence of that parameter in the data present on the server and so on. 
+
+Lodash
+-------
+It is another utility that enables us to do lot more with Nodejs. 
+
+    const _ = require("lodash");
+    var some_string = "hi this is me";
+    some_string = _.lowerCase(some_string);
+    some_string = _.truncate(some_string, {"length":100};
+
+Lodash great with strings and array, check the online documentation to use more of its features. 
 
 
+Databases:
+--------------
+Every time the server restarts, the data present on the server is also lost. Because it was stored
+as global variables and arrays. So to have a persistent data, we have to have some physical storages.
+And to manage and structure the data so that they can be efficietly used, we must also have database
+management systems(softwares). 
+
+Now in the current market there are two major players, 
+
+SQL: MySQL, Postgres
+NoSQL: MongoDB, Redis       [no only structured query language]
+
+MySQL :       
+    1. More Mature
+    2. Table structure
+    3. Require a Schema
+    4. Great with relationships
+    5. Scales vertically  [ vertically scaling is not the solution, height is limited]
+
+MongoDB :
+    1. Shiny and new : More prone to changes
+    2. Document Structure
+    3. more Flexible to Changes
+    4. not great with Complex Relationships
+    5. Horiaontally Scalable ==> which will require to store the data on multiple systems. 
+
+--------------------
+SQL:
+--------------------
+Note: There are four operations that we will be doing, as can be suggested by the https CRUD requests.
 
 
+--------------------
+MongoDB:
+--------------------
+Collection: Is equivalent to tables.
+Document: Each record in the collection is called a document in mongodb lingo. Each document might
+        have different schema. Flexibility.
+MongoDb stores data records as BSON documents(binary representation of JSON).
+After installing Mongodb using its tarfile and following all the process. To get started , start 
+the daemon on one terminal :    
+        sudo mongod
+On the other terminal open the mongo shell, using : 
+        mongo
 
 
+Commands :
+       
+        help
+        show dbs        // it has 3 preloaded db : admin, config, local
+        use shopDB      // creates new data base named : 'shopDB'
+        db              // gives the current database you are in 
+CRUD
+----
+    db.collection.insertOne(..)         // collection is the name the collection e.g., users
+    db.collection.insertMany(...)
+    // example
+    > db.products.insertOne({_id:2, name: "Pencil", price: 0.80, stock: 12})
+    { "acknowledged" : true, "insertedId" : 2 } // output
+    //READ
+    db.collection.find(query, projection)   // 
+    db.products.find()      // finds all the document of the collection.
+    db.products.find({name: "Pen"})
+    db.products.find({price : {$gt: 1}})        // we can add conditions as well, [documentation]
+    db.products.find({price: {$gt: 1}}, {name:1, _id:0})    // projection is used to specify the 
+                                                            // fields particularly
+    //UPDATE
+    > db.products.updateOne({_id:1}, {$set: {stock: 32}})
+    { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+    //DELETE
+    > db.products.deleteOne(.....)
+
+we can also add some complex documents:
+        db.products.insert({
+                _id: 4,
+                name: "Ink",
+                price: 2.3,
+                stock: 24,
+                reviews: [
+                        {
+                                author: "amiay",
+                                rating: 3,
+                                review: "The was a magic ink"
+                        },
+                        {
+                                author:"swati",
+                                rating:4,
+                                review:"The was a Dark ink"
+                        }
+                ]
+        })
+
+Driver
+-------
+To be able to connect our app with the data base, we need to have some driver. The official way
+to do so is, MongoDB Node.js driver. The driver features an asynchronous API which allows you to
+access method return values through Promises or specify callbacks to access them when communcating 
+with MongoDB.
+    // install the driver
+    npm install mongodb
+
+One thing to note is that, MongoDB being newer, there are frequent changes in the way we connect 
+to the database, using async or simple function, try-catch and so on. So go through the document
+-ation. Also one important thing to note is that, we can verify our entry into the database, using
+        assert.equal(3, result.ops.length);// or similar statement of comparison
+
+1   const { MongoClient } = require("mongodb");
+  1 // const MongoClient = require("mongodb").MongoClient;      // above is same as this
+  2 const assert= require("assert");
+  3
+  4 // Replace the uri string with your MongoDB deployment's connection string.
+  5 const url =
+  6   "mongodb://localhost:27017";
+  7
+  8 const client = new MongoClient(url, { useUnifiedTopology: true });      // second param gets rid of warning
+    ... 
+
+Similarly we have way to CRUD using this native module. It does not take too much time to realise
+that we this really 'wordy'. So we have a solution : 'mongoose'
+
+mongoose:
+---------
+It 'bigly' simplifies our lives, by making connection, crud one liners. It is object document mapping.
+
+        const mongoose = require("mongoose");       // ofcourse you have to : npm install mongoose
+        mongoose.connect(.......);
+Here we have to create a new schema. This schema will provide structure [ kind of blue print to our db].
+        const fruitSchema = new mongoose.Schema({
+            name: String,
+            rating: Number,
+            review: String
+        });
+
+Then we have to create model. Also keep in mind the convention used for naming the collections
+        const Fruit = mongoose.model("Fruit", fruitSchema);     // creating collection with schema
+        const fruit = new Fruit({
+            name: "Apple",
+            rating: 7, 
+            review: "Pretty solid as afruit."
+        });
+        fruit.save();       // this inserts the fruit into the collection (fruits not Fruit.... uses lodash).
+
+To automatically close 
+mongoose.connection.close();
+
+Note:
+-----
+while defining the schema we can also define some validation(head to the documentation). This can be 
+        rating: {
+        type: Number,
+        min: 1,
+        max: 10
+        }
+Validation is important feature and it is made easy using 'mongoose'. 
+Similarly, update and delete can also be looked up from the documentation. 
+
+Making things persistent
+--------------------------
+We stored data in arrays that reside on the ram. But now we have the tool required to be able to
+store things on the disk using mongoose/mongodb. 
+
+To tap into the entries of the data base, first set up all the pre-requisites: mongod, require(...).
+Whenever a post request is made, 
+    const new_tast = req.body.next_item;
+    const task = new Task({new_task});      // note that model 'Task' has already been created
+    task.save(function(err){
+        if(err) return console.log(err);
+        console.log("Entry saved successfully");
+    });     // this has to be done for each post request.// 
+
+    // now querying the data
+    // Method 1. => Query the whole document every time and select only the required field
+    // inside app.get("/", function(req, res){
+        Task.find(function(err, items){
+            if(err) console.log(err);
+            res.render({
+                title: day,
+                taskName: items         // items is an array of objects 
+            });
+        });
+    });
+
+    // Method 2. => just query the required field name 
+    const query = Task.find({}).select({"taskName":1, "_id":0}); // just specifying the projection
+    query.exec(function(err, items){
+        if(err) return console.log(err);
+        res.render({
+            title: day,
+            taskName: items         // this will send {'taskname': 'code'} // still not enough
+        });
+    });
 
 
+    // syntax of .find()
+
+    Task.find({condition}, function(err, results){
+        if(err) return console.log(err);
+        // use 'results' documents
+    });
+
+posting a request to delete from database
+--------------------------------------------
+  1 app.post("/delete", function(req, res){
+  2     const to_be_deleted_id = req.body.checkbox;
+  3     Task.deleteOne({_id:to_be_deleted_id}, function(err){
+  4         if(err) return console.log(err);
+  5         console.log("Successful deletion");
+  6         res.redirect("/");
+  7     })
+  8
+  9 });
+
+Important Note:
+------------------
+'name' and 'value' are two important attributes that we can cleverly exploit in order to make 
+our life easier. However to a frontend poerson it might seem that these two attributes are 
+quite useless. These two attributes can be used to differntiate on request from another and 
+carryout different logic in our app.js. 
+
+Adding to an existing array in a document
+-------------------------------------------
+  1     List.updateOne({name: customListName}, {"$push": {"items": [task]}},function(err, result){
+  2         if(err) return console.log(err);
+  3         console.log("Item added successfully" );
+  4         });
+
+  //another way 
+  List.fineOne({name: customListName}, function(err, foundList){
+    if(err) return console.log(err);
+    foundList.items.push(task);     // task = new Task({....})      
+  });
+
+Going global
+---------------
+Previously we used 'heroku' to host our nodejs app[ the mail chimp app for subscription]. This
+time we will also need to host our database on some server that runs 24*7. This functionality
+is provided by 'Atlas' from mongodb itself. 
+We have to follow the steps inorder to get the database live as cluster.    
+
+RESTful API
+-----------
+Build our api. REpresentation State Transfer.We have already seen about how cool these api's 
+are and how we can use one in our own app. But now how do we build one. There are several 
+architectural styles that one can follow to build one. 
+        1. SOAP
+        2. REST
+        3. GraphQl
+        4. Falcor
+REST basically proposes to use the same types of protocal for each and every api in the world.
+This would make things really really uniform. This also proposes the use of https verbs.
+        1. GET: read
+        2. POST: basically create
+        3. PUT, PATCH : update; patch is selective updation
+        4. DELETE
+Specific patterns of routes are also important for http. 
+To work with this section we will use, robo 3T. This is gui to use monogdb. Here we create a new
+collection (be sure to check the convention for naming)
+
+app.route("/articles").get(function(req,res){}).put().delete();
+
+This allows us to improve upon the maintainability of the code, by avoiding error.
+Refer to 'wikiDB' api folder in the study material
 
 
 Some useful websites
@@ -885,3 +1227,4 @@ kanye.rest      : an example of simple api. Quotes of Kanye West.
 heroku          : hosts freely, you dynamic web app up to 5. 
 git             : https://learngitbranching.js.org/
 css-selectors   : too many selectors to cover=> w3schools
+Mongodb on mac  : https://blog.londonappbrewery.com/how-to-download-install-mongodb-on-mac-2895ccd2b5c1

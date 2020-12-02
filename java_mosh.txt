@@ -133,7 +133,7 @@ some useful methods:
     .indexOf('e')           // returns index of 'e'
     .replace(target:"!", replacement:"*")       // original string does not change
                             // strings are immutable, we cannot change them.
-    .toLowerCase()
+    .toLowerCase()          // does not affect the actual string, returns a new one. 
     .toUpperCase()
     .trim()                 // gets rid of white spaces before and after. 
     .substring(1)           // gives all except the first ~ python's stringg[1:]
@@ -147,6 +147,38 @@ escape sequences: String name = "Hello \"Amiay\"";      // Hello "Amiay"
                   
 \t, \n                are some other. 
 
+Regular Expressions
+----------------------
+        import java.util.regex.*;
+        public class Main{
+            psvm(){
+                Pattern pattern = Pattern.compile(".xx.");
+                Matcher matcher = pattern.matcher(test_string);
+                sout(matcher.matches());        // true or false
+            }
+        }
+
+// Pattern.matches(pattern_string, test_string);    // return true if string matches compiled pattern
+to count:
+        int count =0;
+        while(matcher.find()){
+            count++;
+        }
+
+Character matching
+-------------------
+    [xyz]           // if anyone of the 'x', 'y', 'z' is the test_test string then --> true
+                // however "yy" will be false, since character is being matched
+                // [xyz][y] will match "yy" as 'true'
+    
+    "[ayz]?"        // a or y or z must come only one time
+                    // "a" will give true, "aaa" => false, "ayyyz"=> false, "ayz" => false, "yz"=> false
+                    // 
+    "[xyz]+"        // true for --> x, xy, xyz, xxy, xxyy, xxyyyyzzz
+                    // false    --> xyza, xay, 
+                    // string should contain only combination of x, y, or z
+                    // xyzzyx  --> true
+    "[xyz]*'        // xyzzyx  --> false  
 Arrays
 ----------
 
@@ -246,6 +278,9 @@ Math
         result = (int)Math.floor(1.1f);
         result = Math.Random(); // Random number [0,1)
         result = Math.max(3,55);
+        // ascii value, char to int[implicit]
+        char c = 'a';
+        int cc = c;     // cc will have 97.     'z'=122, '0'=48, '9'=57, 'A'=65, 'Z'=90
 
 
 
@@ -256,6 +291,12 @@ Note: Abstract classes cannot be instantiated.
         String mon = n.format(1234);
          System.out.println(mon);       //  ₹ 1,234.00
          String indian_money = NumberFormat.getCurrencyInstance().format(7000);     // method chaining
+         
+
+         double time = 0.0f;
+         time = (cap/time)*1.2;     // cap and time are 'doubles' accepted as sc.nextDouble()
+         
+         sout(String.format("%.2f", time)+"hours");
 
 Reading inputs, Scanning rather
 ---------------------------------

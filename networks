@@ -1,0 +1,62 @@
+Computer Networks
+---------------------
+Source: Udemy Bombal
+
+Repeaters : They amplify, so that signal does not attinuate. They were first one to one.
+Hub:    These are physical devices that,are dumb, and forward the traffic from one port to all
+        other ports connected. 
+Switches: These are devices that have intelligence. They forward from one MAC address to another
+          that was intended. They fall under the second layer. [Data link layer]. They use table.
+          They are used within a network[LAN or WAN]
+
+Bridges: they fall somewhere in between. 
+
+Routers: These connect from one network to another. IP addresses play an important part. 
+Firewall: PC also have this. But they are software implemented. But you can purchase one that is 
+        dedicated for this sole purpose. Also, these firewalls can be present in modern day routers.
+        They are basically allowing only the traffic that has been specified by the user. 
+
+Note: Internet ---> router ---> firewall---> switch ---> computers
+
+What is an ACCESS POINT?
+
+
+IDS & IPS
+Intrusion detection system and Intrusion protection system.
+
+OSE and TCP/IP models
+-----------------------
+There are different models/blueprints that the "makers" adhere to inorder to standardise things
+and division of labour. This has to several models since 1989. These two models are present to 
+the network in layers.
+        1. Application layer[layer 7]
+        2. Transport layer
+        3. Network layer/ Internet layer
+        4. Data link
+        5. Physical
+currently we have a hybrid of these two models. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RESOURCES:
+-----------------
+Cisco packettracer
