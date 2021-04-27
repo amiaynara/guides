@@ -1,0 +1,155 @@
+You should use virtualenv
+        pip install virtualenv
+        virtualenv env_name
+
+
+
+
+settings.py
+----------
+It has all the settings for our app. Knowing the flask really did help me understand things. 
+It has database integration, routing, secretkey, static and much more...
+
+        python manage.py migrate    # syncs our settings with our django project
+        python manage.py create createsuperuser # enter the credentials
+        python manage.py startapp blog      # new app component that we want to add
+        python manage.py makemigrations     # these two commands will always be used.. 
+        python manage.py migrate    
+        
+Once we have things set up we have to make changes, add our own apps. This can be editing
+the models.py of our new app that we create using 'startapp blog'. Models is bascially defining 
+schema of the table in our database. And we can add the data using the UI provided by the browser
+However, we can also do thisusing the shell. 
+        python manage.py shell      # here we can import our models!!
+
+        # this looks like python shell but is not. 
+
+template context
+-====================
+templates here are similar to the jinja2 in flask. And equivalent of ejs. 
+        {% extends 'base.html' %}
+        {% include 'navbar.html' %}     // this allows to reusability
+
+
+on the views.py
+        def home_view(request, *args, **kwargs):
+            msg={
+                "key1":"value1",        # these are context variables. 
+                "key2":"value2"
+            }
+            return render(request, 'home.html', msg)
+
+In the templates these context variables can be used using {{}}
+        {{key1}} and {{key2}}
+
+
+Working with database
+--------------------------
+        python manage.py shell      # opens the shell where we can import the model of ORM
+        >> from blog.models import Post
+        >> from django.contrib.auth.models import User
+        >> User.objects.filter(....).first()
+        >> User.objects.first()
+        >> User.objects.all()           # each entry or row is stored as an object 
+
+        >> user = User.objects.first()
+        >> user.id      # 1
+        >> user.pk      # 1
+
+        >> post_1 = Post(title = "Blog 1" , content = "this is hte content of the post", author=user)
+        # above creates an instance but not adds to the database
+        >> post_2.save()        # only now it is saved and can be verified by the following command
+        >> Post.objects.all()
+        # note that user has to be .first() ---> an object not a QuerySet
+        >> post = Post.objects.first()
+        >> post.author.username         # notice the chaning of dots. 
+        # User model that django provides, has modelname_set that allows us to query => e.g.
+        >> user.post_set.all()          # gives all the queries by the 'user'
+        
+
+
+
+views.py [classes vs function]
+------------------------------
+A lot of sites(blog) have list of various articles that can be seen by the user. Similarly, other
+sites also have similar structure, where user scans through the list and then finally clicks on 
+one to get the detail. 
+Django tries to predict these behaviour and provides us with various support for implementing this
+out of the box. 
+So we can have 'list-views', 'detail-views' and update-delete view. Once we identify the candidate 
+with similar view we can see the difference in implementation.
+
+        from django.views.generic import ListView
+        class PostListView(ListView):       # inherits from the inbuilt class
+            model = Post                    # what to show 
+
+        # in the blog/url.py
+        from .views import PostListView
+        urlpatterns = [ ... , path('', PostListView.as_view(), name='blog-home'), ...)
+        # doing only the above will cause an error output in the debug mode. Template does not exist.
+        # <app>/<model>_<viewtype>.html       is searched by django blog/post_list.html
+        class PostListView(ListView):
+            model = Post
+            template_name = 'blog/home.html'
+            context_object_name= 'posts'
+            ordering = ['-date_posted']
+
+
+Pagination
+-----------
+from django         import Paginator
+posts = [str(c) for c in range(1,6)]
+p = Paginator(posts, 2)         # each page will have 2 posts
+number_of_pages, either there are next pages or not and on and on, can be known by going through the 
+documentation.
+This is also used with class-tupe views.
+In the template you can refer to these by using page_obj.has_previous, is_paginated and so on. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Commands:
+-------------------
+    django-admin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

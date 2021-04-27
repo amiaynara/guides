@@ -1204,6 +1204,183 @@ app.route("/articles").get(function(req,res){}).put().delete();
 This allows us to improve upon the maintainability of the code, by avoiding error.
 Refer to 'wikiDB' api folder in the study material
 
+.put()      // inside we will put the update() operation
+This basically changes an entry as a whole.  
+
+Tip:  %20 is denoted as ' ', while putting it on the https://localhost:3000/articles/:articleTitle 
+is the route where we want to 'update' or 'PUT' our changes to. And if field name is - title and the
+the specific title is "abhay narayan", the we need to pass "https://localhost:3000/articles/abhay%20narayan
+as the url to be able to update. Along with that we must also be able to supply the 'payload' the 
+new data that will replace the old one. 
+.put(function(req, res){
+    Article.update{title: req.params.articleTitle}, {title: req.body.title, content:req.body.content},{overwrite: true} function(err){...usual suspects here...});
+
+Note that the above operation will replace the entire document, even if only certain fields were specified
+in the put request[which we intended to overwrite]. 
+If we wanted to update ONLY CERTAIN part of the document then we go with the "PATCH" option.
+        
+        .patch(function(req,res){
+            Article.update({query}, {$set: req.body}, function(err){
+            if(err) return console.log(err);
+            res.send("update successfull");
+            });
+        });
+
+Authentication
+--------------------
+There are various levels of authenticationa and security that we can apply to our site. This choice
+will depend upon the audience we are catering to and the product or the service we are providing. 
+
+Level 1
+--------
+This is just simple creation of a login page, where the user will enter the password and username 
+and he should be directed to the required page if the credentials are correct. These 'sensitive' data
+are stored as simple plain text[ something to be very worried about]. there are various vulnerabilties
+to the system. But then, this is just the start. 
+
+Level 2
+--------
+Encryption: using the key to encode and decode the sensitive information. It uses two parts in the 
+actual use case: encryption and authentication( AES  +  SHA). It also makes use of the BSON format. 
+    npm install mongoose-encryption
+
+
+READ THE Documentation of the "encrypt" plugin and the mongoose-encryption
+//in the app.js
+        ...
+        const encrypt = require("mongoose-encryption");
+        const userSchema = new mongoose.Schema({.....});
+        
+        const lsecret = "Thisisourlittlesecret";     // LONG_STRING_THAT_IS_UNGUESSABLE
+        userSchema.plugin(ecrypt, {secret: lsecret, encryptedFields: ["password"]});   
+Note: while .save() --> the mongoose automatically encrypts & while .find() it automatically decrypts
+    
+    YdwF4CCEghZ5GKhnFqBAqb4SD+lEmdCampzEUA3jvQKgWyJfaWQiLCJfY3QiXQ==
+    // is the encrypted information
+    
+However one drawback is that since we have exposed the 'seed' for encryption, therefore we have to be
+worried. Because once someone gets access to the website's source code one could easily use that as 
+a key to decrypt our site. 
+But on the flip side we need these information and keys to be present so that app works as intended. 
+This conundrum can be solved using something called environment variables. This can be used in the
+project with the help of a very popular package---->    dotenv  or .ENV
+
+require and use this package as early as possible in the app.js. :
+        require("dotenv").config(); // at the top of our document. 
+
+        touch .env      // create a file in the project directory directly
+        // in side .env file
+        API_KEY=this_is_the_api_key_itself              
+        //
+Note that there are no ; or spaces. there will be no 'const'. Also note the capitalization.             
+And while using it in the app we have to use it as follows:
+        
+        process.env.API_KEY             // reminds the way heroku stores the port number
+
+Note:
+This .env file should be added to the .gitignore file before uploading it to remote. 
+However, for hosting solutions this is quite different, like heroku, it gives a separate panel to 
+write our environment variables. 
+
+Level 3 : Hashing
+-----------------
+Hashing is a way of identifying information not encoding it. It is one way, unlike encryption. This
+can be used to verify the authenticity of a document. A hashing function basically takes input and
+spits out a string that is unique. However, absolute uniqueness is not guarenteed, given that coll-
+isions are possible. There are several hashing techniques as well: md5, SHA-1, SHA-256 and so on. 
+Ofcourse some are weak and some are stronger to defeat. Here we are using md5[not recommended]. 
+
+When the user registers the password gets hashed and the real password in not stored at all but the 
+hashed one. Next time when the user tries to log back in, the password is converted back to its hash
+and matched against the actual password in the database. And process is complete. 
+Now MD5 hashes can be cracked, if someone is motivated enough, there are also very large databases that
+have been made on the internet. These are ofcourse of very commong passwords used on the internet. 
+There are other hashing algorithms that make the job difficult. But one other neat technique that we
+can use is that we can add some random string to the passwords that have been inserted by the user.
+This makes every password very unique(however, not truly unique though). md5 is one of such functions.
+One very secure one is bcrypt. To further increase the security we can add rounds of salting. As the 
+increase in the computing power we can just add another round of salting. And we get multiple times
+more secure. 
+    npm install bcrypt
+
+    // in app.js 
+    const bcrypt = require("bcrypt");
+    const saltingrounds = 10;
+    app.post(... while receiving the password apply the hash and salting...);
+
+{ "_id" : ObjectId("5fc8b43c95eb7357363f30d2"), "email" : "a@b.com", "password" : "df9f7c813fdc72029b41758ef8dbb528", "__v" : 0 }                                   // only md5 
+{ "_id" : ObjectId("5fc90a33a9652da7b0cd4f45"), "email" : "c@d.com", "password" : "$2b$10$R3TY02TgzwgMY1.mG.2xd.Bo72a4rr1NZNveV9klOlSPyZIqMkpJK", "__v" : 0 }       // hashing
+{ "_id" : ObjectId("5fc994de795a8e30920fe125"), "email" : "g@h.com", "password" : "$2b$10$YYjR.69Nw1zbNP0ImuU9L.mVS7Y78iC9V1SUSoQLHxGyRHNwF8Iqu", "__v" : 0 }       // hashing with salt
+
+Cookies and sessions
+---------------------
+Session is the time when the browser interacts with the server,(in continuous manner?). These are
+generally some ID that is assigned to each cookie, and these represent a session. And when you go
+to someother sites or come back after some time. These cookies get sent to the server and these
+server 'try to remind' you of the session(or products in case of amazon). 
+
+Passport
+---------
+It is authentication middleware of Nodejs. 
+        npm install passport passport-local passport-local-mongoose express-session
+        // in app.js
+        const passport = require("passport");
+        const passportLocalMongoose = require("passport-local-mongoose");
+        const session = require("session");
+
+        app.use(session({
+          secret: 'keyboard cat',
+          resave: false,
+          saveUninitialized: true,
+          cookie: { secure: true }
+        }));
+        app.use(passport.initialize());;
+        app.use(passport.session());
+        
+        // make sure you have schema declared using mongoose.Schema()
+        userSchema.plugin(passportLocalMongoose);
+        // after creating the model from schema
+        const User = new mongoose.model("User", userSchema);
+        passport.use(User.createStrategy());
+        passport.serializeUser(User.serializeUser());
+        passport.deserializeUser(User.deserializeUser());
+
+        // Note the order of the code, it is very important
+You also have to update the app.post("/register") and post for "/login" as well. Make sure
+to go through the documentation of passport and express-session. 
+Note: the session will create a cookie, inorder to mark the session. Once the localhost cookie is
+deleted the, session is no more. 
+
+Level 6
+---------
+OAuth2.0
+---------
+Using a third party allows to save the hassle that is involved in providing high degree of security
+to the clients or users. So we the common developers turn to big tech organisations that have already
+worked and made very complex mathematical ways to keep the data secure. So we can just use them. 
+OAuth has three features that make it very good:
+    1. Granular Access levels : It allows the developer to ask for only specific fields to be fetched
+                    from 'facebook' or 'google'.
+    2. Read/Read+Write access : We can make a request for both reading and/or writing to their data base.
+        That will ofcourse based on some prearranged contracts. This can be setup at their developer 
+        console, that they generally provide. next step is redirect to authenticate, S3, Logs in. S4 user
+        grants the permission. S5. receive authorisation code. Now we can allow the user in. or go 
+        for S6. we ask for authentication tokens. 
+
+React
+-----
+A JavaScript library for building user interfaces. A front framework. It makes it very easy to 
+create repeated-components. G
+
+
+
+
+
+
+
+
+
+
 
 Some useful websites
 ----------------------
@@ -1228,3 +1405,7 @@ heroku          : hosts freely, you dynamic web app up to 5.
 git             : https://learngitbranching.js.org/
 css-selectors   : too many selectors to cover=> w3schools
 Mongodb on mac  : https://blog.londonappbrewery.com/how-to-download-install-mongodb-on-mac-2895ccd2b5c1
+github/gitignore: templates for what formats should we include in the .gitigore for a particular project
+plaintextoffend : a site to visit, where they post plain-text passwords.
+haveibeenpwnd   : 
+codesandbox     : online tool to write react apps, and even deploy

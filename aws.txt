@@ -1,0 +1,164 @@
+AWS course by stefane on Udemy
+--------------------------------
+1. Create a root account by giving the card info.
+2. Create an IAM user, (Identity and Access Management console)
+    - Create MultiFactorAuthentication[Google authenticator]
+    - Add user (admin user or not)
+    - Download Csv
+    - Add a Group - admin
+    - Provide administrative policies to that group. 
+    - It is better to provide the administrative access to a Group(not a single user) and then add a user to that group
+    - There fore dettach the administrative access policy from the user.(user groups to assign permissions)
+
+    - If you want you can create other users and groups as well. 
+3. sign in as an IAM user and then create an EC2 instance, 
+    - Now allocate proper settings in  the desired way(os: amazon linux 2 or ubuntu)
+    - create a rsa public and private key -> You will be able to download the private key. store it, don't get it compromised.
+    - Now ssh into the machine by using the public ipv4 address and 'ec2-user' 
+        $ssh ec2-user@a.b.c.d       => uses tcp at port 22 by default
+        Below message is received:
+        The authenticity of host '13.235.50.66 (13.235.50.66)' can't be established.
+        ECDSA key fingerprint is SHA256:YWzCGO8sQaXgagTMkTlzZTIfBi5dLWVQPNx9NTDRN/w.
+        Are you sure you want to continue connecting (yes/no/[fingerprint])? 
+        
+        you go =====> yes
+
+        Warning: Permanently added '13.235.50.66' (ECDSA) to the list of known hosts.
+        ec2-user@13.235.50.66: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+        and you are thrown out. Makes sense, because you need to use the private rsa key that you generated while creating
+        that ec2 instance. 
+        - Also make sure that .pem file is not "too open", by chmod to 0400
+        
+    - You need to use the private key, 
+        $ ssh -i file.pem  ec2-user@ipaddress
+4. Lo! you are in the system. 
+      $ sudo yum update     # sudo apt update does not work 
+
+Security Groups
+--------------------
+Security groups control the traffic on an ec2 instance. It is the most fundamental skill to trouble shoot any networking issure.
+How to allow, inbound and outbound ports?
+Inbound: All the traffic rules that will allow traffic into the instance. eg. The TCP for port 22 is listening for SSH connection.
+Outboud: Traffic is allowed on all ports. 
+
+if there is no inbound rule then there is infinite wait when a user tries to ssh into the system. 
+The the public ip of the ec2 instance is not constant. How Elastic Ip can be used to keep the ip same but that is a paid service. 
+
+Launching an Apache serve on ec2
+----------------------------------
+#yum install -y httpd.x86_64        # as a root user
+#systemctl start httpd.service
+#systemctl enable httpd.service
+#curl localhost:80                  # makes a get req to the port localhost on port 80(default http port)A
+This will give an html page back as a response, however when accessed from a computer somewhere on the internet this does not 
+give the page, instead keep loading and loading. This is because of the security group rules. We need to enable http request on
+port 80(by default all the inbound traffic is rejected)
+So, after changing the rules (setting it ) for HTTP requests, the inbound request are now entertained at port 80.
+
+The page that is served when an external IP requests HTTP at port 80 is stored in /var/www/html/index.html
+This page can be overwritten to change the content that will be shown, But doing only that is not very smart idea, is it?
+
+Bootstraping a machine means : Running a script when the machine starts automatically. The script runs only once.
+
+All the lines that we individually ran can be run directly using a script that would be give before hand during creation of the instance. 
+
+    # sudo yum -y update
+    # sudo yum install -y httpd.x86_64
+    # systemctl start httpd.service
+    # systemctl enable httpd.enable
+    # echo "This computer is $(hostname -f)" >> /var/www/html/index.html
+
+This will be reflected in the webpage that you now can open at the public ip of the new instance. This is quite awesome. User Data rocks...
+
+
+EC2 Spot Instance
+------------------
+Can get upto 90% discount. 
+Process: Define a max_spot_price where, up to which you are ok to pay. But beyond that the instance will be taken away from you. Generally the instance prices is lower than the max you would set up, for very rarely this will change and might exceed the limit you have set. At that moment your instance will be destroyed. 
+Another strategy is to book the spot instance for an interval , say hrs, and then keep rebooking it. 
+
+Spot fleets are even more cheaper option. 
+
+Placement Groups
+----------------
+1. clusters: All the instances are on the same hardware or same rack. We might choose this because we want super low latency (10gps network)
+             All will fail if the rack fails. So there is a tradeoff as always. 
+2. spread : minimise the risk of failures. distributed. 
+3. partition: use metadata to know where is hte instance.
+Where to specify the placement group for an instance. 
+While creating the instance you have to specify the placement group.
+
+Elastic Network Interfaces
+--------------------------
+
+
+EC2 hibernate
+----------------
+After the instance/computer shuts down generally the ram state is not saved  and it takes time to restart these processes sometimes even 
+manually it is done. Hibernate stores the state of the ram and hence the instance never actually stops. This requiring some extra space
+ram it is available only for certain services.
+        $ uptime        # a commandd that says the time the system has been up, time since boot.
+Using the uptime will help you prove this service.
+
+EC2 Nitro
+-------------
+Next generations of EC2 instances. The underlying tech is different. Allow high performance computing, ipv6. Aj
+
+EBS Volume
+------------
+This is presistent storage option for aws. This volume can be used within the same AZ as a USB, but through a network. They are detachable. 
+Delete on termination command is to set while creation of ebs. When attached preserves root volume when instance is terminated. SAme AZ!
+
+ebs snapshots: backup
+------------------------
+these can be transfered from one az to another on different instances. It is available in region and across regions as well. 
+
+AMI
+___
+amazon machine image.: customization of ec2 instance. 
+    - own software, os, configs...
+    - Faster boot because all your softwares are prepackaged. 
+    - built for specific region
+    - can be created from a public ami provided by aws. 
+    - or we can create our own as well. => make and maintain that . 
+    - or from a aws marketplace.
+    - These are really fast. 
+
+EC2 Instance Store:: Not for long storage.But these are high perfomance.  
+
+RAID
+-----
+0: (increase performance)
+1: (increase tolerance) # same copies at the same time. 
+
+ELB: Load Balancers(external)
+---------------------
+3 kinds of lbs:
+1. Classic load balancer (v1- old generation) - 2009: HTTP, TCP, HTTPS
+2. Application load balancer 2016: https, http, websocket
+3. network lb:UDP, TLS 
+
+Route 53: 
+===========
+It is a managed DNS
+DNS is a collection of rules and records which helps clients understand how to reach  a server through its domain name. 
+In AWS, the most common records are: 
+    - A : hostname to IPv4
+    - AAAA : hostname to ipv6
+    - CNAME : hostname to hostname
+    - Alias : hostname to aws resource
+
+Elastic BeanStalk
+-----------------
+Just the appilcation is you responsibility.
+
+Terminologies that can help you improve the solution architecture for a web app
+----------------------------------------------------------------------------------
+* ELB stickiness : to keep user bound to single instance => saves loss of shortterm data
+                    However if that ec2 instance goes down, then you face down time. => you now  use stateless => JWT or cookies
+                    => requests get heavier and hackers have more room to work.
+                    => you can use server-session, sending only the session id to client and store that on ElastiCache on server.
+*RDS Master and RDS Read replicas => made using replication process, we can use it on our site. 
+To avoid disaster => use multip AZ service of that service. 
+
+

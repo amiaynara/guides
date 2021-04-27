@@ -60,4 +60,20 @@ Don't forget to do BundleInstall after ever Plugin addition.
 Warnings: Do not stage the whole .vim => add a .gitignore with 'bundle/' in it. 
 
 
+Wifi Control
+--------------
+nmcli is a command line tool controlling NeworkManager. 
+        
+        nmcli c             : list of saved connections
+        nmcli d wifi list   : list of available wifi hotspots
+        sudo iwlist <WifiInterface> scanning
 
+        ifconfig -a         : to see the list of interfaces
+
+creating & saving aliases
+--------------------------
+# temporary aliases
+>> alias activate='source ../../bin/activate'
+
+# permanent
+alias activate='source ../../bin/activate'  # in ./bashrc
