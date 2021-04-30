@@ -220,3 +220,32 @@ Handy functions in jQuery
 .css("property")                // returns the value of the "property"
 console.log($('this').attr("id"),'has fadedout') // returns the associated element. 
 .animate({JSON_object_of_properties_and_values},time_in_mili_sec) // 
+
+React : Angela Yu : Udemy
+------------------------------
+Every thing that we create will be present in the <div id="root"></div>
+    
+    var React = require('react');       // instead use import React from "react";
+    var ReactDOM = require('react-dom');
+    ReactDOM(What to show,    where to show it , ... third will come later)---> ReactDOM.render(<h1>Hello world</h1>, document.getElementById("root"));
+The strange thing about the above code is that we are able to write and render html directly from a js file. Well, actually this is called jsx. With the  help of compilers this jsx is converted into pure javascript. The compiler that does this is 'babel'. That is why we also "require" the 'react' an 'react-dom'. Actual demo can be seen online using some  site. 
+
+Note: The first argument can of ReactDOM() can only take single html element.<h> cannot be in series with other such as <p>.
+So we need to bind everthing into single div. 
+
+So jsx allowed us to directly create html elements and render it. However, this makes it static. There we shouldd be add some dynamic content as well. This can be done using {} and the variable name. 
+
+...
+const name = 'amiay';
+
+ReactDOM.render(
+    <div>My name is {name}</div>, ...
+)
+
+Note: {} inside this curly braces, you can only insert an 'EXPRESSION' not a statement. expressions evaluate to a value. However, 
+statements require the computer to do some work, like if statement. 
+
+Ways of adding dynamic content for first name and last name:
+        {first_name + " " + last_name }
+        {first_name} {last_name}
+        {`${first_name} ${last_name}`}      # this is string literal
