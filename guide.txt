@@ -680,3 +680,84 @@ A react interface can be set up manually but we do it by our own.
     npm install -g create-react-app #add sudo
     create-react-app <proj_name>
 
+Controlled Components
+----------------------
+In React lingo, 
+form elements such as <input>, <textarea> and <select> typical maintain theri own state and update it based on user input. In React, mutable state is typically kept in the state property of components, and only updated with setState(). We can combine the two by making React state be the "single source of truth". Then the React component that renders a form also controls what happens in htat form subsequent user input. An input form element whose value is controlled by React in this way is called a "controlled component" 
+
+    function App(){
+        const [name, setName] = useState("");
+
+        function handleChange(event){
+            console.log(event .target.value);
+            setName(event. target. value);
+        }
+    }
+    return (
+        <div>
+            <input onChange={handleChange}
+            type="text"
+            placeholder="what is your name?"
+            value = {name}
+            />
+        </div>
+// The example below shows the name entered in the input box as the heading only after the submit button is clicked. 
+import React, { useState } from "react";
+
+function App() {
+  var [btn_color, set_color] = useState("white");
+  var [name, set_name] = useState("");
+  var [n, sn] = useState("");
+  var background = {
+    background: btn_color
+  };
+  function change_name() {
+    sn(name);
+    console.log(n);
+    set_name("")
+  }
+  function change_color() {
+    set_color("black");
+    if (btn_color === "white") {
+      set_color("black");
+    } else {
+      set_color("white");
+    }
+  }
+  function handle_change(event) {
+    console.log(event.target.value);
+    set_name(event.target.value);
+  }
+  return (
+    <div className="container">
+      <h1>Hello {n}</h1>
+      <input onChange={handle_change} type="text" placeholder="What's your name?" value={name} />
+      <button
+        onMouseEnter={change_color}
+        onMouseOut={change_color}
+        style={background}
+        onClick={change_name}
+      >
+        Submit
+      </button>
+    </div>
+  );
+}
+
+export default App;
+
+    )
+
+Like onClick , onChange is also an event listener.
+
+function handle_change(event){
+    const {name, value} = event.target;         // object destructuring
+
+    setContact( prevValue => {
+        return {
+        ...prevValue,                           // spreading
+        [name] : value                          // [name] used to access the name variable, else it is accepted as a 
+                                                // string "name" becomes a new key.
+        }
+    }
+}

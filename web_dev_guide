@@ -223,6 +223,7 @@ console.log($('this').attr("id"),'has fadedout') // returns the associated eleme
 
 React : Angela Yu : Udemy
 ------------------------------
+It helps in declarative coding rather instead of imperative style(just js), This makes our lives much easier as a developer. 
 Every thing that we create will be present in the <div id="root"></div>
     
     var React = require('react');       // instead use import React from "react";
@@ -249,3 +250,245 @@ Ways of adding dynamic content for first name and last name:
         {first_name + " " + last_name }
         {first_name} {last_name}
         {`${first_name} ${last_name}`}      # this is string literal
+
+styling
+--------
+class based styling(recommended by React) is similar to what we are used to: declaring in a separate file. However, the inline styling is quite interesting, here. If we specify the inline styling as style={width: 100% } this also works fine but the compiler starts giving us some error. this is so because it expects an java script object to specify the  styling. e.g.:
+    const styling = {
+        width: "read",
+        fontSize: '20px'
+    }
+    // also note the use of '' around the property value.
+    and in jsx: 
+    style={styling}     // yes two {{
+
+
+As already mention, React allows us use components. That allows other benfits as well. But the first one is -- keeping the code lot cleaner by distributing it among different files. => Easier to maintain. How?
+Idea of function components:
+// inddex.js
+    import ...
+    import ReactDOM from 'react-dom';
+
+    function Heading(){
+        return <h1>My heading</h1>
+    }
+
+    ReactDOM.render(
+        <div>
+            <Heading />
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    , document.getElementById('root')
+    )
+
+Note that the custom components have been named using Capital letter as the first letter. There are other naming conventions as well. Look at the airbnb, for more such best practices. Now we should also store these components in a different file and 'import' them where needed. Also keep in mind to 'import React from 'react'' [ enables to write jsx code] you can save it as .js or .jsx(preferred).  
+// touch Heading.jsx  &  move Heading functional component there
+// touch List.js & move <ul> there as well. 
+Now our index.js becomes : 
+    
+    import ...
+
+    ReactDOM.render(
+        <Heading />
+        <List />
+    , document.getElementById('root'));
+
+We, now, go a step further and replace the first argument of render( with <App />). And that means that we create another component that will have house all components. Another layer of modularity, leaving our index.js with only one component to render-> App. We create another file App.js or .jsx that will have :
+    import React from 'react';
+    function App(){
+        return(
+            <Heading />
+            <List />
+        );
+    }
+    export default App; 
+
+what is 'default' export ?
+create a file : math.js (not jsx)
+        const pi = 3.142;
+        function doublePi(){
+        return 2* pi;
+        }
+        function triplePi(){
+        return 3*pi;
+        }
+
+        export default pi;      
+        export {doublePi, triplePi};
+in app.js
+        import pieee from 'math.js';        // you can receive the default export through any string we want & there is only one default.
+        import {doublePi, triplePi} from 'math.js'; // here the receiver strings must match and cannot be arbitrary.
+        // another way of receiving is : 
+        import * as pi from 'math.js';
+
+        pi.default  is 3.142, pi.triplePi() is a method call.
+
+Now we are moving from the code sandbox to local development env. We need an editor. we will use vs code for now. But if you want continue using vim, install the plugin for javascript called : vim-javascript plugin.
+
+Using map
+---------
+Using map helps: 
+    - better performance
+    - potential bugs as the state of other (not inteded) array item might change. 
+        function mapContact(contact) {
+          return (
+            <Card
+              id ={contact.id}
+              name={contact.name}
+              email={contact.email}
+              img={contact.imgURL}
+              tel={contact.phone}
+            />
+          );
+        }
+        function App() {
+          return (
+            <div>
+              <h1 className="heading">My Contacts</h1>
+
+        ======>       {contacts.map(mapContact)}            <=======
+            </div>
+          );
+        }
+
+Note: instead of defining a new function for every map, we can 'on the spot' define an anonymous function. 
+    {contacts.map(function (contact){
+    return(
+       <Card ....props go in here  /> 
+    });}
+    // similar to forEach
+    contacts.forEach(function(contact){
+        <
+    }
+Similar functions 
+-------------------
+Filter  : look through and return those that fill a particular criteria
+        contacts.filter(function(num){
+            return num>10
+        })
+Reduce  : 
+        contacts.filter(function(accumulator, currentNumber){
+            return accumulator + currentNumber
+        });
+Find
+FindIndex
+
+Arrow Functions
+--------------------
+x => x*x
+
+Ternary operator
+-------------------
+I know these can be very helpful. exp ? true : false.
+but there one more alternative, when you have only one condition to check( since you cannot use if(){} block in jsx). Therefore, we use
+'&&' operator in conjuction with some expression. 
+    !isRegistered && <Form is_logged="false" />
+    // above is just another way of putting things when in false condition we want to return ''  or null
+
+Hooks
+----------
+Why do we need hooks?
+consider the following way to handle the state(for title of a post).
+    function Post(props){
+        let title = props.title;
+        const handle_click = () => {
+            title = "new title";
+            console.log('title');
+        }
+        return (
+            <div>
+                <p>{title}</p>
+                <p>This is the content</p>
+                <button onClick={handle_click}>Change Title</button>
+            </div>
+        );
+    }
+The above component should be able to change its title when the button is clicked, right? 
+It might be tempting to agree to the above statement. But react does not work that way. This where the 
+genius or 'magic' of react comes into play. The would indeed work if the page was rendered some how. This is the way 
+html pages work. But using just normal functions do not allow this to happen, until we 'imperatively' ask it rerender the component. 
+But react takes care of all that hassle for us. And provides us with hooks, which can change the state declaritively. 
+useState is one of the hooks.
+declarative : 
+How our different components should look under different conditions. 
+imperative : 
+We get hold hold of the component and then change it.(getElement).style.text... => tell to do something different.
+
+hooks are relatively new concept in our app, where using which we can read or modify the state of the app.
+
+    var count = 0;      // initial value of the count
+    function increase(){
+        count++;
+        console.log(count);
+    }
+    function App(){
+    return (
+    <div>
+        <h1> {count}</h1>
+        <button onClick={increase}>+</button>
+    </div>
+    )
+    }
+
+When this code is executed, and the button clicked the value of the count variable changes indeed but since the components need to be re-rendered in order to reflect the change, there fore the value of count does not change on the screen. So every time we rendered, dom again, as the value of count changes we would certainly be able to see the change.
+    ... 
+    function increase(){
+        count++;
+        ReactDOM.render(<the whole page>, document.getElementById('root'));
+    }
+
+This makes our life more difficult. Hooks come to our help here (useState for current use case). But the condition for using hooks is that it must be used in a functional component. It will change the state and rerender the only required component. 
+
+    import React, { useState } from 'react';
+
+    function App(){
+        var [count, setState] = useState(0);        // destructuring and setting the initial state to 0
+
+        function increase(){
+            setState(count + 1);
+        }
+        function decrease(){
+            setState decrease(count - 1);
+        }
+        
+        return (
+            <div>
+                <h1>{count}</h1>
+                <button onClick={increase}>+</button>
+                <button onClick={decrease}>1</button>
+            </div>
+        )
+    }
+
+setInterval(function_name, 1000): calls the function after every 1000milisec
+
+Destructuring
+----------------
+    // Array
+    const some_array = [1,2,3,4]
+    var [ele1 , ele2] = some_array      // => a will be 1 and b will be 2
+    // object
+    const obj = {
+        name: "amiay",
+        roll: "234",
+        score: 123, } // same as "score": 123
+    }
+    const {name, score} = obj;          // name and score have to match exactly
+    const {name="default", score="0"} = obj         // handles missing data
+    //extensive destructuring
+    const { name, sound, feedingRequirements: {food, water} }
+
+controlled components and two way binding
+--------------------------------------------
+useStates allows us to assign the value of the form fields.
+
+How to communicate from child to parent? 
+---------
+We can communicate from parent to child using the props. However when it comes to communicating other way round we can achieve it by passing functions to the child as props, and then calling the function in the child with data present in the child. Using this function we can change the state of the parent. Here also the term comes, 'lifting state up'. This means passing the state back to the parent with the intention to use this state-data for other components(where passing it using props was not possible).
+
+Note: Careful: Just after the change of state from child to parent, the value change is not reflected in the console.log(state_value).why? I don't know. 
+

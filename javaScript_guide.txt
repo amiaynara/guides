@@ -12,7 +12,7 @@ Note: Typescript is a langugage(Maintained by Microsoft). superset of JavaScript
 Transpilers:
 ____________
 Tracer/Babel/Typescript
-you can also use chrome or firefox. Since, we are learning so we will go with the chrome. Also we are in 2020+. It is for production application. You might use Babel. 
+you can also use chrome or firefox. Since, we are learning so we will go with the chrome. Also we are in 2020+. It is for production application. You might use Babel.  # you need to install the babel extension for vscode. 
 
 
 Getting started
@@ -33,7 +33,34 @@ Opening the main.js as Ctrl+O in chrome will just show the JavaScript on the dis
     google-chrome index.html    # [Method 2]
     nodemon main.js             # [Method 3]
 Note: Basically chrome compiles the script found in html. So does node. Hence you must include you main.js into your index.html if using a browser. 
-    
+   
+Primitive types and reference types
+-------------------------------------
+Like java, js also has the concept of references and the primitives. (similar to python)
+number, strings, and booleans are copied. 
+const a = 1
+const b = a;    // 1 is actually copied to b
+
+// objects and arrays are reference types. 
+var obj = {
+    name: "amiay"
+}
+var o2 = obj ;
+o2.name = 'sumit';
+console.log(o2.name)        // sumit
+console.log(obj.name)       // sumit    (not amiay)
+To actually copy use ...(spread) operator. 
+
+Array functions
+---------------
+const numbers = [1,2, 3,4 ]
+const db = numbers.map((num) => {
+    return num* 2
+    });
+}
+
+these are normal javascript not next-gen.
+
 Variables
 ---------
 Containers that can store anything. objects are also declared similarly.
@@ -87,6 +114,28 @@ Loops:
 
 You think this should print 0 through 9. but it does not instead prints 9(9times). By the time the function runs the loop is executed. To ge the desired results we need to immediately invoked function expression(iife). But a simple way is 'let'. 
 While dealing with closures and loops use 'let'. 
+
+let vs var vs const
+-------------
+var is older and can cause some complications sometimes. k
+
+var myName = "amiay";
+myName = "sumit";       // is totally fine. 
+const myName = "amiay";
+myName = "sumit"        // TypeError: Assignment to constant variable. 
+
+
+let d = "amiay";
+let d = "narayan";      // allows re-declaration, with let
+var d = "ami";          // Identifier 'd' has already been declared.
+d = "nara"              // let can be changed. 
+
+var e = 'amiay'
+var e = 'naryaan'       // valid , allows redeclaration with var
+let e = 'narayan'       // Identifier  'e' has already been declared. 
+
+A container cannot be assigned to a different container type. However let and var allow redeclaring to let and var respectively. const does not allow reassignment and redeclartion. Note: const must always be initialised. 
+
 
 
 Functions
@@ -185,12 +234,16 @@ The way:
       constructor(name){
         this.name=name;
       }
+      // other way of creating method
+      greet(){
+        console.log("hi" + this.name)
+      }
         
     }
    
    let p= new person("Chandler");
 Note that a constructor is always called.
-    - One class implies one constructor only in JS.
+    - One class implies ONE constructor only in JS.
     - The function call for constructor need not match the protoype.
     - Creation of a object guarentees, the constructor call. 
     - Creation of a a child object causes parent constructor function call unless super() function is called in the child constructor. 
@@ -199,3 +252,21 @@ Note that a constructor is always called.
     - For a "normal"(no child-parent story): first the function with exact match is searched, if exact match is not found then the method with the name same name is called(irrespective of the EXACT signature match).
     - If the method (being called ) is present only in the parent class, then child object can call parent method.
     - However if the parent class and Child class both have the same function then child class method is called. Note that even if just the name matches then also the CHILD class method will be caused. 
+
+class : Udemy(update : may, 21)
+-------------------------------
+inheritance :   
+        - if you are extending from a class, and are also implementing your own constructor, then the child constructor must call super(). However, implementing the constructor is an option.
+        - Child can use the properties (methods and variables) of the parent using the '.' (dot) operator. 
+
+ES6:
+---
+    constructor() {
+        this.myProperty = 'value';
+    }
+    myMethod(){...}
+
+ES7:
+----
+myProperty = 'value'
+myMethod = () => {...}
