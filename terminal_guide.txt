@@ -99,3 +99,81 @@ https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
 
 
     git flow release finish '0.1.0'
+
+Publishing your python package
+------------------------------
+
+    create  a main folder say PACKAGE <--- is the main folder 
+    create an 'src' folder inside
+    create a setup.py as well. 
+        - Add content to your setup.py..... 
+                from setuptool import setup
+                setup(
+                name="helloworld",
+                ...
+                )
+    Put your module.py(your codes) in the source folder. 
+    we are ready with the bare minimum 
+
+    test it by-
+        $ python setup.py bdist_wheel       => creates a .whl file inside a new directory called dist, other things are 
+        also created
+    from gitignore.io get a gitignore for python code. 
+    for further testing 
+        $ pip install -e .      # install on your local system.
+        Every time you change your setup.py file run this command to test if things are working properly.
+    ----- wait before uploading to pypi -------
+
+    create a git init
+    add LICENSE.txt         ----------> choosealicense.com
+    add classifiers to the setup() in setup.py      --> info about programming language. 
+    Choice of formatting documentation. [ReStructured Text] or [Markdown] README.md is simpler and less powerful.
+    Add more info to the setup.py as well. like long_description() 
+    Add dependencies in setup() of setup.py as install_requires=["pandas~=1.2"...] <--- a list
+    Add extra_require={dev=['lxml~=0.46']}
+    Write tests---> You can use pytest. instead using REPL every time.  
+    Add more info meta-data, like url github and so on. 
+    to test
+        tar tzf dist/.......tar.gz      # but LICENSE.txt and test_module.py will be missing 
+        # therefore 
+        $ pip install check-manifest
+        $ check-manifest --create       # suggests you some lines to add just that to the file
+        $ git add MANIFEST.in       
+    $ python setup.py bdist_wheel sdist
+    $ ls dist/
+        # will give the wheel file and the tar file. 
+    Pushing to PyPi
+    use 'twine' -> separates build step from upload step and avoids complications
+    $ pip install twine
+    $ twine upload dist/*
+        # we can upload here after giving the password and the username
+    Now for production , [technically we are still not there ]
+    use 'tox.ini' to test for various other python environments [3.6, 3.7]    
+    $ pip install tox 
+    
+    you can write documentation and test as much as you can. 
+
+    However this talk suggests to not use all the above steps. 
+    Instead use 'cookiecutter' project that will create the whole set of files without much of this 
+    hassle
+        $ pip install cookiecutter
+        $ cookiecutter gh:ionelmc/cookiecutter-pylibrary
+            ... lots of questions ...
+            ... done ! ...
+            ... Tweak required ...
+        other projects are :
+        Poetry 
+        Flit
+        Hatch
+---------------------------------------------
+https://youtu.be/-WDV0-OB4fE
+---------------------------------------------
+
+# updating your package
+do the changes-----
+Now change the release version in setup.py from 0.0.5 to 0.0.6 for example 
+now you create the build again 
+    $ python setup.py bdist_wheel sdist         # it will create two more files in the dist/
+    $ git add . && git commit -m 'Releasing second version'
+    $ twine upload --skip-existing dist/*
+    # 

@@ -1,7 +1,7 @@
 You should use virtualenv
         pip install virtualenv
         virtualenv env_name
-
+        pip install djangorestframework     # for api's
 
 
 
