@@ -1,3 +1,232 @@
 React
 -=-----
+ The Udemy course for React. 
 
+ Second module: Setting Dynamic Styles
+ ---------------------------------------
+ Let us take an example of form filling. Suppose we want the styling to change when user enters wrong name in an input field. How would we do it? 
+ "non-reactive" way to doing it would be declarative and would have to change the values all the time by using keydown or on-change() method on the input it. But react is react! right?
+ We can do {useState}, to monitor if the value entered in the input is valid or not. 
+    
+    function Input(props){
+        const [enteredValue, setEnteredValue] = useState('');
+        const [valid, setValid]=useState(true);
+        
+        const invalid_style = {
+            color: 'red',
+            background: '#ffcccc'
+        }   // <-------------- 
+
+        handle_input = (event) => {
+        var goal = event.target.value;
+        setEnteredValue(goal);
+        if(enteredValue > 0){
+            setValid(true);         // sets the validity as true
+        }
+       }
+
+       handle_submit = () =>{
+        if(enteredValue.length === 0){
+            setValid(false);
+        }else{
+        props.handleGoal(enteredValue);
+        }
+       }
+        return(
+            <div style={valid ? {} : invalid_style} >
+                <form onSubmit={handle_submit}>
+                    <label>Goals</label>
+                    <input  onChange={handle_input} />
+                </form>
+            </div>
+        )
+
+
+    }
+
+The point is to notice the way the styling has been achieved. A class is added to the style attribute dynamically. 
+However this leads to some problems as well. We now have to add css to the same jsx file(which already has html and js). So instead we can use 'template literals' to add classes dynamically(``). And keep the class properties in the .css file. 
+
+    <div className={`oneclass ${invalid_css_rule_class}`} > 
+        <form>
+        </form>
+    </div>
+
+    in .css file 
+    .invalid_css_rule_class{
+        color: red;
+        border: 1px solid red;
+    }
+This is react in action, the declarative. 
+
+Styled Components
+-----------------
+    $ npm install --save styled-components
+    
+    //in button.jsx, which had a functional component
+    // remove that 
+    import './Button.css';
+    
+    const Button = styled.button`
+
+          font: inherit;
+          padding: 0.5rem 1.5rem;
+          border: 1px solid #8b005d;
+          color: white;
+          background: #8b005d;
+          box-shadow: 0 0 4px rgba(0, 0, 0, 0.26);
+          cursor: pointer;
+
+
+        &:focus {
+          outline: none;
+        }
+
+        &:hover,                     
+        &:active {
+          background: #ac0e77;
+          border-color: #ac0e77;
+          box-shadow: 0 0 8px rgba(0, 0, 0, 0.26);
+        }
+    `;     // <--------- This is specific to javascript not react
+
+    export default Button;
+
+WE can also use media queries here. We can also use props inside it using ${props => props.valid ? 'red' : 'black ' } 
+// note that we don't use the .button inside ``. 
+Also this is a choice where we want to use or not. The teacher chooses plain-old css classes as they present seperation of concerns.  
+
+Another alternative we have css-modules. 
+Like previous make your css classes: However to use cssmodules we have to organise code in a different way. And fortunately, $ npm create-react-app already is configured in such way. 
+
+// Button.module.css
+.button{
+    color : pink;
+}
+we have to 
+    import styles from './Button.module.css'       // note the 'styles from' is added here 
+
+    and the name of css file is Button.module.css   // this is needed for the internal transformation
+    and in 
+    className="button"
+    use 
+    className={styles.button}
+
+Two ways of accessing properties in javascript:
+<div valid={isValid} style={styles['form-control']}>
+<div valid={isValid} style={styles.button}>     // this was due the presence of '-'
+
+<div valid={isValid} className={`${styles['form-control']} ${!isValid && styles.valid}`}>
+To allow dynamic classes to be added to the element, we use ``. So that we are able to use the ternary expression. 
+# media queries
+-------------------
+@media (min-width: 768px){
+    .button{
+        width: auto;
+    }
+}
+
+
+
+Fragments, Portals & Refs
+--------------------------
+Limitations of jsx:
+    1. Does not allow two root elements.
+        solution: We could use different a  parent div to wrap the child instead. 
+        solution: We could also [<div></div>, <div></div>] , an array instead of two. But you now react it wants a
+            key for the arrays. if you could do that it is fine. A
+        solution: helpers (a folder in components with a file named Wrapper.js)
+
+        // in Wrapper.js
+        const Wrapper = (props) => {
+            return props.children;      // return all the children that you received. 
+        };
+        export default Wrapper;
+
+        // now in other files we can import it as
+        import Wrapper from '..../Helpers/Wrapper';
+
+Concept of Fragments is also similar: 
+Instead of creating our own wrapper everytime we get the wrapper out of the box as 'Fragments'.
+There was a problem and Fragment is the solution to that. 
+    return (<React.Fragment>
+                <h2> ......</h2>
+                <p></p>
+            </React.Fragment>
+            ) // this always works.
+
+        // instead import it as -------> import React, {useState, Fragment} from 'react';
+                                    OR
+    return (
+        <>
+        .....blah blah
+        </>
+
+        )// your project setup needs to support it. 
+    )
+
+React portals also do somehting similar. 
+-------------------------------------------
+<div onClick={doSomething}>Click Me </div>      // this works fine. but that does not mean we should use it. 
+We should always provide some logical structure to the code that we are writing and not exploit. This will
+help maintain the project. Portals allow us to put a component somewhere else where it is shown but where it 
+should be.If we want two components to be next to each other but actually in our react code they appear on very d
+ifferent places. We can provide the portal to get them together.
+    <div id="backdrop-root"></div> where you want to be port it. 
+Read more. (lesson number 105 )
+
+Refs
+------
+Another hook 
+    import React, {useState, useRef} from 'react';
+//When a form with multiple inputs we don't want to tract the form with every keypress, that seems a bit too redundantUsable in functional components. 
+    const nameInputRef  = useRef();   // it atakes a defautl
+
+    import React, { useState } from 'react';
+    import styles from './Form.module.css';
+    import Card from '../UI/Card';
+
+    function Form(props){
+
+        const nameInputRef = useRef();
+        const ageInputRef = useRef();
+
+        const handle_submit = (event) => {
+            event.preventDefault();
+            console.log('form submitted')
+            // when the user clicks submt....
+            // it is not bad to read the value of input here // though we should not manipulate it. 
+            console.log(userInputRef); /// is an object {current:input#username} something like this. 
+            //so we can read the value as 
+            const username = userInputRef.current.value;        // if Max is entered in field then we can get it here               // directly... cooool. 
+
+
+            props.handle_form(user);
+        }
+        return (
+            <Card>
+                <form onSubmit={handle_submit}>
+                    <label className={styles.label} >Name</label>
+                    <input 
+                    name="user_name" 
+                    ref = {nameInputRef}
+                    <label className={styles.label}>Age</label>
+                    <input 
+                    name="user_age" 
+                    ref={ageInputRef}
+                     />
+                    <button type="submit">Register</button>
+                </form>          
+            </Card>
+
+        )
+    }
+
+    export default Form;
+Note: the replacement of value={} with ref={}
+By using Refs we can get rid of the onChange method, We can also get rid of the states that we are maintaining. 
+this helps us with shortening our code so much. Only one problem. The input field values don't reset after submit.
+The above example is mixed (khichdi) of my implementation and course(so it would not work but does the job of 
+explaining.)
+Now, though we should not manipulate the Refs values, but for resetting(just for resetting the values in the form fields we can use it. )and that is how we will achieve the resetting feature after submission .
+Also note that fields have become uncontrolled. Like 'key', 'ref' are also present by default for every element.  

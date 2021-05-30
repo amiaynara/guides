@@ -265,7 +265,7 @@ class based styling(recommended by React) is similar to what we are used to: dec
 
 As already mention, React allows us use components. That allows other benfits as well. But the first one is -- keeping the code lot cleaner by distributing it among different files. => Easier to maintain. How?
 Idea of function components:
-// inddex.js
+// index.js
     import ...
     import ReactDOM from 'react-dom';
 
@@ -407,10 +407,11 @@ consider the following way to handle the state(for title of a post).
             </div>
         );
     }
+
+
 The above component should be able to change its title when the button is clicked, right? 
 It might be tempting to agree to the above statement. But react does not work that way. This where the 
-genius or 'magic' of react comes into play. The would indeed work if the page was rendered some how. This is the way 
-html pages work. But using just normal functions do not allow this to happen, until we 'imperatively' ask it rerender the component. 
+genius or 'magic' of react comes into play. This would have indeed worked if the page was rendered some how. This is the way html pages work. But using just normal functions do not allow this to happen, until we 'imperatively' ask it rerender the component. 
 But react takes care of all that hassle for us. And provides us with hooks, which can change the state declaritively. 
 useState is one of the hooks.
 declarative : 
@@ -484,7 +485,7 @@ Destructuring
 
 controlled components and two way binding
 --------------------------------------------
-useStates allows us to assign the value of the form fields.
+useState allows us to assign the value of the form fields. value={state_value}
 
 How to communicate from child to parent? 
 ---------
