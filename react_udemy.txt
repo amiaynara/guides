@@ -230,3 +230,245 @@ The above example is mixed (khichdi) of my implementation and course(so it would
 explaining.)
 Now, though we should not manipulate the Refs values, but for resetting(just for resetting the values in the form fields we can use it. )and that is how we will achieve the resetting feature after submission .
 Also note that fields have become uncontrolled. Like 'key', 'ref' are also present by default for every element.  
+
+
+Effects, Reducers & Context
+-----------------------------
+1. Effect or Side Effect
+Main job of react(till now): Render the components and react to the user input (declaratively).
+Problem:
+There are many components that migh not need rendering. Or may their re-rendering may lead to unwanted behaviour such as an infinite loop. Ex. suppose we have a function that sends an http request back to the server. But this then causes and the response causes the dom to re-render. So we need a different pattern or solution for this type of problem. 
+Here we have "useEffect" Hook. This another built-in react hook. 
+
+      useEffect(()=> {
+        // a method that sets the value of local storage
+        const logged_in_status = localStorage.getItem('LoggedIn');
+        if(logged_in_status === '1'){
+          setIsLoggedIn(true);
+        }
+      }, [])
+      // the method inside the useEffect just executes only when the dependecies [] change.
+      // since there are no dependencies it will only execute once, avoiding infinite loop.
+      // when the app component runs for the first time, only then the method and that is it.
+
+using useEffect for formValidation
+  useEffect(()=> {
+    setFormIsValid(
+      EmailValue.includes('@') && enteredPassword.trim().length > 6
+    )
+  }, [enteredEmail, enteredPassword]
+
+// Normally we would handle the above behaviour as follows in react
+// this was previously handled by methods that were passed to onChange event handler of the input field. 
+// function NewComp(){
+// const emailChangeHandler = (event)=>{
+    const email = event.target.value; // get the value of email input field
+    setEmailValue(email);
+    // now validate with every keystroke
+    setValidForm(EmailValue.includes('@') and EmailValue.trim().length > 6);
+}
+// return(
+// <input onChange={emailChangeHandler} >)
+// }
+
+But we can see that these are not much of an improvement, ofcourse we reduce the typing the code multiple places. 
+But still it runs everytime the dependencies(EmailValue and enteredPassword) change. So if the side effect was to 
+send an https request. This would make too much re-renddering of the DOM. Therewe can accumulate these changes and 
+launch the effect after some times. We can try using setTimeout(setFormValid(....), 500) but this alone will not help as well. This will simply make an offset of 500ms. 
+So the solution is : 
+    Cleanup function
+useEffect's first parameter is a function and we can return a function as well. 
+
+so,
+    useEffect(()=>{
+        const indentifier = setTimeOut(()=> {
+            console.log('set time out was run');
+            setFormValid(
+                //....validation logic
+            )
+        }, 500);
+        
+        return () => {
+            // we return function here
+            console.log('cleanup ran');
+            clearTimeout(identifier);
+        }
+    , [EmailValue, ... dependencies]}
+The speciality about clean up funciton is that it runs only when dependencies change but it does not run for the first time the component is rendered. 
+so, in the above example, 'set time out was run' will be logged but NOT 'cleanup ran'
+
+This feature provided by the useEffect method allows us to run setFormValid only when there is a gap of 500ms between two keystrokes. Because when ever there are two consecutive strokes with an interval of 500ms, the useEffect runs twice and clears the timeout identifier and there fore the method inside the setTimeout which was due to be executed does get executed. however, where there is substantial gap between two key strokes (>500ms) the identifier will not get destroyed and the setFormValid will run and assign the state a true or false value. Clean up will be run all the times and destroy the timer.
+Note: useEffect method runs after (not before not during) every time the functional components is rendered.But the method (clean up function)returned by useEffect's first parameter does not for first execution but runs every time the dependencies change.  
+Note: Clean function runs before the method inside the useEffect runs. But clean up does not run for the first execution. 
+
+2. useReducer(): 
+It can be thought of as powerful version of useState. Mananging too many states, or complex states can often lead to buggy or inefficient state management. (Problem) 
+solution : useReducer
+
+    const [state, dispatchFtn] = useReducer(reducerFtn, initialstate, initfn)
+
+dispatchFtn: can be use to dispatch a new action (trigger an update of state)
+reducerFunction: (prevState, action) => newState
+    A fn that is triggered automatically an action is dispatched (via dispatchfunction) - it receives the latest state snapshot and should receive the latest value of the state. 
+
+eg. 
+
+                import React, { useState, useEffect, useReducer } from 'react';
+                import Card from '../UI/Card/Card';
+                import classes from './Login.module.css';
+                import Button from '../UI/Button/Button';
+
+                const emailReducer = (state, action) => {
+                  if (action.type==="USER_INPUT"){
+                    return {value: action.val, isValid: action.val.includes('@')}
+                  }
+                  if (action.type==="ON_BLUR"){
+                    return {value: state.value, isValid: state.value.includes('@')}
+                  }
+                  return {value: '', isValid: false};
+                }
+                const Login = (props) => {
+                  // const [enteredEmail, setEnteredEmail] = useState('');
+                  // const [emailIsValid, setEmailIsValid] = useState();
+                  const [enteredPassword, setEnteredPassword] = useState('');
+                  const [passwordIsValid, setPasswordIsValid] = useState();
+                  const [formIsValid, setFormIsValid] = useState(false);
+
+                  const [emailState, dispatchEmail] = useReducer(emailReducer, {
+                    value: '',
+                    isValid: undefined
+                  })
+
+
+//                  useEffect(()=> {
+ //                   const identifier = setTimeout(()=>{
+  //                    console.log('Checking form validity');
+   //                     setFormIsValid(
+    //                      emailState.value.includes('@') && enteredPassword.trim().length > 6
+     //                   )}
+////
+  //                  , 500);
+   //                 console.log(identifier)
+    //                return ()=>{
+     //                 console.log('clean up')
+      //                clearTimeout(identifier); // does not let the setFormValid method run if the keypresses are between <500ms interval .
+       //             }
+//
+ //                 }, [emailState, enteredPassword])
+  //                // in a way these are replace ment for creating our own handdler for change of inputs
+   //               // we use dto write onchangehandler inorder to check if the values in the input were valid
+    //              // on each change, now this side effect is being handled by useEffect when ever form changes.
+     //             const emailChangeHandler = (event) => {
+      //              // setEnteredEmail(emailState.value);
+       //             dispatchEmail({type:'USER_INPUT', val:event.target.value})
+        //            setFormIsValid(event.target.value.includes('@') && enteredPassword.length > 6)
+         //         };
+
+                  const passwordChangeHandler = (event) => {
+                    setEnteredPassword(event.target.value);
+                  };
+
+                  const validateEmailHandler = () => {
+                    dispatchEmail({type: "ON_BLUR"})
+
+                  };
+
+                  const validatePasswordHandler = () => {
+                    setPasswordIsValid(enteredPassword.trim().length > 6);
+                  };
+
+                  const submitHandler = (event) => {
+                    event.preventDefault();
+                    props.onLogin(emailState.value, enteredPassword);
+                  };
+
+                  return (
+                    <Card className={classes.login}>
+                      <form onSubmit={submitHandler}>
+                        <div
+                          className={`${classes.control} ${
+                            emailState.isValid === false ? classes.invalid : ''
+                          }`}
+                        >
+                          <label htmlFor="email">E-Mail</label>
+                          <input
+                            type="email"
+                            id="email"
+                            value={emailState.value}
+                            onChange={emailChangeHandler}
+                            onBlur={validateEmailHandler}
+                          />
+                        </div>
+                        <div
+                          className={`${classes.control} ${
+                            passwordIsValid === false ? classes.invalid : ''
+                          }`}
+                        >
+                          <label htmlFor="password">Password</label>
+                          <input
+                            type="password"
+                            id="password"
+                            value={enteredPassword}
+                            onChange={passwordChangeHandler}
+                            onBlur={validatePasswordHandler}
+                          />
+                        </div>
+                        <div className={classes.actions}>
+                          <Button type="submit" className={classes.btn} disabled={!formIsValid}>
+                            Login
+                          </Button>
+                        </div>
+                      </form>
+                    </Card>
+                  );
+                };
+
+                export default Login;
+// above example demonstrates the use of useReducer() // taking the example of email, 
+// you can compare it with using useState which has been applied on password field
+
+Take a look at the below code, derived from above and read the comments. 
+  const passwordChangeHandler = (event) => {
+    // setEnteredPassword(event.target.value);
+    dispatchPassword({type:"USER_INPUT", val: event.target.value})
+    setFormIsValid(event.target.value.length > 6 && emailState.value.includes('@'));
+    // keep in mind that emailState.value might have some previous value which is no more relevant.
+    // Therefore this code is not optimal. This is because the way react schedules the updates of states.
+  };
+
+This short coming can be overcome by using the useEffect along with useReducer. Just put the formvalidation in useEffect as before and put the password and emailSTate as dependencies. 
+------------------------------------------------------------------
+  // object destructuring
+  const {isValid:emailIsValid} = emailState;
+  const {isValid:passwordIsValid} = passwordState; // aliasing
+
+  useEffect(()=> {
+    const identifier = setTimeout(()=>{
+      console.log('Checking form validity');
+        setFormIsValid(
+          emailState.isValid && passwordState.isValid
+        )}
+
+    , 500);
+    console.log(identifier)
+    return ()=>{
+      console.log('clean up')
+      clearTimeout(identifier); // does not let the setFormValid method run if the keypresses are between <500ms interval .
+    }
+
+  }, [emailIsValid, passwordIsValid])
+// if the last  line was just [emailState, passwordState]) , as was the case before, then it would simply lead to running this useEffect again and again even after the email and password have already become valid. Because change in the value further would cause on of the dependency to change cause the useEffect to run unnecessarily. And since we already know that useEffect generally are responsible to run https/or other heavy lifting side effects, we should try to limit these.
+bottom line: avoid using the whole objects as the dependecies array. 
+To differentiate b/w the usage of useState and useReducer
+see lec 119. 
+------------------------------------------------------------------
+Note another thing about using useEffect.
+
+Anther Problem
+--------------
+Suppose you have an app that where there is a long chain of childrens. Imagine a balanced binary tree of height 6. This will really become hard to manage. You will have to pass states which are not even used by "trasit-components". Just because a distant children wants to use the props sent by App, all other intermediates will carry the props. This is the problem that 'context' or 'store' solves. It provides direct access to the component props without bothering about lifting the state and passing props.
+
+How to achieve this.
+create a store directory in the src folder. create a file 'auth-context.js' or any other name.
+    import React from 'react';
+    React.createContext('This is app wide state');
