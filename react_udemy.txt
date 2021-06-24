@@ -97,6 +97,7 @@ WE can also use media queries here. We can also use props inside it using ${prop
 Also this is a choice where we want to use or not. The teacher chooses plain-old css classes as they present seperation of concerns.  
 
 Another alternative we have css-modules. 
+-----------------------------------------
 Like previous make your css classes: However to use cssmodules we have to organise code in a different way. And fortunately, $ npm create-react-app already is configured in such way. 
 
 // Button.module.css
@@ -471,4 +472,125 @@ Suppose you have an app that where there is a long chain of childrens. Imagine a
 How to achieve this.
 create a store directory in the src folder. create a file 'auth-context.js' or any other name.
     import React from 'react';
-    React.createContext('This is app wide state');
+    const authContext = React.createContext('This is app wide state');
+
+    export default authContext;
+
+now import in the desired component. In the parent component
+
+function App(){
+    return (
+        <authContext.Provider value={{
+            isLoggedIn: isLoggedIn
+        }}>                             // this acts as a replacement for <React.Fragment>
+            <LoginComponent>Thi</LoginComponent>
+            <div> </div>
+        </authContext.Provider>
+    )
+}
+
+all the children will have access to the authContext prop can be accessed in two ways
+    1. authContext.Consumer
+    2. Using hooks
+Using Consumer
+function LoginForm(){
+    
+    return (
+    <authContext.Consumer>
+    {(ctx) => 
+    {
+    return (
+       <form>
+       ....
+        where ever you used the context variable with props just replace it with ctx.
+        
+       ....
+       </form>
+    )
+
+    }
+
+    }
+    </authContext.Consumer>
+    )
+}
+----------------------------------------------
+    2. useContext Hook 
+as before use authContext.Provider tag around the parent. And where you want to receive, just use { useContext }
+and inside the functional component just do the following: 
+{
+    const ctx = useContext(authContext);
+
+    return(
+        <h1>{ctx.isLoggedIn}</h1>
+    )
+}
+This works like a charm. 
+
+Now to refactor it further, we can create a separate file, that manages the whole authentication context provider, hence the name 'store' is justified. A central for a particular service.  
+
+
+Food order app complete
+Be sure to revise(useRef, useReducer, useEffect, portals)
+--------------------------------------------------------------
+How does react work?
+React has something called virtual dom, (equivalent to real dom) but more efficient to reflect the changes. 
+Take a look at the below code. 
+
+function Parent(){
+    const [state, setState] = useState();
+    return <div>
+        <Comp1 />
+        <Comp2 new_val={state}/>
+    </div>
+}
+No matter whether you pass the props down to the child or not, these will child components will get executed. This makes the react rendering pretty slow. Although better than reloading the whole page, but still we should be able to do better.  
+So if we want <Comp1 /> to be not rendered, then  we can just say following during its export: 
+    export default React.memo(Comp1); // call only if  props values change. 
+
+however there one catch, consider the following button beign returned by a functional component. 
+    return (
+        <Button clickHandler={clickHandler} />
+    )
+    )
+and in export of Button you use 
+    export default React.memo(Button);
+However you will find that to your surprise the button still gets re-rendered. This is because of the fact that the each time the parent gets re evaluated, (since they are functions and functions are nothing but objects). Therefore Everytime the object is new. nothing to do with the older Parent component. Therefore 'clickHandler' is also definded again and again( therefore this changes, hence the button component is re-rendered)
+To solve this problem we have : 
+        useCallback
+This makes sure that same memory in the memory is used again after the re-render. 
+how to use:     
+        const toggleParagraph = useCallback(() => {
+            setShowParagraph(prevValue => !prevValue);
+        }, []);
+        // this also takes dependicies like useEffect. 
+
+Tip: 
+Use function form to update(set) the state, because of the way  react schedules the state.State batching when multiple states are set.    
+
+Making http requests:
+--------------------
+Now, requests can be made using axios, ajax, XMLHttpRequest and so on. But here we will start with first, 
+fetch(). fetch() is a javascript replacement for XMLHttpRequest. 
+    
+    fetch('http:/path/of/endpoint/')
+        .then(response => response.json())
+            .then(data => console.log(data.results));
+Above is a simple way of accessing data using fetch(). By default all the requests are GET.
+Note that fetch() returns a promise, which I am resolving here using .then()
+
+async, await
+------------
+Another way to achieve the  above asynchronous behaviour is: 
+    
+    async function fetchMovies(){
+        const response = await fetch('http://path/to/endpoint/');   // this also returns a promise
+        const data     = await response.json()                      // this also returns a promise
+        console.log(data.results);
+    }
+With .then() we use .catch() to except any error that might occur in the request process. But here we have to use 
+    try{
+        const response = await fetch('http://path/to/end/point/')
+    }
+    catch(err)
+Max has said that 'then()' and 'async - await' are basically same under the hood, we should consider using async await when we want better readability. 

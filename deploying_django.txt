@@ -1,0 +1,78 @@
+Corey_Schafer: youtube
+-------------============
+1. start an ec2 instance (although he uses linode) with ubuntu on it. 
+2. $ sudo apt update && sudo apt upgrade
+3. install python, pip and virtual env
+4. get the repository from github (git clone )
+5. rename the domain-name:
+    $ sudo hostnamectl set-hostname --static django-server
+    $ hostname
+6. set the hostname and the hostfile 
+7. add another user
+    $ sudo vim /etc/sudoers         # change the name of root to ubuntu 
+    $ sudo adduser tesla
+    $ sudo adduser tesla sudo
+    # This allows us to ssh into ec2 as tesla next time onwards 
+8. create ssh key-based authentication 
+9.      $ sudo ufw allow 8000
+        $ sudo ufw enable
+        $ sudo ufw status
+10. get the django project on to the server, and yes create the virtual env as well. 
+11. in settings.py add ip address of the aws to the ALLOWED_HOSTS
+12. $ ./manage.py collectstatic         # will create a static folder with the static files.
+13. $ python manage.py runserver 0.0.0.0:8000
+14. although not secure but you are good to go.
+
+cd stock_env/
+source bin/activate
+pip install Django
+git checkout develop        # create a new branch if needed
+sudo apt install nodejs
+sudo apt install node
+npm run build
+in the base dir
+./manage collectstatic
+in the settings
+change the allowed_hosts to the ip of the ec2 instance
+Further if there is a data base like RDS, then put the credentials of the database in the form of
+os.environ.get('db_name')
+in the present app, I have simply used the db.sqlite3 and it runs on the ec2 instance itself.
+pip install -r requirements.txt
+sudo apt install ufw
+sudo ufw default allow outgoing
+sudo ufw default deny incoming
+sudo ufw allow ssh
+sudo ufw allow 8000
+sudo ufw status
+This should allow to access through IP:8000
+
+But this will not work here in production environment.
+sudo apt-get install apache2
+sudo apt-get install libapache2-mod-wsgi-py3
+cd /etc/apache2/sites-available/
+sudo cp 000-default.conf django_project.conf
+
+      Alias /static /home/ubuntu/stock_env/src/static
+      <Directory /home/ubuntu/stock_env/src/static>
+        Require all granted
+      </Directory>
+
+      <Directory /home/ubuntu/stock_env/src/stock_project>
+        <Files wsgi.py>
+          Require all granted
+        </Files>
+      </Directory>
+
+      WSGIScriptAlias / /home/stock_env/src/stock_project/wsgi.py
+      WSGIDaemonProcess django_app python-path=/home/stock_env/src python-home=/home/ubuntu/stock_env
+      WSGIProcessGroup django_app
+sudo a2ensite django_project        # name of the conf file
+sudo a2dissite 000-default.conf
+sudo chown :www-data stock_env/src/db.sqlite3
+sudo chmod 664 stock_env/src/db.sqlite3
+sudo chown :www-data stock_env/src/ # this also has to be done with media folder
+sudo chmod 775 stock_env/src
+change DEBUG = False
+sudo ufw delete allow 8000
+sudo ufw allow http/tcp
+sudo service apache2 restart
