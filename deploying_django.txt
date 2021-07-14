@@ -43,8 +43,20 @@ sudo ufw default allow outgoing
 sudo ufw default deny incoming
 sudo ufw allow ssh
 sudo ufw allow 8000
+sudo ufw enable
 sudo ufw status
 This should allow to access through IP:8000
+# settings.py
+ALLOWED_HOSTS=[ip_of_the_ec2_instance]
+./manage.py runserver 0.0.0.0:8000
+
+# adding config.json
+sudo vim /etc/apache2/config.json       # then add the secret data in json format
+# in settings.py
+import json
+with open('/etc/apache2/config.json') as config_file:
+    config = json.load(config_file)
+
 
 But this will not work here in production environment.
 sudo apt-get install apache2

@@ -1,0 +1,49 @@
+	  Alias /static /home/ubuntu/blog_project/static
+	  <Directory /home/ubuntu/blog_project/static>
+	    Require all granted
+	  </Directory>
+
+	  Alias /media /home/ubuntu/blog_project/media
+	  <Directory /home/ubuntu/blog_project/media>
+	    Require all granted
+	  </Directory>
+
+	  <Directory /home/ubuntu/blog_project/blog_project>
+	    <Files wsgi.py>
+	      Require all granted
+	    </Files>
+	  </Directory>
+
+	  WSGIScriptAlias / /home/ubuntu/blog_project/blog_project/wsgi.py
+	  WSGIDaemonProcess django_app python-path=/home/ubuntu/blog_project python-home=/home/ubuntu/blog_project/venv
+	  WSGIProcessGroup django_app
+
+
+
+{
+ "DB_NAME_L":"newdb",
+ "DB_USER_L":"postgres",
+ "DB_PASSWORD_"L:"aminara",
+ "DB_HOST_L":"localhost",
+ "DB_PORT_L":"5432","
+
+ "DB_NAME":"db_name",
+ "DB_USER":"postgres",
+ "DB_PASSWORD":"",
+ "DB_HOST":"",
+ "DB_PORT":"5432",
+
+ "BLOG_PROJECT_SECRET_KEY":"u01v(y8pc6vls!h!r(yx6$%c-lr\$0\$_b^7fhk!&)ht$+(hz48e",
+ "MY_GENERAL_EMAIL":"amiay.narayan@gmail.com",
+ "GENERAL_EMAIL_PASS":"vyrteihszgskfomf",
+
+ "BHILAI_EMAIL":"amiayn@iitbhilai.ac.in"
+}
+
+
+
+Master username
+postgres
+
+Master Password
+masterpassword
