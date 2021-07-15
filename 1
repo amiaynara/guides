@@ -1,0 +1,237 @@
+What is Containerization?
+=========================
+AS described by creators:
+"Docker provides the ability to package and run an application in a loosely isolated environment called a container. The isolation and security allow you to run many containers simultaneously on a given host. Containers are lightweight because they don’t need the extra load of a hypervisor, but run directly within the host machine’s kernel. This means you can run more containers on a given hardware combination than if you were using virtual machines"
+
+# Image
+The image is a blueprint of the container and the container is created from it.
+For simplicity, if you take this from an object-oriented programming point of view, an image is a class, where all the requirements are defined and declared. A container is an instance of the image. These images are stored somewhere in the cloud and pulled as needed
+
+# Container
+A container is an instance of an image, which simulates the required environment with the use of the Linux kernel packaged in it. In the diagram, you can see app B is enclosed in one container. Similarly, you can enclose the other two apps as well
+
+# Docker ecosystem
+
+* Docker Registry: Docker maintains all the images in the registry and they can be pulled from the registry too
+
+* Docker Hub: This is the repository for all your custom-built images. Images can be pushed and accessed from the Hub
+
+* Docker Client: The CLI tool used to interact with the Docker server
+
+* Docker Daemon: The Docker server process responsible for pulling, pushing, and building the images. It is also used for running the container
+
+Throughout this course, we will be using a local Docker client and daemon only. There are only a few things you need to keep in mind while working with Docker:
+
+1. Images
+2. Containers
+3. Networks - which we will be cover in the Docker Compose section
+
+The short list above is all you need. Docker takes care of the rest. There are so many abstractions in the implementation of Docker for every platform other than Linux, but the whole idea remains the same: providing the native Linux kernel to containers. So, let’s focus on the core functionality we need to do development and let the Docker daemon do the rest
+
+## Installation
+
+```bash
+# Remove any older versions of docker
+# use sudo if required
+$ sudo apt-get remove docker docker-engine docker.io containerd runc
+# Update package index
+# use sudo if required
+$ sudo apt-get update
+# Use sudo if required
+$ sudo apt-get install apt-transport-https ca-certificates curl \
+    gnupg-agent \
+    software-properties-common
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+$ sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+$ sudo apt-get update
+$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+$ sudo docker info
+```
+# if  you don't want to use sudo with all docker commands. 
+```bash
+$ sudo usermod -aG docker <your-user>
+```
+
+## Hello world in docker
+`$ docker run hello-world`
+```bash
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+```
+
+If you get the output above, all is set. If you read the sentences below, line by line, you will be able to recall what we have learned in the architecture lesson.
+
+* Docker daemon first tries to find the image locally.
+* It pulls the image from the registry.
+* Docker daemon runs the image.
+```bash
+docker image ls             # list all the images present on the system
+docker ps                   # list all the running images on the system 
+```
+Note: you can see that nginx occupies 128MB while hello-world image 13kB. Note that if there were no component sharing the program would have occupied lot more space. 
+As every image is built on top of Linux kernel, it has some common dependencies that can be reused by other images. Docker bundles these dependencies in one stack and these stacks are called layers.
+
+## Commands used in this lesson #
+```bash
+docker pull \<images-name>:\<version> : pulls image from Docker registry
+docker run \<images-name>:\<version> : runs container from mentioned image
+docker ps : shows all running containers
+docker ps -a: shows all available containers
+docker exec: executes a command in a running container
+```
+```bash
+$ docker pull python:3.5         # will pull from the registry if not present locally
+$ docker run python:3.5          # will 'fork' the container can be seen from following command; docker ran and exited
+$ docker ps -a
+CONTAINER ID   IMAGE               COMMAND                  CREATED              STATUS                          PORTS     NAMES
+0d225fd5d79f   python:3.5          "python3"                About a minute ago   Exited (0) About a minute ago             infallible_lumiere
+```
+
+**CONTAINER ID**: shows the unique ID of each container
+
+**IMAGE**: the image from which the container is created
+
+**COMMAND**: command executed in the container while starting it
+
+**CREATED**: the time the container was created
+
+**STATUS**: the current status of the container
+
+**PORTS**: if any of the container ports is connected to the host machine, it will be displayed here
+
+**NAMES**: this is the name of a container. If it is not provided while creating the container, Docker provides a unique name by default.
+
+Type 
+```bash
+$ docker run -it <image name> <command to execute>
+```
+To get the shell, we will execute bash as a command. The options i & t are used to provide an interactive mode and a pseudo tty terminal.
+```bash
+$ docker run -it bash 
+root@1a423eda20e2:/# whoami
+root
+```
+Currently, we are in a virtual Linux OS. It is very lightweight as no extra packages will be installed in it except Python.
+You can get back to the bash of any running container anytime you want by running 
+```bash
+$ docker exec -it <container id/name> bash      # note that the container must be already running, does not work for exited containers
+```
+To start an exited/stopped container: 
+```bash
+$ docker start <container_id>
+$ docker exec <container_id/name> <comman>      # runs the container again
+$ docker kill <container_id>                    # kills the container (docker ps will not have that  container_id anymore and ps -a will show exited
+root@asdfks234:/# apt update
+root@asdfks234:/# apt install vim               # i think it does not download, if possible it shares from the ubuntu/linux kernel. 
+```
+
+### Note
+
+```bash
+$ docker run python:3.5 bash                    # does not show any output but creates a new container(forks the image python:3.5)
+$ docker run container_id                       # is not valid (run must have an image as an argument) not a container => error
+$ docker run -it python:3.5 bash                # again forks a new container and will show you a bash terminal
+$ docker exec -it <container_id/name> bash      # if the container is already running then it starts the bash using that else , error
+$ docker start <container_id/name>              # start the container/ make the container running, now you can exec a bash
+```
+
+### Why do we need to commit?
+One goal of containers is to be able recreate the environement with all the depedencies without much of a headache. 
+This is acheived by creating an image out of the changes that we have made into our container. We make these changes
+by commiting it.
+### How to commit?
+```bash
+$ exit                                          # from the current container's bash if inside it. 
+$ docker commit -m '<commit message>" <container_id/name> <new_image_name>:<version>
+$ docker  commit -m "add date showing program to python3.5" 1a423eda20e2 date_shower:0.1
+```
+## Push to docker hub
+```bash
+$ docker login
+$ docker tag <image_name>:<version> <docker_username>/<image_name>:<version>
+$ docker push <image_name>:<version> <docker_username>/<image_name>:<version>
+```
+## Connecting host machine file system to container
+Whenever you create a container from an image, it creates a new container without any data except the image data. We created the date-project image, which is a very small image. It has only one project file which we created in the container file system. If the container is removed before committing the changes, we will lose the data. So, it is always good practice to separate your data’s file system from the container’s file system.
+* docker volume --help: to get the volume help
+* docker volume create: to create a new volume
+* docker inspect volume: to inspect the created volume
+* docker run -v: to mount a volume
+### Bind mount
+Here you bind a path on host to the some directory in the container. 
+```bash
+$ docker run -it -v /home/tesla/Desktop/:/python_desktop date_project:0.1           # exec does not work
+```
+__`To mount the file system as read-only, use ro flag. $docker run -it -v <absolute_path>:<folder path or new folder name>:ro date_project:1.0`__
+
+### Volumes
+Docker volumes are mostly created to share data within different containers, rather than sharing data with host and container
+`docker volume --help`
+```bash
+$ docker volume create <volume_name>                        # if no name is provided docker provides a unique name 
+```
+```bash
+$ docker volume inspect new_volume                          # inspect a new volume
+[
+    {
+        "CreatedAt": "2021-07-15T20:18:19+05:30",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/new_volume/_data",
+        "Name": "new_volume",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+```
+```bash
+$ docker run -it -v new_volume:/project date_shower:0.1         # while using 'run' what ever is after the image_name will be the command run in the container
+```
+
+## Some useful commands
+
+Command	Action
+`
+docker ps	                        Lists all running containers. -a option will list stopped and running both
+docker inspect [container_name]	    Provides all info about the container
+docker stop [container_name]	    Stops the running container
+docker kill [container_name]	    Kills(stops) the container and removes the container from the system
+docker rmi [image/s]	            Removes the provided image
+docker images	                    Lists all images on the system
+docker exec [-it]	                Executes command in a Docker container
+docker system	                    Gets the Docker system information such as memory usage and housekeeping stuff
+docker system prune	                This command will save you from getting the “No memory left” nightmare with production systems
+`
+
+## Problem for practise:
+1. pull the image for python3.8 and keep track of the layers it has fetched. 
+```bash
+$ docker pull python:3.8
+```
+There are 9 layers that were pulled. 
+
+2. Create a docker volume named app_files
+```bash
+$ docker volume --help                          # try to use help
+$ docker volume create app_files                # One has to be able remember 'create' comman
+```
+
+3. Create a container named 'first_container' from the Python3.8 image with app_files volume attaced to it. 
+```bash
+$ docker run -it -v app_files:/folder_in_container --name first_container python:3.8 bash       # you may not start bash
+```
+
+4. Write a Python program named 'current_time.py' to display the current timestanp inside the app_files volume. 
+```bash
+$ docker start first_container
+$ docker exec -it first_container bash              # open the a file and create the python code for current time. 
+```
+
+5. Create another container named 'second_container' from the python 3.8 image and update the python script located in the app_files volume to print the current date. 
+```bash
+$ docker run -it -v app_files:/to_second_container --name second_container python:3.8 bash
+```
+Now go the shared folder, and chaneg th code such that the time is shown separtely

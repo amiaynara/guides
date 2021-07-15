@@ -1,0 +1,116 @@
+What is Containerization?
+=========================
+AS described by creators:
+"Docker provides the ability to package and run an application in a loosely isolated environment called a container. The isolation and security allow you to run many containers simultaneously on a given host. Containers are lightweight because they don’t need the extra load of a hypervisor, but run directly within the host machine’s kernel. This means you can run more containers on a given hardware combination than if you were using virtual machines"
+
+# Image
+The image is a blueprint of the container and the container is created from it.
+For simplicity, if you take this from an object-oriented programming point of view, an image is a class, where all the requirements are defined and declared. A container is an instance of the image. These images are stored somewhere in the cloud and pulled as needed
+
+# Container
+A container is an instance of an image, which simulates the required environment with the use of the Linux kernel packaged in it. In the diagram, you can see app B is enclosed in one container. Similarly, you can enclose the other two apps as well
+
+# Docker ecosystem
+
+* Docker Registry: Docker maintains all the images in the registry and they can be pulled from the registry too
+
+* Docker Hub: This is the repository for all your custom-built images. Images can be pushed and accessed from the Hub
+
+* Docker Client: The CLI tool used to interact with the Docker server
+
+* Docker Daemon: The Docker server process responsible for pulling, pushing, and building the images. It is also used for running the container
+
+Throughout this course, we will be using a local Docker client and daemon only. There are only a few things you need to keep in mind while working with Docker:
+
+1. Images
+2. Containers
+3. Networks - which we will be cover in the Docker Compose section
+
+The short list above is all you need. Docker takes care of the rest. There are so many abstractions in the implementation of Docker for every platform other than Linux, but the whole idea remains the same: providing the native Linux kernel to containers. So, let’s focus on the core functionality we need to do development and let the Docker daemon do the rest
+
+## Installation
+
+```bash
+# Remove any older versions of docker
+# use sudo if required
+$ sudo apt-get remove docker docker-engine docker.io containerd runc
+# Update package index
+# use sudo if required
+$ sudo apt-get update
+# Use sudo if required
+$ sudo apt-get install apt-transport-https ca-certificates curl \
+    gnupg-agent \
+    software-properties-common
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+$ sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+$ sudo apt-get update
+$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+$ sudo docker info
+```
+# if  you don't want to use sudo with all docker commands. 
+```bash
+$ sudo usermod -aG docker <your-user>
+```
+
+## Hello world in docker
+`$ docker run hello-world`
+```bash
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+```
+
+If you get the output above, all is set. If you read the sentences below, line by line, you will be able to recall what we have learned in the architecture lesson.
+
+* Docker daemon first tries to find the image locally.
+* It pulls the image from the registry.
+* Docker daemon runs the image.
+```bash
+docker image ls             # list all the images present on the system
+docker ps                   # list all the running images on the system 
+```
+Note: you can see that nginx occupies 128MB while hello-world image 13kB. Note that if there were no component sharing the program would have occupied lot more space. 
+As every image is built on top of Linux kernel, it has some common dependencies that can be reused by other images. Docker bundles these dependencies in one stack and these stacks are called layers.
+
+## Commands used in this lesson #
+```bash
+docker pull \<images-name>:\<version> : pulls image from Docker registry
+docker run \<images-name>:\<version> : runs container from mentioned image
+docker ps : shows all running containers
+docker ps -a: shows all available containers
+docker exec: executes a command in a running container
+```
+```bash
+$ docker pull python:3.5         # will pull from the registry if not present locally
+$ docker run python:3.5          # will 'fork' the container can be seen from following command; docker ran and exited
+$ docker ps -a
+CONTAINER ID   IMAGE               COMMAND                  CREATED              STATUS                          PORTS     NAMES
+0d225fd5d79f   python:3.5          "python3"                About a minute ago   Exited (0) About a minute ago             infallible_lumiere
+```
+**CONTAINER ID**: shows the unique ID of each container
+
+**IMAGE**: the image from which the container is created
+
+**COMMAND**: command executed in the container while starting it
+
+**CREATED**: the time the container was created
+
+**STATUS**: the current status of the container
+
+**PORTS**: if any of the container ports is connected to the host machine, it will be displayed here
+
+**NAMES**: this is the name of a container. If it is not provided while creating the container, Docker provides a unique name by default.
+
+Type 
+```bash
+$ docker run -it <image name> <command to execute>
+```
+To get the shell, we will execute bash as a command. The options i & t are used to provide an interactive mode and a pseudo tty terminal.
+```bash
+$ docker run -it bash 
+root@1a423eda20e2:/# whoami
+root
+```
+
