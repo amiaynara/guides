@@ -245,4 +245,49 @@ greetNeatTrick('sumit');
 ```
 
 ## Objects and functions
+*Object and the dot*
+As already mentioned when you think of object think this: 
+```
+  {
+    key: value, // where value can be another object
+  }
+```
+In a more descriptive way, objects can have *properties* and *methods*. 
+- Properties : **primitives** and **nested objects** 
+- Methods: javascript function sitting inside. 
+So the Main object will be sitting in the computer memory and it will have references to the properties and
+methods that have been defined inside of it.
+
+Consider the following example: 
+```
+  var x; // is not an object  but 'undefined' type
+  console.log(typeof x); // undefined
+  var y = 3; // is a number
+  console.log(typeof y); // number 
+
+  var person = new Object(); // a better and simpler way is to just use '{}'
+  person['firstName'] = 'amiay';
+  person['lastName'] = 'narayan'; // [] is called 'computed member operator'
+
+  console.log(person[fieldName], person['lastName]);
+  // dot operator is a more convenient way and a faster way to type as well
+  console.log(person.firsName, person.lastName);
+  // dot operator can be similarly used to set the values of new property
+  person.address.street = 'Naya tola chitranjan road'; // Now this would give error
+
+  // Why the error? Since we just defined 'address', address property get allocated as 'undefined' type and 
+  // we cannot use '.' operator on undefined type. That is why!
+
+  // Therefore we need to do this first
+  person.address = new Object(); // or {}
+  // Now the below is valid
+  person.address.street = 'Naya bazar pachna road';
+  console.log(person.address);
+  console.log(person.address.street);
+
+```
+
+Note : **dot operator has left-to-right associativity**. Important thing to mind. Dot is just another operator
+        therefore must have an associativity, similarly, 'computed member access' also has associativity.
+
 
