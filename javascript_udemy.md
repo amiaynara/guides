@@ -290,4 +290,135 @@ Consider the following example:
 Note : **dot operator has left-to-right associativity**. Important thing to mind. Dot is just another operator
         therefore must have an associativity, similarly, 'computed member access' also has associativity.
 
+### Object literal
+Objects can more neatly be created using `{}`. 
 
+```
+const person = {
+  firstName: 'amiay',
+  lastName: 'narayan',
+  address: {
+    street: 'I live here in this street',
+    city: 'Noida',
+  }
+}
+// Preferred way to create an objectA
+```
+*Note: An object can be created anywhere I want, on the fly. 
+`sendObj({prop1: 'value1', prop2: 'value2'})`
+We can see that there is a sort of freedom while creating and working with objects. This is because when the 
+javascript engine compiles this code, they are all compiled to the same code.
+
+## Namespaces
+They are containers for various methods and variables. But javascript does not have the concept of namespaces.
+Unline **C++**, where we use `using namespace std`. This is generally required to avoid mix and match of names
+of variables and funtions. Allows same function names to be used in two different libraries. But due to the 
+presence of object concept in javascript we don't actually need 'namespaces' here. Because here we can use
+objects and then declare variables inside of these instead of creating them directly in the global environment.
+
+```
+var greetings = "hello";
+var greetings = 'hola';
+console.log(greetings); // hola
+
+// to create avoid this confusion we have namespaces but in JS we can easily use the objects
+var english = {
+  greeting : 'hello',
+}
+var spanish = {
+  greeting : 'hola',
+}
+console.log(english.greeting, 'is the english greeting');
+console.log(spanish.greeting, 'is the spanish greeting');
+```
+**Note: JSON and object literals
+```
+var objectLiteral = {
+  firstName: 'amiay',
+  lastName: 'narayan',
+} // valid object literal
+
+{
+  firstName: 'abhay',
+  lastName: 'narayan',
+} // valid obj literal but not a valid JSON
+{
+  "isCute" true,
+  "name": "sindbad",
+} // is a VALID JSON and a valid object literal syntax
+```
+***JSON is a subset of object literal syntax, JSON is more strict***
+
+```
+const objLiteral = {
+  isFast: true,
+  name: 'Amiay',
+}
+
+JSON.stringify(objLiteral); // obj => JSON string
+JSON.parse({"name": "amiay", "isCute" : true}); // JSON string => obj
+```
+## First Class Functions
+Everything that you can do with other types, you can do with these first class functions as well. 
+Functions in JS, as you already know, are just another object that resides in the memory. 
+Since functions are objects, there we can attach properties and methods to a function as well!!
+so we can attach,
+- a primitive
+- an object
+- other functions
+- hidden special properties: 'NAME' (optional), CODE: that we add and is invocable. 
+
+```
+// just to prove a few things---> MUST try below
+
+function greet() {
+  console.log('hi hello, I am a function');
+}
+greet.language = 'hola'; // We are adding a primitive property to a function, to a function!!!!
+
+console.log(greet); // function greet() { console.log('hi hello, I am a function');} // actually just logs the code
+console.log(greet.language); // hola
+
+```
+Note: in the example above : 
+The **NAME** property of the object(which is a function) is : greet
+The **CODE** property of the object(which is a function) is : console.log('hi hello, I am a function');
+
+## Function statements and Function expressions
+**Expression**: A unit of code that returns a value
+```
+a = 3; // is an expresssion, as it return 3 (try it on chrome console), '=' is an operator afterall
+1 + 2; // is an expression, returns 3
+
+if ( x === true) { console.log('hhere '); } // this is a statement
+
+function greet() {
+  console.log('hola, how are you today');
+} // is function statement, does NOT return a value. Just creates an object with NAME and CODE properties
+// Also hoisting happens when this part of code is executed, note that the code is only run when we have 
+// a function call ->  greet()
+
+// function expression
+
+var anonymousGreet = function () {
+  console.log(' this is another function ');
+} // function () {} .... creates an object we all know that by now, so this object(function) will exist in the 
+// memory and the variable 'anonymousGreet' will have a reference to this function
+```
+Note: Another thing to keep in mind is : when a function is called before a a function statement definition, it is
+totally fine, as the javascript engine 'hoists' it. But when a function is being defined using function EXPRESSION, 
+we CANNOT call the method before, the expression, as this will still be 'undefined'. Refer execution phase(start of course).
+
+**Another Cool Thing** that we can do with the `first class functions` is that we can pass them around as function arguments.
+```
+log(a) {
+  a();
+}
+
+log(function () {
+    console.log('HI this is me');
+  }
+); // An anonymous function (which is ofcourse an object) is passed as an argument
+```
+
+***This style of coding leads to entire new style of coding, functional programming***
