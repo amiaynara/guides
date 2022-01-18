@@ -358,7 +358,7 @@ const objLiteral = {
 JSON.stringify(objLiteral); // obj => JSON string
 JSON.parse({"name": "amiay", "isCute" : true}); // JSON string => obj
 ```
-## First Class Functions
+##First Class Functions
 Everything that you can do with other types, you can do with these first class functions as well. 
 Functions in JS, as you already know, are just another object that resides in the memory. 
 Since functions are objects, there we can attach properties and methods to a function as well!!
@@ -422,3 +422,193 @@ log(function () {
 ```
 
 ***This style of coding leads to entire new style of coding, functional programming***
+
+###By Value and By reference
+When dealing with primivites, the values are copied by value. What that means is: 
+When storing a primitive value, the variable name points to an address in memory.
+And when this variable is assigned to another variable then another memory location
+is assigned and it stores a copy of original value. Look at the below example:
+```
+// Call by value(primitives)
+let a = 3;
+let b = a; // value itself is copied
+
+b = 9;
+console.log(a); // 3
+console.log(b); // 9
+```
+However in case of objects, the values are assigned 'by reference'. 
+```
+let a = {'name': 'amiay'};
+let b = a;
+b.name = 'sumit';
+console.log(b); // {'name': 'sumit'} <-- "Mutation"
+console.log(a); // {'name': 'sumit'}
+b.surname = 'sangakkara';
+a.address = 'Purani Bazar, Sri Lanka';
+console.log(b); // {'address': 'Purani Bazar, Sri Lanka', 'name': 'sumit', 'surname': sangakkara'}
+console.log(a); // {'address': 'Purani Bazar, Sri Lanka', 'name': 'sumit', 'surname': sangakkara'}
+```
+
+NOTE: The receiver variable starts pointing to the original memory location(not a duplicate is created).
+So when the value is changed in the newer one it is reflected in the older one, and also if the original
+(older) object is modified the change is also seen in the new one. 
+`
+var c = {name : 'narayan'};
+console.log(c); // {'name': 'narayan'}
+var d = c;
+c = {'greetings': 'hola'}'; // Creates a new space in the memory
+console.log(c); // {'greetings': 'hola'}
+console.log(d); // {name : 'narayan'}
+// Also note that, the values are passed by reference in case of objects and 'by-value' in case of primitives
+function testFunction(d){
+  d.greetings = 'Hola';
+  console.log(d.greetings);
+}
+var d = {'greetings': 'amiay'};
+var c = d;
+testFunction(d);
+console.log(d);
+console.log(d);
+`
+
+## 'this' object
+```
+console.log(this); // Window {} <-- the global window object that the javascript engine creates
+function a(){
+  console.log(this); // Window
+  this.newVariable = 'hello'; // gets attached to the global object (Window)
+}
+function b(){
+  console.log(this); // Window
+  this.newVariable = 'holaa'; // mutate the global object (Window)
+  function c() {
+    console.log(this); // Window
+  }
+}
+
+console.log(this.newVariable); // undefined
+console.log(newVariable); // Uncaught Reference error: newVariable is not defined
+a();
+console.log(this.newVariable); // hello
+console.log(newVariable) // hello
+
+```
+
+***Consider another code snippet, this will clarify the 'this' further***
+
+```
+var obj = {
+  name : 'amiay',
+  log : function () {
+          console.log(this); // Object {name: 'amiay', log: function}
+          this.name = 'Change the name'; // mutate the obj
+        }
+}
+obj.log();
+```
+consider a similar code snippet
+
+```
+var obj = {
+  name : 'amiay',
+  log : function () {
+          console.log(this); // Object {name: 'amiay', log: function}
+          this.name = 'Change the name'; // mutate the obj
+          var setname = function () {
+            console.log(this);
+            this.name = 'updated again';
+          }
+          setname();
+          console.log(this); // We might expect the 'name' property on 'obj' object to get changed (but no,
+          // a new property named 'name': 'updated again' gets added to the global object (Window) instead
+        }
+}
+obj.log();
+```
+*You will note that a new property gets added to the Window object instead. Although we thought that inside
+'setname' method we were setting the 'name' property of the 'obj' object. This, many people treat as a 'bug'
+associated to javascript. They think 'this' inside of 'setname' method should also point to the 'obj', which
+is a reasonable ask.*
+- **Design Pattern**: It a solution to a repeated problem.
+**A Design Pattern** to tackle this situation is described in the following code snippet. 
+```
+var obj = {
+  name : 'amiay',
+  log : function () {
+          var self = this; // self will be pointing to the same location as the 'this' object
+                            // in this case this points to the 'obj' in the memory, so will 'self'
+          console.log(this); // Object {name: 'amiay', log: function}
+          self.name = 'Change the name'; // mutate the obj
+          var setname = function () {
+            console.log(self);
+            self.name = 'updated again';
+          }
+          setname();
+          console.log(self); // we get {'name': 'updated again', 'log': function}
+        }
+}
+obj.log();
+```
+**NOTE:** Every programming languages have their qwirks, and clever people try and come up with nice solutions/patterns
+to solve situation.
+
+## Arrays : Collection of anything
+It is similar to `list` in python.
+We can mix and match different types of objects/primitives and store them in a single array.
+
+`var arr = [1, 2, 3]`
+```
+var arr = [1, arr, {'name': 'amiay'}, true, function(name) {console.log(name); var greet = 'hola';}]; // function expression here NOT statement
+// we can call the function as follows
+arr[4](arr[2].name);
+```
+## arguments
+Like 'this' or 'arguments' is another variable that gets created with a function.
+'arguments' is `array-like` variable that contains all the arguments (parameter values) passed to a function.
+```
+function greetings(firstName, lastName, language) {
+  if (arguments.length === 0) {
+    console.log('missing parameters');
+    return;
+  }
+  console.log(firstName, ' is same as ', arguments[0]);
+  console.log(lastName);
+  console.log(language);
+
+}
+greetings(); // undefined undefined undefined  // <-- because of hoisting no error but undefined
+greetings('amiay', 'narayan'); // amiay narayan undefined
+```
+**Aside**
+- Note that the function call `greetings()` does not cause error, even though there is not function with
+that same signature. We do have a function named `greetings` but that takes three parameters. In Languages,
+like ***C++, java*** this would have been an error. But JavaScript is different, the variables that are not
+passed get assigned to `undefined`. 
+- `function greetings(firstName, lastName, language = 'en') {...}` is a way to assign defaults
+- With time 'arguments' will get deprecated, and 'spread arguments' will be prevelant.
+- **function overloading** is not available in javascript
+
+#### Dangerous Aside!
+Syntax parser in javascript engine, reads any keyword character by character and anticipates what the keyword
+is. And in doing so it can leave the code as it is or it can even make necessary changes. For example, ';'
+in JavaScript are optional because the syntax parser does it for us. This can lead to some *hard-to-find* 
+bugs in the code if we are not careful. Take a look at the below code snippet.
+
+```
+function greetings(){
+  console.log('hi there');
+  return // syntax parser will add the ';' right here and we undefined will be passed
+    {
+      name: 'narayan'
+    } // <- this object does not get passed
+}
+console.log(greetings()); // undefined
+```
+**White Spaces:**
+***Carriage returns, tabs, spaces*** are used to make the code more readable and maintable and are necessary.And 
+the syntax parser is very liberal when it comes to whitespaces. So use comments where ever you think you can 
+by adding proper readable white spaces. 
+
+###IIFEs, Immediately Invoked Function Expressions
+
