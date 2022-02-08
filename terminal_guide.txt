@@ -177,3 +177,11 @@ now you create the build again
     $ git add . && git commit -m 'Releasing second version'
     $ twine upload --skip-existing dist/*
     # 
+
+## AWS CLI
+```
+$ pipenv shell
+$ pipenv install awscli
+$ aws configure
+$ aws s3 ls     // should list the buckets present
+```
