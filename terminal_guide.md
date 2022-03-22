@@ -188,6 +188,7 @@ $ aws s3 ls     // should list the buckets present
 $ aws s3 cp /source/file/location s3://name_of_s3_bucket/or/path/to/subfolder
 $ aws s3 cp /source/file/location -       // Alternative to 'cat' command 
 $ aws s3 sync /source/file/location s3://name_of_s3_bucket/or/path/to/subfolder       // much faster using parallel
+$ aws s3 rm s3://path/to/required/file/folder --recursive                             // recursive in case of folder
 
 ```
 **NOTE:** S3 does not have folder structure, it just presents the data on the UI as folder structure
